@@ -11,3 +11,12 @@ Finally, a user will be able to gather all the information stored and visualize 
 
 ## Technology Stack
 We will use Spring, Eureka, Zuul, docker and OpenAPI 3.0 to build our backend service.
+Additionally, we are planning to create an Android Client application that allows for convenient usage of the service.
+
+## Architecture
+We are planning to compose three micro services that make up our application: a user service, that is responsible for signing up, signing in and signing out users, a time tracking service that only allows for authorized requests to be processed and an accumulator service that is capabale of processing queries.
+
+We will use a Zuul API-Gateway to redirect requests from a client to the specific service instance that is needed.
+
+## Cloud Service Provider
+We are planning to use a droplet on DigitalOcean to host our service.
