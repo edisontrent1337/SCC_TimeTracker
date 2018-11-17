@@ -41,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				passwordEncoder.encode("password"),
 				Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
 		inMemoryUserDetailsManager.createUser(admin);
-		User serviceProvider = new User("ilma-smart-service",
+		User serviceProvider = new User("scc-service",
 				passwordEncoder.encode("password"),
 				Collections.singletonList(new SimpleGrantedAuthority("ROLE_SERVICE_PROVIDER")));
 		inMemoryUserDetailsManager.createUser(serviceProvider);

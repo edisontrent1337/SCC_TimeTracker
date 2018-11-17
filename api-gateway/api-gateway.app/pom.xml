@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<!-- Name of application and docker container -->
 	<name>scc-api-gateway</name>
-	<description>API Gateway for Time Tracker Application</description>
+	<description>API gateway for Time Tracking Application.</description>
 
 	<parent>
 		<groupId>com.trent.scc</groupId>
@@ -13,13 +14,6 @@
 	</parent>
 	<artifactId>api-gateway.app</artifactId>
 	<packaging>jar</packaging>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-		<spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -82,7 +76,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>de.devboost.ilma.apigateway.ApiGatewayApplication</mainClass>
+							<mainClass>com.trent.scc.apigateway.ApiGatewayApplication</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -159,7 +153,4 @@
 			</build>
 		</profile>
 	</profiles>
-
-
-
 </project>
