@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: user-service
+  profiles:
+    active: production
+
+
+  ## Spring DATA SOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+  datasource:
+    url: "jdbc:mysql://localhost:3306/users?useSSL=false&serverTimezone=UTC"
+    username: "root"
+    password: "root"
+
+
+  ## Hibernate Properties
+  # The SQL dialect makes Hibernate generate better SQL for the chosen database
+  jpa:
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.MySQL5Dialect"
+        id:
+          new_generator_mappings: false
+
+    ## Hibernate properties
+    # ddl auto (create, create-drop, validate, update)
+    hibernate:
+      ddl-auto: "validate"
+
+server:
+  port: 8080
+
+configuration:
+  cors:
+    allowedOrigins:
+      - http://localhost:3000
+      - http://localhost:3001
+      - http://localhost:9123
+
+
+## Eureka properties
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://ilma-smart-service:password@localhost:8761/eureka}
+  instance:
+    preferIpAddress: true

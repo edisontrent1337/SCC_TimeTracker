@@ -1,0 +1,21 @@
+POST http://localhost:8762/user-service/signup
+Content-Type: application/json
+
+{
+	"username": "test_user",
+	"password": "test_password"
+}
+
+###
+
+POST http://localhost:8762/user-service/login
+Content-Type: application/json
+
+{
+	"username": "test_user",
+	"password": "test_password"
+}
+
+> {% client.global.set("jwt_token", response.body.token); %}
+
+###

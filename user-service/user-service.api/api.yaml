@@ -1,0 +1,43 @@
+swagger: "2.0"
+info:
+  version: "0.1"
+  title: "User Service"
+
+produces:
+  - application/json
+
+paths:
+
+  /signup:
+    post:
+      operationId: signup
+      parameters:
+        - name : userdata
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserData'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/RegistrationStatus'
+
+definitions:
+  UserData:
+    type: object
+    description: Data that is transferred to register a new or update an existing user.
+    properties:
+      username:
+        type: string
+        description: The user name.
+      password:
+        type: string
+        description: The hashed password of the user
+
+  RegistrationStatus:
+    type: string
+    enum:
+      - USERNAME_ALREADY_TAKEN
+      - INVALID_PASSWORD
+      - SUCCESS

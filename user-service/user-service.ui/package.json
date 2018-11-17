@@ -1,0 +1,58 @@
+{
+  "name": "ilma_login",
+  "version": "0.1.0",
+  "main": "./src/index.js",
+  "dependencies": {
+    "bootstrap": "^4.1.3",
+    "react": "^16.4.1",
+    "react-bootstrap": "^0.32.4",
+    "react-dom": "^16.4.1",
+    "react-loadable": "^5.4.0",
+    "react-scripts": "1.1.4",
+    "redux-thunk": "^2.3.0",
+    "single-spa-react": "^2.6.0",
+    "webpack-merge": "^4.1.3"
+  },
+  "scripts": {
+    "watch": "webpack --watch",
+    "start": "webpack-dev-server --open --color --port 3001 --config webpack.config.dev.js",
+    "prepublish": "rm -rf ../user-service.app/src/main/resources/static/dist && npm run build",
+    "build": "rimraf ../user-service.app/src/main/resources/static/dist &&  webpack --progress --profile"
+  },
+  "babel": {
+    "presets": [
+      "env",
+      "react"
+    ]
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-latest": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "css-loader": "^1.0.0",
+    "dist": "^0.1.2",
+    "file-loader": "^1.1.11",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.4.1",
+    "react": "^16.4.1",
+    "react-bootstrap": "^0.32.4",
+    "react-dom": "^16.4.1",
+    "react-modal": "^3.5.1",
+    "react-redux": "^5.0.7",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "redux": "^4.0.0",
+    "rimraf": "^2.6.2",
+    "style-loader": "^0.21.0",
+    "uglifyjs-webpack-plugin": "^1.2.7",
+    "webpack": "^4.15.1",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4",
+    "webpack-node-externals": "^1.6.0",
+    "webpack-system-register": "^1.6.0"
+  }
+}

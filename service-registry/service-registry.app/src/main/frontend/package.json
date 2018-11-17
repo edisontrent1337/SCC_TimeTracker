@@ -1,0 +1,33 @@
+{
+    "name": "frontend",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "start": "webpack-dev-server --open",
+        "build": "webpack --progress --color --config webpack.config.js --display-error-details",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Sinthujan Thanabalasingam",
+    "license": "ISC",
+    "dependencies": {
+        "babel-core": "6.26.3",
+        "babel-plugin-syntax-dynamic-import": "6.18.0",
+        "babel-plugin-transform-object-rest-spread": "6.26.0",
+        "babel-preset-env": "1.7.0",
+        "babel-preset-latest": "6.24.1",
+        "babel-preset-react": "6.24.1",
+        "single-spa": "4.0.0",
+        "systemjs": "0.19.0"
+    },
+    "devDependencies": {
+        "babel-loader": "7.1.5",
+        "clean-webpack-plugin": "0.1.19",
+        "css-loader": "1.0.0",
+        "html-loader": "0.5.5",
+        "jspm": "^0.16.53",
+        "style-loader": "0.21.0",
+        "webpack": "4.15.1",
+        "webpack-cli": "3.0.8",
+        "webpack-dev-server": "3.1.4"
+    }
+}
