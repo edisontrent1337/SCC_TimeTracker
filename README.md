@@ -1,5 +1,5 @@
 # SCC_TimeTracker
-Repository for the seminar task of group 4 of the lecture Service and Cloud Computing by Dr. Braun, TU Dresden
+Repository for the seminar task of group 4 of the lecture Service and Cloud Computing by Dr. Braun, TU Dresden     
 [Link to the lecture](https://tu-dresden.de/ing/informatik/sya/professur-fuer-rechnernetze/studium/lehrveranstaltungen/lehrveranstaltungsdetails?ln=de&lv_id=49)
 
 
@@ -21,11 +21,46 @@ We will use a Zuul API-Gateway to redirect requests from a client to the specifi
 ## Cloud Service Provider
 We are planning to use a droplet on DigitalOcean to host our service.
 
+## Functions
+API: (send data, send data2; expected data)   
+* User
+** CRM
+*** register (username, password)
+*** login (username, password; token)
+*** logout
+** Time tracking
+*** start activity (token, timestamp, activity)
+*** stop activity (token, timestamp, activity)
+*** delete activity (token, activity)
+*** edit tracked activity (token, edited record)
+*** (registration new activity (token, activity))
+** Personal statistic
+*** get last activities (token; last records)
+*** time series of the day / week / month / year / all (token; time series)
+*** average of day / week / month / year / all (token; average)
+*** for main activities may extra graphical representation
+**** sleep: from 12 am to 12 am next day a diagram, bar chart of sleep
+* Statistic of all users
+** Only for the main activities
+** For Everybody / Only User?
+** Same options as for User
+** All tracked hours / activities and so on
 
-## Ablauf
+Main activities   
+* sleep
+* study / learn
+* sport
+* work
+
+Additional expansions if we have enough time   
+* Social component
+** add friends
+** compare tracked activities (overlaying graphics)
+* may we generate the diagrams on the server and not in the client (token; graphic)
+
+## Deadlines
 | Datum          | Ziel                                                                                    |
 |----------------|-----------------------------------------------------------------------------------------|
 | 11.+18.12.2018 | Technologieauswahl, Web Service mit Test-Clients                                        |
 | 28.01.2019     | Finale Abgabe                                                                           |
 | 29.01.2019     | Gesamtergebnis mit Client-Applikationen und Sicherheits-Erweiterungen, Docker-Container |
-
