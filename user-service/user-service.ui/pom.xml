@@ -9,7 +9,7 @@
 	<description>Reactor for the User Service UI application.</description>
 
 	<parent>
-		<groupId>de.devboost.ilma</groupId>
+		<groupId>com.trent.scc</groupId>
 		<artifactId>user-service</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
