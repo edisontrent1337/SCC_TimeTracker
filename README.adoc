@@ -24,7 +24,7 @@ We are planning to use a droplet on DigitalOcean to host our service.
 ## Functions
 API: (send data, send data2; expected data)   
 * User
-** CRM
+** CRM    
 *** register (username, password)
 *** login (username, password; token)
 *** logout
