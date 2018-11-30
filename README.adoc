@@ -22,7 +22,7 @@ We will use a Zuul API-Gateway to redirect requests from a client to the specifi
 We are planning to use a droplet on DigitalOcean to host our service.
 
 ## Functions
-API: (send data, send data2; expected data)   
+.API: (send data, send data2; expected data)   
 * User
 ** CRM    
 *** register (username, password)
@@ -46,21 +46,23 @@ API: (send data, send data2; expected data)
 ** Same options as for User
 ** All tracked hours / activities and so on
 
-Main activities   
-* sleep
+.Main activities     
+* sleep  
 * study / learn
 * sport
 * work
 
-Additional expansions if we have enough time   
+.Additional expansions if we have enough time   
 * Social component
 ** add friends
 ** compare tracked activities (overlaying graphics)
 * may we generate the diagrams on the server and not in the client (token; graphic)
 
 ## Deadlines
-| Datum          | Ziel                                                                                    |
-|----------------|-----------------------------------------------------------------------------------------|
-| 11.+18.12.2018 | Technologieauswahl, Web Service mit Test-Clients                                        |
-| 28.01.2019     | Finale Abgabe                                                                           |
-| 29.01.2019     | Gesamtergebnis mit Client-Applikationen und Sicherheits-Erweiterungen, Docker-Container |
+[options="header", cols="1,10"]
+|==========
+| Datum          | Ziel                                                                                    
+| 11.+18.12.2018 | Technologieauswahl, Web Service mit Test-Clients                                        
+| 28.01.2019     | Finale Abgabe                                                                           
+| 29.01.2019     | Gesamtergebnis mit Client-Applikationen und Sicherheits-Erweiterungen, Docker-Container 
+|=====
