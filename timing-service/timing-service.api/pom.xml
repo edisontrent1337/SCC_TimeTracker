@@ -26,12 +26,12 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>io.swagger</groupId>
+				<groupId>io.swagger.codegen.v3</groupId>
 				<artifactId>swagger-codegen-maven-plugin</artifactId>
-				<version>2.3.1</version>
+				<version>3.0.0</version>
 				<executions>
 					<execution>
-						<id>user-service-api</id>
+						<id>timing-service-api</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>

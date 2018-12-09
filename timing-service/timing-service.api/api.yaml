@@ -1,0 +1,168 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: Timing Service
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+
+    activity:
+      description: An activity that can be tracked
+      properties:
+        name:
+          type: string
+          description: The name of the activity
+        uuid:
+          type: string
+          description: The uuid of the activity
+        description:
+          type: string
+          description: The description of the activity
+        useruuid:
+          type: string
+          description: The uuid of the user that owns this activity
+
+    activityRecord:
+      description: A record of an activity that a user has submitted
+      properties:
+        activityuuid:
+          type: string
+          description: The uuid of the activity.
+        time:
+          type: string
+          format: date-time
+          description: The point in time this record was created
+        useruuid:
+          type: string
+          description: The uuid of the user that created this record
+        uuid:
+          type: string
+          description: The uuid of this record
+
+    operationResponse:
+      properties:
+        error:
+          type: string
+          description: Used to indicate error messages. Null if no error occured
+        data:
+          type: array
+          description: Attached data of response
+          items:
+            type: object
+
+paths:
+  /activities/:
+    post:
+      security:
+      - bearerAuth: []
+      operationId: createActivity
+      requestBody:
+        description: Creates a new activity.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/activity"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+    get:
+      operationId: getActivities
+      description: Returns all activities
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/activity"
+
+  /activities/{activityId}:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getActivity
+      description: Returns activity with given id
+      parameters:
+      - name: activityId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+  /activities/{activityId}/records:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getActivityRecords
+      description: Returns all records for an activity
+      parameters:
+      - name: activityId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+    post:
+      security:
+      - bearerAuth: []
+      operationId: addActivityRecord
+      description: Adds a new record for an activity
+      parameters:
+      - name: activityId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/activityRecord"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+  /activities/stats:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getGlobalActivityStats
+      description: Returns statistics for this application
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
