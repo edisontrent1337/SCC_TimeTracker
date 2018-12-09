@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<!-- Name of application and docker container -->
-	<name>scc-user-service</name>
-	<description>User service for Time Tracking Application.</description>
+	<name>scc-timing-service</name>
+	<description>Timing service for Time Tracking Application.</description>
 
 	<parent>
 		<groupId>com.trent.scc</groupId>
-		<artifactId>user-service</artifactId>
+		<artifactId>timing-service</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>user-service.app</artifactId>
+	<artifactId>timing-service.app</artifactId>
 	<packaging>jar</packaging>
 
 	<dependencies>
@@ -27,10 +27,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-oauth2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -56,13 +52,6 @@
 			<version>3.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.trent.scc</groupId>
-			<artifactId>user-service.api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-
 		<!-- Test dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -83,27 +72,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.trent.scc</groupId>
-			<artifactId>user-service.api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.trent.scc</groupId>
-			<artifactId>user-service.api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>de.devboost.ilma</groupId>
-			<artifactId>user-service.api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.trent.scc</groupId>
-			<artifactId>user-service.api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>
@@ -152,7 +120,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.trent.scc.userservice.UserServiceApplication</mainClass>
+							<mainClass>com.trent.scc.timingservice.TimingServiceApp</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

@@ -12,6 +12,7 @@
 		<module>api-gateway</module>
 		<module>service-registry</module>
 		<module>user-service</module>
+		<module>timing-service</module>
 	</modules>
 
 	<build>
