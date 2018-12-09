@@ -1,43 +1,125 @@
-swagger: "2.0"
+openapi: 3.0.0
 info:
-  version: "0.1"
-  title: "User Service"
+  version: 0.0.1
+  title: User Service
 
-produces:
-  - application/json
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserData:
+      description: Data that is transferred to register a new or update an existing user.
+      properties:
+        username:
+          type: string
+          description: The user name.
+        password:
+          type: string
+          description: The hashed password of the user
+        role:
+          type: string
+
+    RegistrationStatus:
+      type: string
+      enum:
+      - USERNAME_ALREADY_TAKEN
+      - INVALID_PASSWORD
+      - SUCCESS
+    UuidData:
+      properties:
+        uuids:
+          type: array
+          items:
+            type: string
+    operationResponse:
+      properties:
+        error:
+          type: string
+          description: Used to indicate error messages.
+        data:
+          type: array
+          items:
+            type: object
 
 paths:
 
   /signup:
     post:
       operationId: signup
-      parameters:
-        - name : userdata
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/UserData'
+      requestBody:
+        description: Creates a new project.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserData'
       responses:
-        200:
+        '200':
           description: OK
-          schema:
-            $ref: '#/definitions/RegistrationStatus'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationStatus'
 
-definitions:
-  UserData:
-    type: object
-    description: Data that is transferred to register a new or update an existing user.
-    properties:
-      username:
-        type: string
-        description: The user name.
-      password:
-        type: string
-        description: The hashed password of the user
+  /users/{uuid}:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getUserName
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserData'
 
-  RegistrationStatus:
-    type: string
-    enum:
-      - USERNAME_ALREADY_TAKEN
-      - INVALID_PASSWORD
-      - SUCCESS
+  /users/{name}/uuid:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getUserUuid
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UuidData'
+
+  /users/info:
+    post:
+      security:
+      - bearerAuth: []
+      operationId: getUserNamesFromUuidList
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UuidData'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserData'
+
