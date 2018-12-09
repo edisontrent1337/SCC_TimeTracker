@@ -21,7 +21,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.time.OffsetDateTime;
 
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.STARTED;
-import static com.trent.scc.timingservice.support.TestConstants.TEST_USER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -39,31 +38,16 @@ public class TimingServiceControllerTest {
 	@Autowired
 	private ActivityRecordRepository activityRecordRepository;
 
-	@Test
-	public void addActivityWorksCorrectly() {
-		HttpEntity<String> entity = createHttpEntityForActivity("Working", "At a company");
-		assertAddActivity(entity);
-	}
 	@Before
 	public void cleanUp() {
 		activityRecordRepository.deleteAll();
 		activityRepository.deleteAll();
 	}
 
-	private HttpEntity<String> createHttpEntityForActivity(String name, String description) {
-		HttpHeaders headers = createAuthorizedHeaders();
-		String body = getActivityAsJson(name, description).toString();
-		return new HttpEntity<>(body, headers);
-	}
-
-	private String assertAddActivity(HttpEntity<String> entity) {
-		String path = "/activities/";
-		ResponseEntity<String> response = restTemplate.exchange(path, HttpMethod.POST, entity, String.class);
-		assertEquals("The status code was wrong for " + path + HttpMethod.POST, HttpStatus.OK, response.getStatusCode());
-		String responseBody = response.getBody();
-		System.out.println(responseBody);
-		assertNotNull("The response body should not be empty", responseBody);
-		return responseBody;
+	@Test
+	public void addActivityWorksCorrectly() {
+		HttpEntity<String> entity = createHttpEntityForActivity("Working", "At a company");
+		assertAddActivity(entity);
 	}
 
 	@Test
@@ -81,6 +65,22 @@ public class TimingServiceControllerTest {
 			e.printStackTrace();
 		}
 
+	}
+
+	private HttpEntity<String> createHttpEntityForActivity(String name, String description) {
+		HttpHeaders headers = createAuthorizedHeaders();
+		String body = getActivityAsJson(name, description).toString();
+		return new HttpEntity<>(body, headers);
+	}
+
+	private String assertAddActivity(HttpEntity<String> entity) {
+		String path = "/activities/";
+		ResponseEntity<String> response = restTemplate.exchange(path, HttpMethod.POST, entity, String.class);
+		assertEquals("The status code was wrong for " + path + HttpMethod.POST, HttpStatus.OK, response.getStatusCode());
+		String responseBody = response.getBody();
+		System.out.println(responseBody);
+		assertNotNull("The response body should not be empty", responseBody);
+		return responseBody;
 	}
 
 	private void assertAddRecord(HttpEntity<String> entity, String activityUuid) {
