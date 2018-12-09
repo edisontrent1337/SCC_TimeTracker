@@ -1,11 +1,10 @@
 package com.trent.scc.userservice.service;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 import com.trent.scc.userservice.api.model.RegistrationStatus;
 import com.trent.scc.userservice.api.model.UserData;
+import com.trent.scc.userservice.api.model.UuidData;
 import com.trent.scc.userservice.config.UserWithUUID;
 import com.trent.scc.userservice.repository.UserEntity;
 import com.trent.scc.userservice.repository.UserRepository;
@@ -56,6 +55,17 @@ public class UserService implements IUserService {
 	}
 
 	@Override
+	public UserData getUserInfo(String userUuid) {
+		UserEntity entity = userRepository.findByUuid(userUuid);
+		UserData result = new UserData();
+		if (entity != null) {
+			result.setUsername(entity.getName());
+			return result;
+		}
+		return null;
+	}
+
+	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		LOGGER.info("Loading user with name: " + username);
 		UserEntity userEntity = userRepository.findByName(username);
@@ -66,9 +76,36 @@ public class UserService implements IUserService {
 		}
 
 
-		UserWithUUID user = new UserWithUUID(userEntity.getName(),
+		return new UserWithUUID(userEntity.getName(),
 				userEntity.getPassword(),
 				Collections.singletonList(new SimpleGrantedAuthority("user")), userEntity.getUuid());
-		return user;
+	}
+
+	@Override
+	public UuidData getUuidData(String username) {
+		UserEntity entity = userRepository.findByName(username);
+		if (entity == null) {
+			LOGGER.info("The user entity for " + username + "was null");
+			throw new UsernameNotFoundException("No user was found with the name: " + username);
+		} else {
+			UuidData data = new UuidData();
+			data.addUuidsItem(entity.getUuid());
+			return data;
+		}
+	}
+
+	@Override
+	public List<UserData> getUserInfoForUuids(List<String> uuidList) {
+		List<UserData> result = new ArrayList<>();
+		for (int i = 0; i < uuidList.size(); i += 2) {
+			String uuid = uuidList.get(i);
+			String role = uuidList.get(i + 1);
+			UserData userData = getUserInfo(uuid);
+			if (userData != null) {
+				userData.setRole(role);
+				result.add(userData);
+			}
+		}
+		return result;
 	}
 }

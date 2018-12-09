@@ -4,18 +4,50 @@ import com.trent.scc.timingservice.api.ActivitiesApi;
 import com.trent.scc.timingservice.api.model.Activity;
 import com.trent.scc.timingservice.api.model.ActivityRecord;
 import com.trent.scc.timingservice.api.model.OperationResponse;
+import com.trent.scc.timingservice.service.OperationStatus;
+import com.trent.scc.timingservice.service.TimingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
 
+@RestController
 public class TimingServiceController implements ActivitiesApi {
 
+
+	@Autowired
+	private TimingService timingService;
+
 	@Override
-	public ResponseEntity<OperationResponse> addActivityRecord(@Valid @RequestBody ActivityRecord body, @PathVariable String activityId) {
-		return null;
+	public ResponseEntity<OperationResponse> addActivityRecord(@Valid @RequestBody ActivityRecord record, @PathVariable String activityId) {
+		String userUuid = getUserAuthentication();
+		record.setUseruuid(userUuid);
+		record.setActivityuuid(activityId);
+		OperationStatus status = timingService.addRecord(record);
+		OperationResponse response = new OperationResponse();
+		switch (status) {
+			case SUCCESS:
+				response.addDataItem(record);
+				break;
+			case NOT_EXISTING:
+				response.error("Can not create a record for " + activityId + " as this activity does not exist.");
+				break;
+			case FAILURE:
+				response.error("Unexpected error occurred.");
+				break;
+			case UNAUTHORIZED:
+				response.error("You are not authorized to add a record for " + activityId);
+				break;
+		}
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@Override
@@ -24,8 +56,26 @@ public class TimingServiceController implements ActivitiesApi {
 	}
 
 	@Override
-	public ResponseEntity<OperationResponse> createActivity(@RequestBody @Valid Activity body) {
-		return null;
+	public ResponseEntity<OperationResponse> createActivity(@RequestBody @Valid Activity activity) {
+		String ownerUuid = getUserAuthentication();
+		activity.setOwneruuid(ownerUuid);
+		OperationStatus status = timingService.addActivity(activity);
+		OperationResponse response = new OperationResponse();
+		switch (status) {
+			case SUCCESS:
+				break;
+			case DUPLICATE_FAILURE:
+				response.error("An activity with this name already exists");
+				break;
+			case FAILURE:
+				response.error("An unexpected error occurred while processing the request");
+				break;
+			case UNAUTHORIZED:
+				response.error("Unauthorized");
+				break;
+		}
+		response.addDataItem(activity);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@Override
@@ -41,5 +91,11 @@ public class TimingServiceController implements ActivitiesApi {
 	@Override
 	public ResponseEntity<OperationResponse> getActivityRecords(@PathVariable String activityId) {
 		return null;
+	}
+
+	private String getUserAuthentication() {
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+		Authentication authentication = securityContext.getAuthentication();
+		return authentication.getName();
 	}
 }

@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import java.time.OffsetDateTime;
 
 @Entity
+@Table(name = "activities")
 public class ActivityEntity {
 
 	@Id
@@ -87,6 +88,5 @@ public class ActivityEntity {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-
 
 }

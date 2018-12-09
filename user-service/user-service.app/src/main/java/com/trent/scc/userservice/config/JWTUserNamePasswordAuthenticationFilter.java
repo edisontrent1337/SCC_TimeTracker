@@ -7,6 +7,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,12 +26,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("WeakerAccess")
-public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter implements AuthenticationFailureHandler {
+public class JWTUserNamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter implements AuthenticationFailureHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JWTUserNamePasswordAuthenticationFilter.class);
 	private AuthenticationManager authenticationManager;
 
-	public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+	public JWTUserNamePasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
 	}
 
@@ -77,7 +79,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				.compact();
 
 		response.setContentType("application/json");
-		response.getWriter().write("{\"token\":\"" + token + "\"}");
+		JSONObject json = new JSONObject();
+		try {
+			json.put("token", token);
+			json.put("uuid", uuid);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		response.getWriter().write(json.toString());
 	}
 
 	@Override

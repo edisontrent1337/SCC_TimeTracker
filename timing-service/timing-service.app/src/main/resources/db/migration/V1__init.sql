@@ -12,7 +12,10 @@ CREATE TABLE activities (
 CREATE TABLE activity_records (
     id bigint(20) NOT NULL AUTO_INCREMENT,
     activity_uuid VARCHAR(255) NOT NULL,
+    uuid VARCHAR(255) NOT NULL,
     state VARCHAR(255) NOT NULL,
-    minutes bigint(20),
+    start_time DATETIME,
+    end_time DATETIME,
+    duration bigint(20),
     PRIMARY KEY (id)
 );

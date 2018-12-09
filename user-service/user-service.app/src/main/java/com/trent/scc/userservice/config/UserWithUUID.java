@@ -14,12 +14,8 @@ public class UserWithUUID extends User {
 		this.uuid = uuid;
 	}
 
-	public String getUuid() {
+	String getUuid() {
 		return uuid;
 	}
-
-
-
-
 
 }

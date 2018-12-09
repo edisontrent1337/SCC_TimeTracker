@@ -1,25 +1,22 @@
 package com.trent.scc.userservice.controller;
 
-import com.trent.scc.userservice.api.SignupApi;
-import com.trent.scc.userservice.api.model.RegistrationStatus;
+import com.trent.scc.userservice.api.UsersApi;
 import com.trent.scc.userservice.api.model.UserData;
+import com.trent.scc.userservice.api.model.UuidData;
 import com.trent.scc.userservice.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
-@SuppressWarnings("unused")
-public class UserController implements SignupApi {
+public class UserController implements UsersApi {
 
 	private final UserService userService;
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	public UserController(UserService userService) {
@@ -27,9 +24,21 @@ public class UserController implements SignupApi {
 	}
 
 	@Override
-	public ResponseEntity<RegistrationStatus> signup(@Valid @RequestBody UserData userData) {
-		RegistrationStatus registrationStatus = userService.registerUser(userData);
-		LOGGER.info("Registered user " + userData.getUsername() + " with result " + registrationStatus);
-		return ResponseEntity.ok(registrationStatus);
+	public ResponseEntity<UserData> getUserName(@PathVariable("uuid") String uuid) {
+		UserData userData = userService.getUserInfo(uuid);
+		return ResponseEntity.ok(userData);
+	}
+
+	@Override
+	public ResponseEntity<List<UserData>> getUserNamesFromUuidList(@Valid @RequestBody UuidData uuidData) {
+		List<String> uuidList = uuidData.getUuids();
+		List<UserData> result = userService.getUserInfoForUuids(uuidList);
+		return ResponseEntity.ok(result);
+	}
+
+	@Override
+	public ResponseEntity<UuidData> getUserUuid(@PathVariable("name") String name) {
+		UuidData data = userService.getUuidData(name);
+		return ResponseEntity.ok(data);
 	}
 }

@@ -57,7 +57,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.anyRequest()
 				.authenticated()
 				.and()
-				.addFilter(new JWTAuthenticationFilter(authenticationManager()));
+				.addFilter(new JWTUserNamePasswordAuthenticationFilter(authenticationManager()))
+				.addFilter(new JWTBasicAuthenticationFilter(authenticationManager()));
 
 		http.exceptionHandling().accessDeniedHandler((request, response, e) -> {
 			response.getWriter().append("\"error\":\"This is an error.\"");

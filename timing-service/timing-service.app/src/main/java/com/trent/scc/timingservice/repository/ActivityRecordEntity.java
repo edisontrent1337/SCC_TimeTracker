@@ -1,8 +1,10 @@
 package com.trent.scc.timingservice.repository;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 
 @Entity
+@Table(name = "activity_records")
 public class ActivityRecordEntity {
 
 	@Id
@@ -18,15 +20,21 @@ public class ActivityRecordEntity {
 	@Column(name = "activity_uuid")
 	private String activityUuid;
 
-	@Column(name = "minutes")
-	private int minutes;
+	@Column(name = "duration")
+	private long duration;
 
-	public int getMinutes() {
-		return minutes;
+	@Column(name="start_time")
+	private OffsetDateTime startTime;
+
+	@Column(name="end_time")
+	private OffsetDateTime endTime;
+
+	public long getDuration() {
+		return duration;
 	}
 
-	public void setMinutes(int minutes) {
-		this.minutes = minutes;
+	public void setDuration(long duration) {
+		this.duration = duration;
 	}
 
 	public long getId() {
@@ -59,5 +67,34 @@ public class ActivityRecordEntity {
 
 	public void setActivityUuid(String activityUuid) {
 		this.activityUuid = activityUuid;
+	}
+
+	public OffsetDateTime getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(OffsetDateTime startTime) {
+		this.startTime = startTime;
+	}
+
+	public OffsetDateTime getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(OffsetDateTime endTime) {
+		this.endTime = endTime;
+	}
+
+	@Override
+	public String toString() {
+		return "ActivityRecordEntity{" +
+				"id=" + id +
+				", uuid='" + uuid + '\'' +
+				", state='" + state + '\'' +
+				", activityUuid='" + activityUuid + '\'' +
+				", duration=" + duration +
+				", startTime=" + startTime +
+				", endTime=" + endTime +
+				'}';
 	}
 }
