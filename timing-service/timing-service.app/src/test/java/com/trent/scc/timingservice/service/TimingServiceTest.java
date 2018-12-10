@@ -50,11 +50,14 @@ public class TimingServiceTest {
 		String activityDescription = "Usually done late at night";
 
 		Activity activity = createActivity(activityName, activityDescription);
-		OperationStatus status = timingService.addActivity(activity);
+		OperationResult<Activity> operationResult = timingService.addActivity(activity);
+		OperationStatus status = operationResult.getStatus();
 		assertEquals("The operation status is wrong.", OperationStatus.SUCCESS, status);
 		assertEquals("The number of saved activities is wrong", 1, activityRepository.count());
 
-		status = timingService.addActivity(activity);
+
+		operationResult = timingService.addActivity(activity);
+		status = operationResult.getStatus();
 		assertEquals("The service should throw a duplicate error", OperationStatus.DUPLICATE_FAILURE, status);
 
 		ActivityEntity entity = activityRepository.findByNameAndOwnerUuid(activityName, activity.getOwneruuid());
@@ -148,7 +151,8 @@ public class TimingServiceTest {
 	}
 
 	private void assertAddRecord(ActivityRecord record) {
-		OperationStatus status = timingService.addRecord(record);
+		OperationResult<ActivityRecord> operationResult = timingService.addRecord(record);
+		OperationStatus status = operationResult.getStatus();
 		assertEquals("There was an error creating a record for an activity.", OperationStatus.SUCCESS, status);
 	}
 

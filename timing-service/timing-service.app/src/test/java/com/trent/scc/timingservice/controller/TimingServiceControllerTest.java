@@ -53,10 +53,9 @@ public class TimingServiceControllerTest {
 	@Test
 	public void addRecordWorksCorrectly() {
 		HttpEntity<String> httpEntityForActivity = createHttpEntityForActivity("Working", "At a company");
-		String response = assertAddActivity(httpEntityForActivity);
+		JSONObject response = assertAddActivity(httpEntityForActivity);
 		try {
-			JSONObject jsonObject = new JSONObject(response);
-			JSONArray array = jsonObject.getJSONArray("data");
+			JSONArray array = response.getJSONArray("data");
 			JSONObject data = new JSONObject(array.get(0).toString());
 			String activityUuid = activityRepository.findByNameAndOwnerUuid("Working", data.get("owneruuid").toString()).getUuid();
 			HttpEntity<String> httpEntityForRecord = createHttpEntityForRecord(activityUuid, OffsetDateTime.now(), STARTED);
@@ -73,29 +72,43 @@ public class TimingServiceControllerTest {
 		return new HttpEntity<>(body, headers);
 	}
 
-	private String assertAddActivity(HttpEntity<String> entity) {
+	private JSONObject assertAddActivity(HttpEntity<String> entity) {
 		String path = "/activities/";
 		ResponseEntity<String> response = restTemplate.exchange(path, HttpMethod.POST, entity, String.class);
 		assertEquals("The status code was wrong for " + path + HttpMethod.POST, HttpStatus.OK, response.getStatusCode());
-		String responseBody = response.getBody();
-		System.out.println(responseBody);
-		assertNotNull("The response body should not be empty", responseBody);
-		return responseBody;
+		JSONObject responseJSON = getResponseAsJSON(response);
+		try {
+			assertEquals("No error should be thrown when adding a record", responseJSON.getString("error"), "null");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return responseJSON;
 	}
 
-	private void assertAddRecord(HttpEntity<String> entity, String activityUuid) {
+	private void assertAddRecord(HttpEntity<String> entity, String activityUuid) throws JSONException {
 		String path = "/activities/" + activityUuid + "/records";
 		ResponseEntity<String> response = restTemplate.exchange(path, HttpMethod.POST, entity, String.class);
 		assertEquals("The status code was wrong for " + path + HttpMethod.POST, HttpStatus.OK, response.getStatusCode());
-		String responseBody = response.getBody();
-		assertNotNull("The response body should not be empty", responseBody);
-		System.out.println(responseBody);
+		JSONObject responseJSON = getResponseAsJSON(response);
+		assertEquals("No error should be thrown when adding a record", responseJSON.getString("error"), "null");
 	}
 
 	private HttpEntity<String> createHttpEntityForRecord(String activityUuid, OffsetDateTime time, StateEnum state) {
 		HttpHeaders headers = createAuthorizedHeaders();
 		String body = getRecordAsJson(activityUuid, time, state).toString();
 		return new HttpEntity<>(body, headers);
+	}
+
+	private JSONObject getResponseAsJSON(ResponseEntity<String> response) {
+		String responseBody = response.getBody();
+		assertNotNull("The response body should not be empty", responseBody);
+		JSONObject responseJSON = null;
+		try {
+			responseJSON = new JSONObject(responseBody);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return responseJSON;
 	}
 
 	private JSONObject getRecordAsJson(String activityUuid, OffsetDateTime time, StateEnum state) {

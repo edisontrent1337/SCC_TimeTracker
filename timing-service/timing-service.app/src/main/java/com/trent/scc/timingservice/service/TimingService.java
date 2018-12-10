@@ -18,57 +18,71 @@ import java.util.UUID;
 
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.ENDED;
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.STARTED;
+import static com.trent.scc.timingservice.service.OperationStatus.*;
 
 @Service
 public class TimingService implements ITimingService {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(TimingService.class);
 
-	@Autowired
-	private ActivityRepository activityRepository;
+	private final ActivityRepository activityRepository;
+
+	private final ActivityRecordRepository activityRecordRepository;
 
 	@Autowired
-	private ActivityRecordRepository activityRecordRepository;
+	public TimingService(ActivityRepository activityRepository, ActivityRecordRepository activityRecordRepository) {
+		this.activityRepository = activityRepository;
+		this.activityRecordRepository = activityRecordRepository;
+	}
 
 	@Override
-	public OperationStatus addActivity(Activity activity) {
+	public OperationResult<Activity> addActivity(Activity activity) {
 		String name = activity.getName();
 		ActivityEntity existingActivity = activityRepository.findByNameAndOwnerUuid(name, activity.getOwneruuid());
 		if (existingActivity == null) {
 			ActivityEntity entity = createNewEntity(activity);
 			activityRepository.save(entity);
-			return OperationStatus.SUCCESS;
+			activity.setUuid(entity.getUuid());
+			return new OperationResult<>(activity, SUCCESS);
 		} else {
-			return OperationStatus.DUPLICATE_FAILURE;
+			return new OperationResult<>(activity, DUPLICATE_FAILURE);
 		}
 	}
 
 	@Override
-	public OperationStatus addRecord(ActivityRecord record) {
+	public OperationResult<ActivityRecord> addRecord(ActivityRecord record) {
 		if (record.getTime() == null) {
 			record.setTime(OffsetDateTime.now());
 		}
 		ActivityEntity storedActivity = findActivityForRecord(record);
+		OperationResult<ActivityRecord> result = new OperationResult<>();
+		result.setPayload(record);
 		if (storedActivity == null) {
-			return OperationStatus.NOT_EXISTING;
+			result.setStatus(NOT_EXISTING);
+			return result;
 		} else {
 			ActivityRecordEntity newRecordEntity = createNewEntityFromRecord(record);
 			List<ActivityRecordEntity> storedRecords = activityRecordRepository.findAllByActivityUuid(record.getActivityuuid());
 			if (storedRecords.isEmpty()) {
 				activityRecordRepository.save(newRecordEntity);
-				return OperationStatus.SUCCESS;
+				result.setStatus(SUCCESS);
+				return result;
 			} else {
-				ActivityRecordEntity lastRecord = storedRecords.get(storedRecords.size() - 1);
-				if ("STARTED".equals(lastRecord.getState())) {
-					lastRecord.setState(ENDED.toString());
-					lastRecord.setEndTime(record.getTime());
-					long duration = lastRecord.getEndTime().toEpochSecond() - lastRecord.getStartTime().toEpochSecond();
-					lastRecord.setDuration(duration);
-					activityRecordRepository.save(lastRecord);
+				ActivityRecordEntity lastRecordEntity = storedRecords.get(storedRecords.size() - 1);
+				if ("STARTED".equals(lastRecordEntity.getState())) {
+					lastRecordEntity.setState(ENDED.toString());
+					lastRecordEntity.setEndTime(record.getTime());
+					long duration = lastRecordEntity.getEndTime().toEpochSecond() - lastRecordEntity.getStartTime().toEpochSecond();
+					lastRecordEntity.setDuration(duration);
+					activityRecordRepository.save(lastRecordEntity);
+					record.setDuration((int) duration);
+					result.setPayload(record);
+
 				} else {
 					activityRecordRepository.save(newRecordEntity);
 				}
-				return OperationStatus.SUCCESS;
+				result.setStatus(SUCCESS);
+				return result;
 			}
 		}
 	}

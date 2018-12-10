@@ -37,7 +37,7 @@ components:
           type: string
           format: date-time
           description: The point in time this record was created
-        useruuid:
+        owneruuid:
           type: string
           description: The uuid of the user that created this record
         uuid:

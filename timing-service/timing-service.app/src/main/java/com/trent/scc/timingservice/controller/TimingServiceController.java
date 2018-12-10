@@ -4,6 +4,7 @@ import com.trent.scc.timingservice.api.ActivitiesApi;
 import com.trent.scc.timingservice.api.model.Activity;
 import com.trent.scc.timingservice.api.model.ActivityRecord;
 import com.trent.scc.timingservice.api.model.OperationResponse;
+import com.trent.scc.timingservice.service.OperationResult;
 import com.trent.scc.timingservice.service.OperationStatus;
 import com.trent.scc.timingservice.service.TimingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +23,24 @@ import java.util.List;
 @RestController
 public class TimingServiceController implements ActivitiesApi {
 
+	private final TimingService timingService;
 
 	@Autowired
-	private TimingService timingService;
+	public TimingServiceController(TimingService timingService) {
+		this.timingService = timingService;
+	}
 
 	@Override
 	public ResponseEntity<OperationResponse> addActivityRecord(@Valid @RequestBody ActivityRecord record, @PathVariable String activityId) {
-		String userUuid = getUserAuthentication();
-		record.setUseruuid(userUuid);
+		String ownerUuid = getUserAuthentication();
+		record.setOwneruuid(ownerUuid);
 		record.setActivityuuid(activityId);
-		OperationStatus status = timingService.addRecord(record);
+		OperationResult<ActivityRecord> result = timingService.addRecord(record);
+		ActivityRecord payload = result.getPayload();
 		OperationResponse response = new OperationResponse();
-		switch (status) {
+		switch (result.getStatus()) {
 			case SUCCESS:
-				response.addDataItem(record);
+				response.addDataItem(payload);
 				break;
 			case NOT_EXISTING:
 				response.error("Can not create a record for " + activityId + " as this activity does not exist.");
@@ -59,7 +64,9 @@ public class TimingServiceController implements ActivitiesApi {
 	public ResponseEntity<OperationResponse> createActivity(@RequestBody @Valid Activity activity) {
 		String ownerUuid = getUserAuthentication();
 		activity.setOwneruuid(ownerUuid);
-		OperationStatus status = timingService.addActivity(activity);
+		OperationResult<Activity> operationResult = timingService.addActivity(activity);
+		OperationStatus status = operationResult.getStatus();
+		Activity payload = operationResult.getPayload();
 		OperationResponse response = new OperationResponse();
 		switch (status) {
 			case SUCCESS:
@@ -74,7 +81,7 @@ public class TimingServiceController implements ActivitiesApi {
 				response.error("Unauthorized");
 				break;
 		}
-		response.addDataItem(activity);
+		response.addDataItem(payload);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
