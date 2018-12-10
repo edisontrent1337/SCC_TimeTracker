@@ -1,0 +1,39 @@
+swagger: "2.0"
+info:
+  version: "0.1"
+  title: "Platform Frontend Service"
+
+produces:
+- application/json
+
+paths:
+
+  /uiservices:
+    get:
+      operationId: getUiServices
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/UiServices'
+
+
+definitions:
+  UiServices:
+    type: object
+    properties:
+      services:
+        type: array
+        items:
+          $ref: '#/definitions/UiService'
+
+  UiService:
+    type: object
+    description: Services with name and url.
+    properties:
+      serviceId:
+        type: string
+      serviceName:
+        type: string
+      serviceAddress:
+        type: string

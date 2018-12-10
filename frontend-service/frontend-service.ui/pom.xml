@@ -2,15 +2,15 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>user-service.ui</artifactId>
+	<artifactId>frontend-service.ui</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>user-service.ui</name>
-	<description>Reactor for the User Service UI application.</description>
+	<name>frontend-service.ui</name>
+	<description>Reactor for the Frontend Service UI application.</description>
 
 	<parent>
-		<groupId>com.trent.scc</groupId>
-		<artifactId>user-service</artifactId>
+		<groupId>de.devboost.ilma</groupId>
+		<artifactId>frontend-service</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 

@@ -13,6 +13,7 @@
 		<module>service-registry</module>
 		<module>user-service</module>
 		<module>timing-service</module>
+		<module>frontend-service</module>
 	</modules>
 
 	<build>

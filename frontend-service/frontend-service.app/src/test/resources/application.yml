@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: frontend-service
+  profiles:
+    active: test
+
+server:
+  port: 9000
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://ilma-smart-service:password@localhost:8761/eureka
+  instance:
+    preferIpAddress: false
+    non-secure-port: 9000 # This needs to match with the server.port property for testing.
