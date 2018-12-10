@@ -67,12 +67,11 @@ services:
     ports:
     - 9123:9123
     networks:
-      ilma:
+      scc:
     depends_on:
     - scc-service-registry
     environment:
     - "EUREKA_URI=http://scc-service:password@scc-service-registry:8761/eureka"
-
 
 networks:
   scc:

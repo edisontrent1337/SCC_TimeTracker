@@ -1,13 +1,10 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import logo from "../images/logo.png";
+import colors from "../ilma-react/colors/colors"
 
 export default class Logo extends React.Component {
     render() {
         return (
-            <div>
-                <img src={logo} />
-            </div>
+            <i style={{color: colors.purple["500"], fontSize:"60px", paddingRight:"10px"}} className="fas fa-stopwatch"> </i>
         );
     }
 }
