@@ -28,7 +28,7 @@ class SignUpScreen extends React.Component {
     }
 
 
-        handleChange(event) {
+    handleChange(event) {
         this.setState({
             [event.target.name]: event.target.value,
 
@@ -51,40 +51,46 @@ class SignUpScreen extends React.Component {
     }
 
     render() {
+        const logo = <i style={{color: colors.blue["500"], fontSize: "60px"}}
+                        className="fas fa-stopwatch"> </i>;
         return (
-            <div className="col-lg-4" style={{margin: "50px auto"}}>
-                <CredentialForm
-                    color={colors.green["500"]}
-                    title="Sign Up to ilma"
-                    onChange={this.handleChange}
-                    error={this.props.error}
-                    links={[{
-                        href: "/",
-                        value: "Go back"
-                    }]}
-                    inputs={[
-                        {
-                            id: "username",
-                            type: "text",
-                            label: "USERNAME or EMAIL",
-                            hint: ["Use at least 3 characters."]
-                        },
-                        {
-                            id: "password",
-                            type: "password",
-                            label: "PASSWORD",
-                            hint: ["Use at least 8 characters."],
-                        },
-                        {
-                            type: "button",
-                            value: "Sign Up",
-                            handler: this.handleSubmit,
-                            validator: this.state.validForm,
-                            hint: ["By signing up to ilma, you agree to our ", <a href="#">Terms and conditions</a>, "."],
-                            mode:"big"
-                        }
-                    ]}
-                />
+            <div style={{backgroundColor:colors.blue["500"]}}>
+                <div className="col-lg-4" style={{margin: "0px auto", backgroundColor: colors.blue["500"]}}>
+                    <CredentialForm
+                        color={colors.green["500"]}
+                        title={<span>Sign Up for<br/> TimeTracker</span>}
+                        onChange={this.handleChange}
+                        logo={logo}
+                        error={this.props.error}
+                        links={[{
+                            href: "/",
+                            value: "Go back"
+                        }]}
+                        inputs={[
+                            {
+                                id: "username",
+                                type: "text",
+                                label: "USERNAME or EMAIL",
+                                hint: ["Use at least 3 characters."]
+                            },
+                            {
+                                id: "password",
+                                type: "password",
+                                label: "PASSWORD",
+                                hint: ["Use at least 8 characters."],
+                            },
+                            {
+                                type: "button",
+                                value: "Sign Up",
+                                handler: this.handleSubmit,
+                                validator: this.state.validForm,
+                                hint: ["By signing up to TimeTracker, you agree to our ",
+                                    <a href="#">Terms and conditions</a>, "."],
+                                mode: "big"
+                            }
+                        ]}
+                    />
+                </div>
             </div>
         );
     }

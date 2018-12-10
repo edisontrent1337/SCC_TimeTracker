@@ -25,7 +25,7 @@ class Header extends React.Component {
                     margin: "0px auto",
                     height: "56px",
                     padding: "10px",
-                    marginBottom: "20px",
+                    marginBottom: "30px",
                     display: "flex",
                     flexDirection: "row",
                     paddingBottom: "10px",
@@ -43,7 +43,7 @@ class Header extends React.Component {
                         }}
                     >
                         <div style={{float: "left"}}><Logo/></div>
-                        <span style={{color:colors.purple["900"]}}>Time <br/>Tracker
+                        <span style={{color:colors.blue["900"]}}>Time <br/>Tracker
                             <br/></span>
                         <span style={{color:colors.blueGrey["200"], fontSize:"18px"}}>v0.01</span>
                     </a>

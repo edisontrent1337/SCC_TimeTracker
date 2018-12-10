@@ -6,142 +6,158 @@ import {userActions} from "../../actions/user.actions.js";
 import colors from "../../ilma-react/colors/colors.js";
 
 class LoginScreen extends React.Component {
-	constructor(props) {
-		super(props);
+    constructor(props) {
+        super(props);
 
-		this.state = {
-			username: "",
-			password: "",
-			loginSubmitted: false,
-			validForm: false
-		};
+        this.state = {
+            username: "",
+            password: "",
+            loginSubmitted: false,
+            validForm: false
+        };
 
-		this.handleChange = this.handleChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.validateForm = this.validateForm.bind(this);
-	}
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.validateForm = this.validateForm.bind(this);
+    }
 
-	componentDidMount() {
-	}
+    componentDidMount() {
+    }
 
-	handleChange(event) {
-		this.setState({
-			[event.target.name]: event.target.value,
+    handleChange(event) {
+        this.setState({
+            [event.target.name]: event.target.value,
 
-		}, () => this.setState({
-			validForm: this.validateForm()
-		}));
+        }, () => this.setState({
+            validForm: this.validateForm()
+        }));
 
-	}
+    }
 
-	validateForm() {
-		return this.state.username.length > 0 && this.state.password.length > 0;
-	}
+    validateForm() {
+        return this.state.username.length > 0 && this.state.password.length > 0;
+    }
 
-	handleSubmit(event) {
-		event.preventDefault();
-		const credentials = {
-			username: this.state.username,
-			password: this.state.password
-		};
+    handleSubmit(event) {
+        event.preventDefault();
+        const credentials = {
+            username: this.state.username,
+            password: this.state.password
+        };
 
-		this.props.dispatch(userActions.login(credentials));
-		this.setState({
-			loginSubmitted: true
-		});
-		window.postMessage("loggedIn","*");
-	}
+        this.props.dispatch(userActions.login(credentials));
+        this.setState({
+            loginSubmitted: true
+        });
+        window.postMessage("loggedIn", "*");
+    }
 
-	render() {
-		return (
-			<Jumbotron
-				style={{
-					backgroundColor: "#263238",
-					borderRadius: "0px",
-					color: "#FFF"
-				}}
-			>
-				<div
-					className="container"
-				>
-					<div className="row">
-						<div
-							className="col-lg-8"
-							style={{
-								fontSize: "18px"
-							}}
-						>
-							<h1
-								style={{
-									fontSize: "48px"
-								}}
-							>
-								Built with <br/> Collaboration in mind.
-							</h1>
-							Ilma offers a free collaboration infrastructure for all parties
-							involved in building projects. Start today and use it for:
-							<ul>
-								<li>
-									Distributed collaboration on design, maintenance, operation
-									and optimization of buildings,
-								</li>
-								<li>
-									Centralized storage and versioning of Building Information
-									Models(BIM IFC),
-								</li>
-								<li>
-									Automation of complex planing and reporting tasks using
-									Smart Services.
-								</li>
-							</ul>
-							By signing up you accept the Ilma privacy policies and general
-							terms.
-						</div>
-						<div className="col-lg-4">
+    render() {
+        const logo = <i style={{color: colors.blue["500"], fontSize: "60px"}}
+                        className="fas fa-stopwatch"> </i>;
+        return (
+            <Jumbotron
+                style={{
+                    backgroundColor: colors.blue["500"],
+                    borderRadius: "0px",
+                    color: "#FFF"
+                }}
+            >
+                <div
+                    className="container"
+                >
+                    <div className="row">
+                        <div
+                            className="col-lg-8"
+                            style={{
+                                fontSize: "18px"
+                            }}
+                        >
+                            <h1
+                                style={{
+                                    fontSize: "48px",
+                                    textAlign: "center"
+                                }}
+                            >
+                                <span style={{color: "#ffffff", fontSize: "24px"}}>
+                                    <i style={{paddingRight: "10px"}} className="fas fa-bed"> </i>
+                                    <i style={{paddingRight: "10px"}} className="fas fa-graduation-cap"> </i>
+                                    <i style={{paddingRight: "10px"}} className="fas fa-utensils"> </i>
+                                    <i style={{paddingRight: "10px"}} className="fas fa-football-ball"> </i>
+                                    <i style={{paddingRight: "10px"}} className="fas fa-hammer"> </i>
+                                    <i style={{paddingRight: "10px"}} className="fas fa-laptop-code"> </i>
+                                    <i style={{paddingRight: "10px"}} className="fas fa-dumbbell"> </i>
+                                    <i style={{paddingRight: "10px"}} className="fas fa-building"> </i>
+                                    <i style={{paddingRight: "10px"}} className="fas fa-theater-masks"> </i>
+                                    <i style={{paddingRight: "10px"}} className="fas fa-book"> </i>
+                                    <i style={{paddingRight: "10px"}} className="fas fa-shower"> </i>
+                                </span>
+                                <br/>
+                                Your time is precious. <br/> Track the time you invest!
+                            </h1>
+                            TimeTracker is a tool that allows you to track the time for different activities
+                            in your life. Find hot spots or recognize patterns in the way you spend your time.
+                            TimeTracker offers the following functionality:
+                            <ul>
+                                <li>
+                                    Create Activities and categories
+                                </li>
+                                <li>
+                                    Store time records of your activities
+                                </li>
+                                <li>
+                                    See statistics and find patterns in your time management.
+                                </li>
+                            </ul>
+                            By signing up you accept the TimeTracker privacy policies and general
+                            terms.
+                        </div>
+                        <div className="col-lg-4">
 
-							<CredentialForm
-								color={colors.blue["500"]}
-								title="Sign in to Ilma"
-								onChange={this.handleChange}
-								error={this.props.error}
-								inputs={[
-									{
-										id: "username",
-										type: "text",
-										label: "USERNAME or EMAIL"
-									},
-									{
-										id: "password",
-										type: "password",
-										label: "PASSWORD",
-									},
-									{
-										type: "button",
-										value: "Sign In",
-										handler: this.handleSubmit,
-										validator: this.state.validForm,
-										mode: "big"
-									}
-								]}
-								links={[{
-									href: "/signup",
-									value: "New here? Create an account!"
-								}]}
-							/>
-						</div>
-					</div>
-				</div>
-			</Jumbotron>
-		);
-	}
+                            <CredentialForm
+                                color={colors.blue["500"]}
+                                title={<span>Sign in to <br/> TimeTracker</span>}
+                                onChange={this.handleChange}
+                                error={this.props.error}
+                                logo={logo}
+                                inputs={[
+                                    {
+                                        id: "username",
+                                        type: "text",
+                                        label: "USERNAME or EMAIL"
+                                    },
+                                    {
+                                        id: "password",
+                                        type: "password",
+                                        label: "PASSWORD",
+                                    },
+                                    {
+                                        type: "button",
+                                        value: "Sign In",
+                                        handler: this.handleSubmit,
+                                        validator: this.state.validForm,
+                                        mode: "big"
+                                    }
+                                ]}
+                                links={[{
+                                    href: "/signup",
+                                    value: "New here? Create an account!"
+                                }]}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </Jumbotron>
+        );
+    }
 }
 
 function mapStateToProps(state) {
-	const {token, error} = state.authReducer;
-	return {
-		token,
-		error
-	};
+    const {token, error} = state.authReducer;
+    return {
+        token,
+        error
+    };
 }
 
 LoginScreen = connect(mapStateToProps)(LoginScreen);

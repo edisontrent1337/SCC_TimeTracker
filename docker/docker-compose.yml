@@ -62,7 +62,7 @@ services:
     - "SPRING_DATASOURCE_PASSWORD=root"
     - "EUREKA_URI=http://scc-service:password@scc-service-registry:8761/eureka"
 
-  frontend-service:
+  scc-frontend-service:
     image: "scc-frontend-service:latest"
     ports:
     - 9123:9123
