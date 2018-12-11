@@ -16,6 +16,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.ENDED;
@@ -87,13 +89,12 @@ public class TimingServiceTest {
 				assertLatestRecordState(ENDED, activityUuid);
 				expectedTotalRecords++;
 				assertTotalNumberOfRecords(expectedTotalRecords);
-				assertLatestRecordDuration(activityUuid,60);
+				assertLatestRecordDuration(activityUuid, 60);
 			}
 		}
 		assertTotalNumberOfRecords(2);
 		assertNumberOfRecordsFor(activityUuid, 2);
 		assertTotalDurationForActivity(activityUuid, 120);
-
 
 		Activity otherActivity = createActivity("Working", "Done because we have to");
 		timingService.addActivity(otherActivity);
@@ -112,6 +113,23 @@ public class TimingServiceTest {
 		assertAddRecord(otherRecord);
 		assertTotalDurationForActivity(otherActivityUuid, 180);
 
+	}
+
+	@Test
+	public void getAllRecordsForUserWorksCorrectly() {
+		String activityName = "Studying";
+		String userUuid = getUuidFromName(activityName);
+		Activity activity = createActivity(activityName, "Done because we have to");
+		timingService.addActivity(activity);
+
+		ActivityRecord record = createActivityRecord(activity);
+		for (int i = 0; i < 10; i++) {
+			record.setTime(OffsetDateTime.now().plusMinutes(i));
+			assertAddRecord(record);
+		}
+
+		List<ActivityRecord> records = timingService.getAllRecordsForUser(userUuid);
+		assertEquals("THe number of records recorded for the user is wrong",5, records.size());
 	}
 
 	private void assertNumberOfRecordsFor(String activityUuid, int expectedLength) {
@@ -171,5 +189,9 @@ public class TimingServiceTest {
 		activity.description(description);
 		activity.setOwneruuid(UUID.nameUUIDFromBytes(name.getBytes()).toString());
 		return activity;
+	}
+
+	private String getUuidFromName(String name) {
+		return UUID.nameUUIDFromBytes(name.getBytes()).toString();
 	}
 }

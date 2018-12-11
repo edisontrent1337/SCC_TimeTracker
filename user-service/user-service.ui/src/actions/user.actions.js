@@ -32,7 +32,7 @@ function login(credentials) {
 			}
 		).then(() => {
             if(typeof localStorage.getItem("user") !== 'undefined') {
-				history.push("/projects");
+				history.push("/dashboard");
 			}
 		});
 	};

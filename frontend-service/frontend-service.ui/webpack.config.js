@@ -66,7 +66,8 @@ module.exports = {
         }),
         //
         new webpack.DefinePlugin({
-            "process.env.NODE_ENV": JSON.stringify("development")
+            TIMING_SERVICE_BASE_API_URL: JSON.stringify('http://localhost:8762/timing-service'),
+            USER_SERVICE_BASE_API_URL: JSON.stringify('http://localhost:8762/user-service')
         }),
         new webpack.optimize.LimitChunkCountPlugin({
             maxChunks: 1

@@ -3,6 +3,7 @@ package com.trent.scc.timingservice.service;
 
 import com.trent.scc.timingservice.api.model.Activity;
 import com.trent.scc.timingservice.api.model.ActivityRecord;
+import com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum;
 import com.trent.scc.timingservice.repository.ActivityEntity;
 import com.trent.scc.timingservice.repository.ActivityRecordEntity;
 import com.trent.scc.timingservice.repository.ActivityRecordRepository;
@@ -13,8 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.ENDED;
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.STARTED;
@@ -143,12 +143,42 @@ public class TimingService implements ITimingService {
 
 	@Override
 	public List<ActivityRecord> getAllRecordsForUser(String userUuid) {
-		return null;
+		List<ActivityRecord> result = new ArrayList<>();
+		List<ActivityEntity> userActivities = activityRepository.findAllByOwnerUuid(userUuid);
+
+		for (ActivityEntity activityEntity : userActivities) {
+			String activityUuid = activityEntity.getUuid();
+			List<ActivityRecordEntity> records = activityRecordRepository.findAllByActivityUuid(activityUuid);
+			for (ActivityRecordEntity recordEntity : records) {
+				ActivityRecord record = createNewRecordFromEntity(recordEntity);
+				record.setActivityName(activityEntity.getName());
+				result.add(record);
+			}
+		}
+		return result;
+	}
+
+	private ActivityRecord createNewRecordFromEntity(ActivityRecordEntity recordEntity) {
+		ActivityRecord result = new ActivityRecord();
+		result.setDuration((int) recordEntity.getDuration());
+		result.setActivityuuid(recordEntity.getActivityUuid());
+		result.setState(StateEnum.valueOf(recordEntity.getState()));
+		System.out.println(result);
+		return result;
 	}
 
 	private ActivityEntity findActivityForRecord(ActivityRecord record) {
 		String activityUuid = record.getActivityuuid();
 		return activityRepository.findByUuid(activityUuid);
+	}
+
+	private Activity createActivityFromEntity(ActivityEntity entity) {
+		Activity activity = new Activity();
+		activity.setUuid(entity.getUuid());
+		activity.setDescription(entity.getDescription());
+		activity.setName(entity.getName());
+		activity.setOwneruuid(entity.getOwnerUuid());
+		return activity;
 	}
 
 	private ActivityEntity createNewEntity(Activity activity) {

@@ -93,11 +93,12 @@ class LoginScreen extends React.Component {
                                     <i style={{paddingRight: "10px"}} className="fas fa-shower"> </i>
                                 </span>
                                 <br/>
-                                Your time is precious. <br/> Track the time you invest!
+                                Your time is precious. <br/> Track your investments!
                             </h1>
-                            TimeTracker is a tool that allows you to track the time for different activities
-                            in your life. Find hot spots or recognize patterns in the way you spend your time.
-                            TimeTracker offers the following functionality:
+                            TimeTracker is a tool that allows you to track the amount of time for different activities
+                            that you take part in daily in your life.
+                            <br/> TimeTracker helps to find hot spots or recognize patterns in the way you spend your time.
+                            <br/> We offer the following features:
                             <ul>
                                 <li>
                                     Create Activities and categories
@@ -109,8 +110,7 @@ class LoginScreen extends React.Component {
                                     See statistics and find patterns in your time management.
                                 </li>
                             </ul>
-                            By signing up you accept the TimeTracker privacy policies and general
-                            terms.
+
                         </div>
                         <div className="col-lg-4">
 
@@ -144,6 +144,8 @@ class LoginScreen extends React.Component {
                                     value: "New here? Create an account!"
                                 }]}
                             />
+                            By signing up you accept the TimeTracker privacy policies and general
+                            terms.
                         </div>
                     </div>
                 </div>

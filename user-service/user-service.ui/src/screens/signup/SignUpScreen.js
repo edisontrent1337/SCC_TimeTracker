@@ -55,7 +55,7 @@ class SignUpScreen extends React.Component {
                         className="fas fa-stopwatch"> </i>;
         return (
             <div style={{backgroundColor:colors.blue["500"]}}>
-                <div className="col-lg-4" style={{margin: "0px auto", backgroundColor: colors.blue["500"]}}>
+                <div className="col-lg-4" style={{margin: "0px auto", padding:"40px 0", backgroundColor: colors.blue["500"]}}>
                     <CredentialForm
                         color={colors.green["500"]}
                         title={<span>Sign Up for<br/> TimeTracker</span>}

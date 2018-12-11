@@ -33,6 +33,9 @@ components:
         activityuuid:
           type: string
           description: The uuid of the activity.
+        activityName:
+          type: string
+          desciption: The name of the activity.
         time:
           type: string
           format: date-time
@@ -160,6 +163,22 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/operationResponse"
+
+  /activities/records:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getAllRecordsForUser
+      description: Returns all records for a user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+
 
   /activities/stats:
     get:

@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server --open --color --port 3000 --config webpack.config.js",
+    "start": "webpack-dev-server --open --color --port 3000 --config webpack.config.dev.js",
     "prepublish": "rm -rf ../frontend-service.app/src/main/resources/static/dist && npm run build",
-    "build": "rimraf ../frontend-service.app/src/main/resources/static/dist &&  webpack --progress --profile --env.API_BASE_URL=http://localhost:8762"
+    "build": "rimraf ../frontend-service.app/src/main/resources/static/dist &&  webpack --progress --profile"
   },
   "dependencies": {
     "angular": "^1.7.1",
@@ -20,7 +20,8 @@
     "single-spa-angularjs": "^3.0.1",
     "single-spa-react": "^2.5.4",
     "systemjs-plugin-babel": "0.0.25",
-    "url-loader": "^1.1.1"
+    "url-loader": "^1.1.1",
+    "webpack-merge": "^4.1.5"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

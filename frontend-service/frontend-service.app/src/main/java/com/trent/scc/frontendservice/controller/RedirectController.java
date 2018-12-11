@@ -6,12 +6,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class RedirectController {
-	@RequestMapping(value = "/services/{path:[^\\.]+}")
+
+	@RequestMapping(value = "/activities/{path:[^\\.]+}")
 	public String redirectToServiceOverview() {
-		return "redirect:/services";
+		return "redirect:/activities";
 	}
 
-	@RequestMapping(value = "/services")
+	@RequestMapping(value = "/activities")
 	public String inPlace() {
 		return "forward:/";
 	}
@@ -21,13 +22,8 @@ public class RedirectController {
 		return "forward:/";
 	}
 
-	@RequestMapping(value = "/projects")
+	@RequestMapping(value = "/dashboard")
 	public String projects() {
-		return "forward:/";
-	}
-
-	@RequestMapping(value = "/project/{path:[^\\.]+}")
-	public String project() {
 		return "forward:/";
 	}
 
