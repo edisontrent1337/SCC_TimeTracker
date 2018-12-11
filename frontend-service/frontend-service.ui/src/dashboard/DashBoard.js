@@ -5,6 +5,7 @@ import Tab from "../ilma-react/tab/Tab";
 import colors from "../ilma-react/colors/colors";
 import Button from "../ilma-react/button/Button";
 import "../ilma-react/table/table.fx.css";
+import Hint from "../ilma-react/hints/Hint";
 
 export default class DashBoard extends React.Component {
 
@@ -16,6 +17,7 @@ export default class DashBoard extends React.Component {
         };
 
         this.loadActivities = this.loadActivities.bind(this);
+        this.convertDuration = this.convertDuration.bind(this);
     }
 
     loadActivities() {
@@ -73,7 +75,7 @@ export default class DashBoard extends React.Component {
                                             </a>
                                         </td>
                                         <td width="50%" style={{color: colors.grey["600"]}}>
-                                            {record.duration} s
+                                            {this.convertDuration(record.duration)}
                                         </td>
                                         <td width="20%">
                                             <div align="right" style={{float: "right"}}>
@@ -92,8 +94,29 @@ export default class DashBoard extends React.Component {
                         </table>
                     </div>
                     }
+                    {numberOfRecords === 0 &&
+                    <div>
+                        <Tab title={"Your Records"}/>
+                        <Hint heading={"Nothing here!"}
+                              buttonText={"Create Record"}
+                              text={"There seem to be no records yet. But don't worry - You can start collaboration now by creating your very first project!"}
+                        />
+
+                    </div>
+                    }
                 </div>
             </div>
         );
+    }
+
+    convertDuration(seconds) {
+        let minutes = Math.floor(seconds/60);
+        console.log(minutes);
+        let remainingSeconds = seconds % 60;
+        if (remainingSeconds < 10) {
+            remainingSeconds = "0" + remainingSeconds;
+        }
+
+        return minutes + ":" + remainingSeconds + " min";
     }
 }
