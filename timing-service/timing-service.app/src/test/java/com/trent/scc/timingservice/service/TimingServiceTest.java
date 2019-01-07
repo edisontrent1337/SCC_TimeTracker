@@ -17,7 +17,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.ENDED;
@@ -29,6 +28,11 @@ import static org.junit.Assert.assertNotNull;
 @SpringBootTest(classes = TimingServiceApp.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class TimingServiceTest {
+
+	private static final String DEFAULT_USER_NAME = "userOne";
+	private static final String DEFAULT_ACTIVITY_NAME = "Preparation for exam";
+	private static final String DEFAULT_ACTIVITY_DESCRIPTION = "Done usually at home or in library";
+	private static final String DEFAULT_ACTIVITY_TAG = "Studies";
 
 	@Autowired
 	private TimingService timingService;
@@ -48,34 +52,30 @@ public class TimingServiceTest {
 
 	@Test
 	public void createActivityWorksCorrectly() {
-		String activityName = "Sleeping";
-		String activityDescription = "Usually done late at night";
 
-		Activity activity = createActivity(activityName, activityDescription);
+		Activity activity = createDefaultActivity();
 		OperationResult<Activity> operationResult = timingService.addActivity(activity);
 		OperationStatus status = operationResult.getStatus();
 		assertEquals("The operation status is wrong.", OperationStatus.SUCCESS, status);
 		assertEquals("The number of saved activities is wrong", 1, activityRepository.count());
 
-
 		operationResult = timingService.addActivity(activity);
 		status = operationResult.getStatus();
 		assertEquals("The service should throw a duplicate error", OperationStatus.DUPLICATE_FAILURE, status);
 
-		ActivityEntity entity = activityRepository.findByNameAndOwnerUuid(activityName, activity.getOwneruuid());
-		assertEquals("The saved name was wrong", activityName, entity.getName());
-		assertEquals("The saved description was wrong", activityDescription, entity.getDescription());
+		ActivityEntity entity = activityRepository.findByNameAndOwnerUuid(DEFAULT_ACTIVITY_NAME, activity.getOwneruuid());
+		assertEquals("The saved name was wrong", DEFAULT_ACTIVITY_NAME, entity.getName());
+		assertEquals("The saved description was wrong", DEFAULT_ACTIVITY_DESCRIPTION, entity.getDescription());
 		assertNotNull("The uuid of the activity was null.", entity.getUuid());
+		assertNotNull("The tag of the activity was null.", entity.getTag());
 		assertNotNull("The owner uuid of the activity was null.", entity.getOwnerUuid());
 
 	}
 
 	@Test
 	public void addActivityRecordWorksCorrectly() {
-		String activityName = "Studying";
-		Activity activity = createActivity(activityName, "Done because we have to");
+		Activity activity = createDefaultActivity();
 		timingService.addActivity(activity);
-
 		ActivityRecord record = createActivityRecord(activity);
 		String activityUuid = record.getActivityuuid();
 
@@ -96,7 +96,7 @@ public class TimingServiceTest {
 		assertNumberOfRecordsFor(activityUuid, 2);
 		assertTotalDurationForActivity(activityUuid, 120);
 
-		Activity otherActivity = createActivity("Working", "Done because we have to");
+		Activity otherActivity = createActivity(DEFAULT_USER_NAME, "Working at DevBoost", "Done because we have to", "Working");
 		timingService.addActivity(otherActivity);
 
 		ActivityRecord otherRecord = createActivityRecord(otherActivity);
@@ -117,19 +117,38 @@ public class TimingServiceTest {
 
 	@Test
 	public void getAllRecordsForUserWorksCorrectly() {
-		String activityName = "Studying";
-		String userUuid = getUuidFromName(activityName);
-		Activity activity = createActivity(activityName, "Done because we have to");
+		Activity activity = createDefaultActivity();
 		timingService.addActivity(activity);
+		ActivityRecord record = createActivityRecord(activity);
+		for (int i = 0; i < 10; i++) {
+			record.setTime(OffsetDateTime.now().plusMinutes(i));
+			assertAddRecord(record);
+		}
+		String userUuid = getUuidFromName(DEFAULT_USER_NAME);
+		List<ActivityRecord> records = timingService.getAllRecordsForUser(userUuid);
+		assertEquals("The number of records recorded for the user is wrong", 5, records.size());
+	}
 
+	@Test
+	public void getAllRecordsForTagWorksCorrectly() {
+		Activity activity = createDefaultActivity();
+		timingService.addActivity(activity);
 		ActivityRecord record = createActivityRecord(activity);
 		for (int i = 0; i < 10; i++) {
 			record.setTime(OffsetDateTime.now().plusMinutes(i));
 			assertAddRecord(record);
 		}
 
-		List<ActivityRecord> records = timingService.getAllRecordsForUser(userUuid);
-		assertEquals("THe number of records recorded for the user is wrong",5, records.size());
+		String userOneUuid = getUuidFromName(DEFAULT_USER_NAME);
+		List<ActivityRecord> records = timingService.getAllRecordsForTag(userOneUuid, DEFAULT_ACTIVITY_TAG);
+		assertEquals("The number of records recorded for the user is wrong", 5, records.size());
+		// Creating another activity by a different user but tagged the same as the activity above
+		Activity otherActivityByDifferentUser = createActivity("userTwo", "Preparation Math", "Calculating stuff", DEFAULT_ACTIVITY_TAG);
+		record = createActivityRecord(otherActivityByDifferentUser);
+		for (int i = 0; i < 10; i++) {
+			record.setTime(OffsetDateTime.now().plusMinutes(i));
+			assertAddRecord(record);
+		}
 	}
 
 	private void assertNumberOfRecordsFor(String activityUuid, int expectedLength) {
@@ -183,12 +202,21 @@ public class TimingServiceTest {
 		return record;
 	}
 
-	private Activity createActivity(String name, String description) {
+	private Activity createActivity(String userName, String name, String description, String tag) {
 		Activity activity = new Activity();
 		activity.setName(name);
 		activity.description(description);
-		activity.setOwneruuid(UUID.nameUUIDFromBytes(name.getBytes()).toString());
+		activity.setTag(tag);
+		activity.setOwneruuid(UUID.nameUUIDFromBytes(userName.getBytes()).toString());
 		return activity;
+	}
+
+	private Activity createDefaultActivity() {
+		return new Activity()
+				.name(DEFAULT_ACTIVITY_NAME)
+				.description(DEFAULT_ACTIVITY_DESCRIPTION)
+				.tag(DEFAULT_ACTIVITY_TAG)
+				.owneruuid(UUID.nameUUIDFromBytes(DEFAULT_USER_NAME.getBytes()).toString());
 	}
 
 	private String getUuidFromName(String name) {

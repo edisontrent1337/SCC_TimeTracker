@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.ENDED;
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.STARTED;
@@ -101,22 +103,37 @@ public class TimingService implements ITimingService {
 	}
 
 	@Override
-	public OperationStatus removeRecord(String recordUuid) {
+	public OperationResult<ActivityRecord> removeRecord(String recordUuid) {
 		return null;
 	}
 
 	@Override
-	public ActivityRecord updateRecord(ActivityRecord record) {
+	public OperationResult<ActivityRecord> updateRecord(ActivityRecord record) {
 		return null;
 	}
 
 	@Override
-	public OperationStatus deleteRecord(String recordUuid) {
+	public OperationResult<ActivityRecord> deleteRecord(String recordUuid) {
 		return null;
 	}
 
 	@Override
-	public OperationStatus getApplicationStatistics() {
+	public OperationResult<?> getApplicationStatistics() {
+		return null;
+	}
+
+	@Override
+	public OperationResult<Activity> removeActivity(String activityUuid) {
+		return null;
+	}
+
+	@Override
+	public OperationResult<Activity> updateActivity(Activity updatedActivity) throws NoSuchElementException {
+		return null;
+	}
+
+	@Override
+	public OperationResult<Activity> deleteActivity(String activityUuid) throws NoSuchElementException {
 		return null;
 	}
 
@@ -158,6 +175,14 @@ public class TimingService implements ITimingService {
 		return result;
 	}
 
+	@Override
+	public List<ActivityRecord> getAllRecordsForTag(String tag) {
+		List<ActivityRecord> result = new ArrayList<>();
+		List<ActivityEntity> userActivities = activityRepository.findAllByTag(tag);
+
+		return null;
+	}
+
 	private ActivityRecord createNewRecordFromEntity(ActivityRecordEntity recordEntity) {
 		ActivityRecord result = new ActivityRecord();
 		result.setDuration((int) recordEntity.getDuration());
@@ -189,6 +214,7 @@ public class TimingService implements ITimingService {
 		entity.setDescription(activity.getDescription());
 		entity.setOwnerUuid(activity.getOwneruuid());
 		entity.setUuid(UUID.randomUUID().toString());
+		entity.setTag(activity.getTag());
 		return entity;
 	}
 
