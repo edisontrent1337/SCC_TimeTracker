@@ -10,13 +10,15 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-
     activity:
       description: An activity that can be tracked
       properties:
         name:
           type: string
           description: The name of the activity
+        tag:
+          type: string
+          description: The tag of the activity
         uuid:
           type: string
           description: The uuid of the activity
@@ -27,6 +29,17 @@ components:
           type: string
           description: The uuid of the user that owns this activity
 
+    operationResponse:
+      properties:
+        error:
+          type: string
+          description: Used to indicate error messages. Null if no error occured
+        data:
+          type: array
+          description: Attached data of response
+          items:
+            type: object
+
     activityRecord:
       description: A record of an activity that a user has submitted
       properties:
@@ -35,7 +48,7 @@ components:
           description: The uuid of the activity.
         activityName:
           type: string
-          desciption: The name of the activity.
+          description: The name of the activity.
         time:
           type: string
           format: date-time
@@ -54,18 +67,6 @@ components:
           enum:
           - STARTED
           - ENDED
-
-    operationResponse:
-      properties:
-        error:
-          type: string
-          description: Used to indicate error messages. Null if no error occured
-        data:
-          type: array
-          description: Attached data of response
-          items:
-            type: object
-
 paths:
   /activities/:
     post:
@@ -177,8 +178,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/operationResponse"
-
-
 
   /activities/stats:
     get:
