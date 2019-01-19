@@ -21,8 +21,8 @@ module.exports = merge.strategy({ plugins: "prepend" })(baseConfig, {
     plugins: [
         new webpack.DefinePlugin({
             MODE: JSON.stringify("standalone"),
-            TIMING_SERVICE_BASE_API_URL: JSON.stringify('http://localhost:8762/timing-service'),
-            USER_SERVICE_BASE_API_URL: JSON.stringify('http://localhost:8080')
+            TIMING_SERVICE_BASE_API_URL: JSON.stringify('http://localhost:8080'),
+            USER_SERVICE_BASE_API_URL: JSON.stringify('http://localhost:8081')
         })
     ]
 });
