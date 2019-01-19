@@ -58,6 +58,44 @@ We are planning to use a droplet on DigitalOcean to host our service.
 ** compare tracked activities (overlaying graphics)
 * may we generate the diagrams on the server and not in the client (token; graphic)
 
+
+## ToDo
+* Dokumentation
+** Auszug aus Folien siehe unten
+** Idee
+** Umsetzung
+** Technologien 
+** Sicherheitskonzepte
+** API 
+*** Mit Swagger automatisiert?
+* Features
+** UI für Anlegen von Aktivitäten 
+** UI für Record erstellen
+** UI Statistik (privat/global) 
+** CRUD-Operationen für Records vollständig implementiere 
+** Statistiktool im Backend
+* Präsentation 
+** 
+* Roll-out 
+* Anlegen von Records für Präsentation der Statistiken bei Abgabe 
+ 
+
+
+#### Aus den Folien zur Abgabe: 
+
+* Gesamtergebnis mit Client-Applikationen und Sicherheits-Erweiterungen, Docker-Container 
+* Software
+** Quellcode im BitBucket-Repro
+** *Packages zum direkten Deployment als Docker-Container*
+** Deployment des Service in Cloud-Infrastruktur
+* Dokumentation 
+** Angaben zum Team, Vorgehensweise 
+** Verwendete Plattform /Software (Installationshinweise, Versionen) 
+** *Schnittstellenbeschreibung des Web Services (WSDL/WADL/Swagger, ...)*
+** Bedienungsanleitung für Clients 
+** Feedback + Kritik am Praktikum
+
+
 ## Deadlines
 [options="header", cols="1,10"]
 |==========
@@ -66,3 +104,5 @@ We are planning to use a droplet on DigitalOcean to host our service.
 | 28.01.2019     | Finale Abgabe                                                                           
 | 29.01.2019     | Gesamtergebnis mit Client-Applikationen und Sicherheits-Erweiterungen, Docker-Container 
 |=====
+
+
