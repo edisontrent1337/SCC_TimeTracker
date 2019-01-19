@@ -72,10 +72,10 @@ We are planning to use a droplet on DigitalOcean to host our service.
 ** UI für Anlegen von Aktivitäten 
 ** UI für Record erstellen
 ** UI Statistik (privat/global) 
+** HTTPS
 ** CRUD-Operationen für Records vollständig implementiere 
 ** Statistiktool im Backend
 * Präsentation 
-** 
 * Roll-out 
 * Anlegen von Records für Präsentation der Statistiken bei Abgabe 
  

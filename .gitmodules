@@ -1,6 +1,0 @@
-[submodule "user-service/user-service.ui/src/ilma-react"]
-	path = user-service/user-service.ui/src/ilma-react
-	url = https://github.com/edisontrent1337/ilma-react
-[submodule "frontend-service/frontend-service.ui/src/ilma-react"]
-	path = frontend-service/frontend-service.ui/src/ilma-react
-	url = https://github.com/edisontrent1337/ilma-react

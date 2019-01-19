@@ -62,7 +62,7 @@ module.exports = {
 
     plugins: [
         new HtmlWebpackPlugin({
-            title: "Ilma User Login",
+            title: "Web User Login",
             template: __dirname + "/public/index.html",
             inject: "body",
             filename: "index.html"
