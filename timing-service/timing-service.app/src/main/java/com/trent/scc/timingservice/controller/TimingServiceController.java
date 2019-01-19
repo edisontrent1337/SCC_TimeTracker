@@ -33,9 +33,7 @@ public class TimingServiceController implements ActivitiesApi {
 
 	@Override
 	public ResponseEntity<OperationResponse> addActivityRecord(@PathVariable String activityId) {
-		String ownerUuid = getUserAuthentication();
 		ActivityRecord record = new ActivityRecord();
-		record.setOwneruuid(ownerUuid);
 		record.setActivityuuid(activityId);
 		OperationResult<ActivityRecord> result = timingService.addRecord(record);
 		ActivityRecord payload = result.getPayload();

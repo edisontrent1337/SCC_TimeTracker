@@ -52,10 +52,15 @@ components:
         time:
           type: string
           format: date-time
-          description: The point in time this record was created
-        owneruuid:
+          description: The point in time a record update was issued (e.g. the request was sent to the server)
+        startTime:
           type: string
-          description: The uuid of the user that created this record
+          format: date-time
+          description: The point in time this record was created
+        endTime:
+          type: string
+          format: date-time
+          description: The point in time this record ended
         uuid:
           type: string
           description: The uuid of this record

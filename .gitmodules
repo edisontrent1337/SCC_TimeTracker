@@ -1,0 +1,9 @@
+[submodule "user-service/user-service.ui/src/web-react"]
+	path = user-service/user-service.ui/src/web-react
+	url = https://github.com/edisontrent1337/web-react
+[submodule "user-service/user-service.ui/src/--force"]
+	path = user-service/user-service.ui/src/--force
+	url = https://github.com/edisontrent1337/web-react
+[submodule "frontend-service/frontend-service.ui/src/web-react"]
+	path = frontend-service/frontend-service.ui/src/web-react
+	url = https://github.com/edisontrent1337/web-react

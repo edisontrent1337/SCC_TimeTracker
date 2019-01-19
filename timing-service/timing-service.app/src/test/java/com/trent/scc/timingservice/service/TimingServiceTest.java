@@ -191,6 +191,14 @@ public class TimingServiceTest {
 			latestRecord = timingService.getLatestRecordForActivity(activityUuid);
 			assertEquals("The last saved record did not have the correct state.", state.toString(), latestRecord.getState());
 			assertNotNull("The activity UUID was not set.", latestRecord.getActivityUuid());
+			switch (state) {
+				case STARTED:
+					assertNotNull("The start time was not set on the last record.", latestRecord.getStartTime());
+					break;
+				case ENDED:
+					assertNotNull("The end time was not set on the last record.", latestRecord.getEndTime());
+					break;
+			}
 		} catch (NoSuchElementException e) {
 			e.printStackTrace();
 		}

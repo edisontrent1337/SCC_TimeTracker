@@ -238,6 +238,9 @@ public class TimingService implements ITimingService {
 		result.setActivityuuid(recordEntity.getActivityUuid());
 		result.setState(StateEnum.valueOf(recordEntity.getState()));
 		result.setTag(recordEntity.getTag());
+		result.startTime(recordEntity.getStartTime());
+		result.setEndTime(recordEntity.getEndTime());
+		result.setUuid(recordEntity.getUuid());
 		return result;
 	}
 
