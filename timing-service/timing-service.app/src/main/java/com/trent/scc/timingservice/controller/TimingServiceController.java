@@ -100,6 +100,15 @@ public class TimingServiceController implements ActivitiesApi {
 		return null;
 	}
 
+	@Override
+	public ResponseEntity<OperationResponse> getAllRecordsForUser() {
+		OperationResponse response = new OperationResponse();
+		String userUuid = getUserAuthentication();
+		List<ActivityRecord> records = timingService.getAllRecordsForUser(userUuid);
+		response.addDataItem(records);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
 	private String getUserAuthentication() {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		Authentication authentication = securityContext.getAuthentication();

@@ -32,6 +32,16 @@ public class ActivityEntity {
 	@Column(name = "uuid")
 	private String uuid;
 
+	@Column(name = "tag")
+	private String tag;
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 
 	public long getId() {
 		return id;
