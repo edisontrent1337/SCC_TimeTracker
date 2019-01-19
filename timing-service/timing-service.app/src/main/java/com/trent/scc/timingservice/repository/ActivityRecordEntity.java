@@ -29,6 +29,17 @@ public class ActivityRecordEntity {
 	@Column(name="end_time")
 	private OffsetDateTime endTime;
 
+	@Column(name="tag")
+	private String tag;
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
 	public long getDuration() {
 		return duration;
 	}

@@ -13,6 +13,7 @@ CREATE TABLE activities (
 CREATE TABLE activity_records (
     id bigint(20) NOT NULL AUTO_INCREMENT,
     activity_uuid VARCHAR(255) NOT NULL,
+    tag VARCHAR(255) NOT NULL,
     uuid VARCHAR(255) NOT NULL,
     state VARCHAR(255) NOT NULL,
     start_time DATETIME,

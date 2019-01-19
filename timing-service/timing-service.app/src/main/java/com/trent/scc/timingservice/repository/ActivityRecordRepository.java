@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ActivityRecordRepository extends CrudRepository<ActivityRecordEntity, Long> {
 	List<ActivityRecordEntity> findAllByActivityUuid(String activityUuid);
+	List<ActivityRecordEntity> findAllByTag(String tag);
 }

@@ -26,6 +26,7 @@ public interface ITimingService {
 
 	List<ActivityRecord> getAllRecordsForUser(String userUuid);
 	List<ActivityRecord> getAllRecordsForTag(String tag);
+	List<ActivityRecord> getAllRecordsForUserAndTag(String userUuid, String tag);
 
 	long getTotalDurationOfActivity(String activityUuid);
 }

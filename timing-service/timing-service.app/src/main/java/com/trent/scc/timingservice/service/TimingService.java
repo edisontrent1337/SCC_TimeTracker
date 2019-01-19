@@ -64,6 +64,7 @@ public class TimingService implements ITimingService {
 			return result;
 		} else {
 			ActivityRecordEntity newRecordEntity = createNewEntityFromRecord(record);
+			newRecordEntity.setTag(storedActivity.getTag());
 			List<ActivityRecordEntity> storedRecords = activityRecordRepository.findAllByActivityUuid(record.getActivityuuid());
 			if (storedRecords.isEmpty()) {
 				activityRecordRepository.save(newRecordEntity);
@@ -94,6 +95,7 @@ public class TimingService implements ITimingService {
 		entity.setActivityUuid(record.getActivityuuid());
 		entity.setState(STARTED.toString());
 		entity.setUuid(UUID.randomUUID().toString());
+		entity.setTag(record.getTag());
 		if (record.getTime() != null) {
 			entity.setStartTime(record.getTime());
 		} else {
@@ -178,9 +180,24 @@ public class TimingService implements ITimingService {
 	@Override
 	public List<ActivityRecord> getAllRecordsForTag(String tag) {
 		List<ActivityRecord> result = new ArrayList<>();
-		List<ActivityEntity> userActivities = activityRepository.findAllByTag(tag);
+		List<ActivityRecordEntity> recordEntities = activityRecordRepository.findAllByTag(tag);
+		for (ActivityRecordEntity recordEntity : recordEntities) {
+			result.add(createNewRecordFromEntity(recordEntity));
+		}
+		return result;
+	}
 
-		return null;
+	@Override
+	public List<ActivityRecord> getAllRecordsForUserAndTag(String ownerUuid, String tag) {
+		List<ActivityRecord> result = new ArrayList<>();
+		List<ActivityEntity> taggedUserActivities = activityRepository.findAllByOwnerUuidAndTag(ownerUuid, tag);
+		for (ActivityEntity activityEntity : taggedUserActivities) {
+			List<ActivityRecordEntity> recordEntities = activityRecordRepository.findAllByActivityUuid(activityEntity.getUuid());
+			for (ActivityRecordEntity recordEntity : recordEntities) {
+				result.add(createNewRecordFromEntity(recordEntity));
+			}
+		}
+		return result;
 	}
 
 	private ActivityRecord createNewRecordFromEntity(ActivityRecordEntity recordEntity) {
