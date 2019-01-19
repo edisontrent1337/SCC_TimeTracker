@@ -115,7 +115,7 @@ public class TimingService implements ITimingService {
 	}
 
 	@Override
-	public OperationResult<ActivityRecord> deleteRecord(String recordUuid) {
+	public OperationResult<ActivityRecord> getRecord(String recordUuid) {
 		return null;
 	}
 
@@ -130,13 +130,23 @@ public class TimingService implements ITimingService {
 	}
 
 	@Override
-	public OperationResult<Activity> updateActivity(Activity updatedActivity) throws NoSuchElementException {
+	public OperationResult<Activity> updateActivity(Activity updatedActivity) {
 		return null;
 	}
 
 	@Override
-	public OperationResult<Activity> deleteActivity(String activityUuid) throws NoSuchElementException {
-		return null;
+	public OperationResult<Activity> getActivity(String activityUuid) {
+		OperationResult<Activity> result = new OperationResult<>();
+		ActivityEntity entity = activityRepository.findByUuid(activityUuid);
+		if (entity == null) {
+			result.setStatus(NOT_EXISTING);
+			return result;
+		} else {
+			Activity activity = createActivityFromEntity(entity);
+			result.setPayload(activity);
+			result.setStatus(SUCCESS);
+			return result;
+		}
 	}
 
 	@Override
@@ -145,6 +155,16 @@ public class TimingService implements ITimingService {
 		List<ActivityRecordEntity> records = activityRecordRepository.findAllByActivityUuid(activityUuid);
 		for (ActivityRecordEntity entity : records) {
 			result += entity.getDuration();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Activity> getActivitiesForUser(String userUuid) {
+		List<ActivityEntity> activityEntities = activityRepository.findAllByOwnerUuid(userUuid);
+		List<Activity> result = new ArrayList<>();
+		for (ActivityEntity entity : activityEntities) {
+			result.add(createActivityFromEntity(entity));
 		}
 		return result;
 	}
@@ -161,7 +181,7 @@ public class TimingService implements ITimingService {
 	}
 
 	@Override
-	public List<ActivityRecord> getAllRecordsForUser(String userUuid) {
+	public List<ActivityRecord> getRecordsForUser(String userUuid) {
 		List<ActivityRecord> result = new ArrayList<>();
 		List<ActivityEntity> userActivities = activityRepository.findAllByOwnerUuid(userUuid);
 
@@ -178,7 +198,7 @@ public class TimingService implements ITimingService {
 	}
 
 	@Override
-	public List<ActivityRecord> getAllRecordsForTag(String tag) {
+	public List<ActivityRecord> getRecordsForTag(String tag) {
 		List<ActivityRecord> result = new ArrayList<>();
 		List<ActivityRecordEntity> recordEntities = activityRecordRepository.findAllByTag(tag);
 		for (ActivityRecordEntity recordEntity : recordEntities) {
@@ -188,7 +208,7 @@ public class TimingService implements ITimingService {
 	}
 
 	@Override
-	public List<ActivityRecord> getAllRecordsForUserAndTag(String ownerUuid, String tag) {
+	public List<ActivityRecord> getRecordsForUserAndTag(String ownerUuid, String tag) {
 		List<ActivityRecord> result = new ArrayList<>();
 		List<ActivityEntity> taggedUserActivities = activityRepository.findAllByOwnerUuidAndTag(ownerUuid, tag);
 		for (ActivityEntity activityEntity : taggedUserActivities) {
@@ -198,6 +218,17 @@ public class TimingService implements ITimingService {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public List<ActivityRecord> getRecordsForActivityAndUser(String activityUuid, String userUuid) {
+		List<ActivityRecord> userRecords = getRecordsForUser(userUuid);
+		for (ActivityRecord record : userRecords) {
+			if (!activityUuid.equals(record.getActivityuuid())) {
+				userRecords.remove(record);
+			}
+		}
+		return userRecords;
 	}
 
 	private ActivityRecord createNewRecordFromEntity(ActivityRecordEntity recordEntity) {
@@ -220,6 +251,7 @@ public class TimingService implements ITimingService {
 		activity.setDescription(entity.getDescription());
 		activity.setName(entity.getName());
 		activity.setOwneruuid(entity.getOwnerUuid());
+		activity.setTag(entity.getTag());
 		return activity;
 	}
 
@@ -231,7 +263,10 @@ public class TimingService implements ITimingService {
 		entity.setDescription(activity.getDescription());
 		entity.setOwnerUuid(activity.getOwneruuid());
 		entity.setUuid(UUID.randomUUID().toString());
-		entity.setTag(activity.getTag());
+		String tag = activity.getTag();
+		if (tag != null) {
+			entity.setTag(tag.toUpperCase());
+		}
 		return entity;
 	}
 

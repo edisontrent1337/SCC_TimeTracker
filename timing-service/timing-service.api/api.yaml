@@ -99,9 +99,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/activity"
+                $ref: "#/components/schemas/operationResponse"
 
   /activities/{activityId}:
     get:
@@ -174,6 +172,12 @@ paths:
       - bearerAuth: []
       operationId: getAllRecordsForUser
       description: Returns all records for a user
+      parameters:
+      - in: query
+        name: tag
+        schema:
+          type: string
+        description: The tag filter for user records
       responses:
         '200':
           description: OK

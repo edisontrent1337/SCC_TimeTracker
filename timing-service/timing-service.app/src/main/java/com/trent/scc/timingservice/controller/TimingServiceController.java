@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -86,25 +87,45 @@ public class TimingServiceController implements ActivitiesApi {
 	}
 
 	@Override
-	public ResponseEntity<List<Activity>> getActivities() {
-		return null;
+	public ResponseEntity<OperationResponse> getActivities() {
+		OperationResponse response = new OperationResponse();
+		String userUuid = getUserAuthentication();
+		List<Activity> activityEntities = timingService.getActivitiesForUser(userUuid);
+		response.addDataItem(activityEntities);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<OperationResponse> getActivity(@PathVariable String activityId) {
-		return null;
+		OperationResponse response = new OperationResponse();
+		OperationResult<Activity> operationResult = timingService.getActivity(activityId);
+		switch (operationResult.getStatus()) {
+			case SUCCESS:
+				response.addDataItem(operationResult.getPayload());
+				return new ResponseEntity<>(response, HttpStatus.OK);
+			case NOT_EXISTING:
+				response.error("The activity with the id " + activityId + " does not exist");
+				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		}
+		response.error("An unexpected error occurred.");
+		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@Override
 	public ResponseEntity<OperationResponse> getActivityRecords(@PathVariable String activityId) {
-		return null;
+		OperationResponse response = new OperationResponse();
+		String userUuid = getUserAuthentication();
+		List<ActivityRecord> records = timingService.getRecordsForActivityAndUser(activityId, userUuid);
+		response.addDataItem(records);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@Override
-	public ResponseEntity<OperationResponse> getAllRecordsForUser() {
+	public ResponseEntity<OperationResponse> getAllRecordsForUser(@Valid @RequestParam(value = "tag", required = false) String tag) {
 		OperationResponse response = new OperationResponse();
 		String userUuid = getUserAuthentication();
-		List<ActivityRecord> records = timingService.getAllRecordsForUser(userUuid);
+		List<ActivityRecord> records;
+		records = tag == null ? timingService.getRecordsForUser(userUuid) : timingService.getRecordsForUserAndTag(userUuid, tag);
 		response.addDataItem(records);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

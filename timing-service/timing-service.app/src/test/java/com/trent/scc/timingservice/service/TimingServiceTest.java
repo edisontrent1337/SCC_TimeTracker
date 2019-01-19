@@ -32,7 +32,7 @@ public class TimingServiceTest {
 	private static final String DEFAULT_USER_NAME = "userOne";
 	private static final String DEFAULT_ACTIVITY_NAME = "Preparation for exam";
 	private static final String DEFAULT_ACTIVITY_DESCRIPTION = "Done usually at home or in library";
-	private static final String DEFAULT_ACTIVITY_TAG = "Studies";
+	private static final String DEFAULT_ACTIVITY_TAG = "STUDIES";
 
 	@Autowired
 	private TimingService timingService;
@@ -125,7 +125,7 @@ public class TimingServiceTest {
 			assertAddRecord(record);
 		}
 		String userUuid = getUuidFromName(DEFAULT_USER_NAME);
-		List<ActivityRecord> records = timingService.getAllRecordsForUser(userUuid);
+		List<ActivityRecord> records = timingService.getRecordsForUser(userUuid);
 		assertEquals("The number of records recorded for the user is wrong", 5, records.size());
 	}
 
@@ -139,13 +139,13 @@ public class TimingServiceTest {
 			assertAddRecord(record);
 		}
 
-		List<ActivityRecord> records = timingService.getAllRecordsForTag(DEFAULT_ACTIVITY_TAG);
+		List<ActivityRecord> records = timingService.getRecordsForTag(DEFAULT_ACTIVITY_TAG);
 		assertEquals("The number of records recorded for the user is wrong", 5, records.size());
 
 		String userOneUuid = getUuidFromName(DEFAULT_USER_NAME);
-		List<ActivityRecord> taggedUserRecords = timingService.getAllRecordsForUserAndTag(userOneUuid,DEFAULT_ACTIVITY_TAG);
+		List<ActivityRecord> taggedUserRecords = timingService.getRecordsForUserAndTag(userOneUuid, DEFAULT_ACTIVITY_TAG);
 		assertEquals("The number of records for tag " + DEFAULT_ACTIVITY_TAG +
-				" and the user " + userOneUuid+"  is wrong", 5, taggedUserRecords.size());
+				" and the user " + userOneUuid + "  is wrong", 5, taggedUserRecords.size());
 
 		// Creating another activity by a different user but tagged the same as the activity above
 		Activity otherActivityByDifferentUser = createActivity("userTwo", "Preparation Math", "Calculating stuff", DEFAULT_ACTIVITY_TAG);
@@ -155,8 +155,19 @@ public class TimingServiceTest {
 			record.setTime(OffsetDateTime.now().plusMinutes(i));
 			assertAddRecord(record);
 		}
-		records = timingService.getAllRecordsForTag(DEFAULT_ACTIVITY_TAG);
+		records = timingService.getRecordsForTag(DEFAULT_ACTIVITY_TAG);
 		assertEquals("The number of records recorded for the tag is wrong", 10, records.size());
+	}
+
+	@Test
+	public void getActivityWorksCorrectly() {
+		Activity activity = createDefaultActivity();
+		timingService.addActivity(activity);
+		String activityUuid = activity.getUuid();
+		OperationResult<Activity> result = timingService.getActivity(activityUuid);
+		assertEquals("The retrieval of the activity was unsuccessful", OperationStatus.SUCCESS, result.getStatus());
+		assertNotNull("The retrieved activity was null", result.getPayload());
+		assertEquals("The retrieved activity differs from the submitted one", activity, result.getPayload());
 	}
 
 	private void assertNumberOfRecordsFor(String activityUuid, int expectedLength) {

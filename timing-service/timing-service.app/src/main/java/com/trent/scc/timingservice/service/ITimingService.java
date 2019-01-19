@@ -10,23 +10,25 @@ import java.util.List;
 public interface ITimingService {
 
 	OperationResult<Activity> addActivity(Activity activity);
+	OperationResult<Activity> getActivity(String activityUuid);
+	OperationResult<Activity> updateActivity(Activity updatedActivity);
 	OperationResult<Activity> removeActivity(String activityUuid);
-	OperationResult<Activity> updateActivity(Activity updatedActivity) throws NoSuchElementException;
-	OperationResult<Activity> deleteActivity(String activityUuid) throws NoSuchElementException;
 
 	OperationResult<ActivityRecord> addRecord(ActivityRecord record);
+	OperationResult<ActivityRecord> getRecord(String recordUuid);
+	OperationResult<ActivityRecord> updateRecord(ActivityRecord record);
 	OperationResult<ActivityRecord> removeRecord(String recordUuid);
-	OperationResult<ActivityRecord> updateRecord(ActivityRecord record) throws NoSuchElementException;
-	OperationResult<ActivityRecord> deleteRecord(String recordUuid) throws NoSuchElementException;
-
 
 	OperationResult<?> getApplicationStatistics();
 
 	ActivityRecordEntity getLatestRecordForActivity(String activityUuid) throws NoSuchElementException;
 
-	List<ActivityRecord> getAllRecordsForUser(String userUuid);
-	List<ActivityRecord> getAllRecordsForTag(String tag);
-	List<ActivityRecord> getAllRecordsForUserAndTag(String userUuid, String tag);
+	List<ActivityRecord> getRecordsForUser(String userUuid);
+	List<ActivityRecord> getRecordsForUserAndTag(String userUuid, String tag);
+	List<ActivityRecord> getRecordsForActivityAndUser(String activityUuid, String userUuid);
+	List<ActivityRecord> getRecordsForTag(String tag);
 
 	long getTotalDurationOfActivity(String activityUuid);
+
+	List<Activity> getActivitiesForUser(String userUuid);
 }
