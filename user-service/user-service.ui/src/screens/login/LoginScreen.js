@@ -1,9 +1,9 @@
 import React from "react";
 import {connect} from "react-redux";
-import CredentialForm from "../../ilma-react/forms/CredentialForm.js";
+import CredentialForm from "../../web-react/forms/CredentialForm.js";
 import {Jumbotron} from 'react-bootstrap';
 import {userActions} from "../../actions/user.actions.js";
-import colors from "../../ilma-react/colors/colors.js";
+import colors from "../../web-react/colors/colors.js";
 
 class LoginScreen extends React.Component {
     constructor(props) {

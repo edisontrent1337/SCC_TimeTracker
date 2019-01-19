@@ -1,7 +1,7 @@
 import React from "react";
 import Logo from "./logo.js";
 import {Button} from "react-bootstrap";
-import colors from "../ilma-react/colors/colors";
+import colors from "../web-react/colors/colors";
 
 class Header extends React.Component {
     constructor(props) {

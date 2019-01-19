@@ -53,7 +53,7 @@
 						<phase>pre-clean</phase>
 						<configuration>
 							<executable>git</executable>
-							<workingDirectory>src/ilma-react</workingDirectory>
+							<workingDirectory>src/web-react</workingDirectory>
 							<arguments>
 								<argument>pull</argument>
 							</arguments>

@@ -1,11 +1,11 @@
 import React from "react";
 import {client} from "../client/APIClient";
-import Circle from "../ilma-react/circle/Circle";
-import Tab from "../ilma-react/tab/Tab";
-import colors from "../ilma-react/colors/colors";
-import Button from "../ilma-react/button/Button";
-import "../ilma-react/table/table.fx.css";
-import Hint from "../ilma-react/hints/Hint";
+import Circle from "../web-react/circle/Circle";
+import Tab from "../web-react/tab/Tab";
+import colors from "../web-react/colors/colors";
+import Button from "../web-react/button/Button";
+import "../web-react/table/table.fx.css";
+import Hint from "../web-react/hints/Hint";
 
 export default class DashBoard extends React.Component {
 

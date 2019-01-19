@@ -59,7 +59,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: "Ilma Platform Service",
+            title: "Web Platform Service",
             template: __dirname + "/public/index.html",
             inject: "body",
             filename: "index.html"

@@ -1,8 +1,8 @@
 import React from "react";
 import {connect} from "react-redux";
 import {userActions} from "../../actions/user.actions";
-import CredentialForm from "../../ilma-react/forms/CredentialForm.js";
-import colors from "../../ilma-react/colors/colors.js";
+import CredentialForm from "../../web-react/forms/CredentialForm.js";
+import colors from "../../web-react/colors/colors.js";
 
 class SignUpScreen extends React.Component {
     constructor(props) {

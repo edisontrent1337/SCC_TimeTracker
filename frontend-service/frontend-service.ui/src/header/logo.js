@@ -1,5 +1,5 @@
 import React from "react";
-import colors from "../ilma-react/colors/colors"
+import colors from "../web-react/colors/colors"
 
 export default class Logo extends React.Component {
     render() {
