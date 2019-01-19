@@ -58,18 +58,8 @@ We are planning to use a droplet on DigitalOcean to host our service.
 ** compare tracked activities (overlaying graphics)
 * may we generate the diagrams on the server and not in the client (token; graphic)
 
-## Deadlines
-[options="header", cols="1,10"]
-|==========
-| Datum          | Ziel                                                                                    
-| 11.+18.12.2018 | Technologieauswahl, Web Service mit Test-Clients                                        
-| 28.01.2019     | Finale Abgabe                                                                           
-| 29.01.2019     | Gesamtergebnis mit Client-Applikationen und Sicherheits-Erweiterungen, Docker-Container 
-|=====
 
-
-## ToDo 
-
+## ToDo
 * Dokumentation
 ** Auszug aus Folien siehe unten
 ** Idee
@@ -89,7 +79,10 @@ We are planning to use a droplet on DigitalOcean to host our service.
 * Roll-out 
 * Anlegen von Records für Präsentation der Statistiken bei Abgabe 
  
-Aus den Folien zur Abgabe: 
+
+
+#### Aus den Folien zur Abgabe: 
+
 * Gesamtergebnis mit Client-Applikationen und Sicherheits-Erweiterungen, Docker-Container 
 * Software
 ** Quellcode im BitBucket-Repro
@@ -101,5 +94,15 @@ Aus den Folien zur Abgabe:
 ** *Schnittstellenbeschreibung des Web Services (WSDL/WADL/Swagger, ...)*
 ** Bedienungsanleitung für Clients 
 ** Feedback + Kritik am Praktikum
+
+
+## Deadlines
+[options="header", cols="1,10"]
+|==========
+| Datum          | Ziel                                                                                    
+| 11.+18.12.2018 | Technologieauswahl, Web Service mit Test-Clients                                        
+| 28.01.2019     | Finale Abgabe                                                                           
+| 29.01.2019     | Gesamtergebnis mit Client-Applikationen und Sicherheits-Erweiterungen, Docker-Container 
+|=====
 
 
