@@ -90,6 +90,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/operationResponse"
+
     get:
       operationId: getActivities
       description: Returns all activities
@@ -120,6 +121,44 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/operationResponse"
+    put:
+      security:
+      - bearerAuth: []
+      operationId: updateActivity
+      description: Updates the activity meta data.
+      parameters:
+      - name: activityId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+    delete:
+      security:
+      - bearerAuth: []
+      operationId: deleteAcitity
+      description: Removes an activity with given id and all its associated records from the database.
+      parameters:
+      - name: activityId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+
 
   /activities/{activityId}/records:
     get:
@@ -145,19 +184,13 @@ paths:
       security:
       - bearerAuth: []
       operationId: addActivityRecord
-      description: Adds a new record for an activity
+      description: Triggers start or end of a record for a given activityID
       parameters:
       - name: activityId
         in: path
         required: true
         schema:
           type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/activityRecord"
       responses:
         '200':
           description: OK
@@ -170,7 +203,7 @@ paths:
     get:
       security:
       - bearerAuth: []
-      operationId: getAllRecordsForUser
+      operationId: getRecords
       description: Returns all records for a user
       parameters:
       - in: query
@@ -178,6 +211,11 @@ paths:
         schema:
           type: string
         description: The tag filter for user records
+      - in: query
+        name: activityUuid
+        schema:
+          type: string
+        description: The uuid of the activity of interest
       responses:
         '200':
           description: OK

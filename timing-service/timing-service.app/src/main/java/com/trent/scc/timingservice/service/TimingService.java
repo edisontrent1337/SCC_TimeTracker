@@ -58,7 +58,6 @@ public class TimingService implements ITimingService {
 		}
 		ActivityEntity storedActivity = findActivityForRecord(record);
 		OperationResult<ActivityRecord> result = new OperationResult<>();
-		result.setPayload(record);
 		if (storedActivity == null) {
 			result.setStatus(NOT_EXISTING);
 			return result;
@@ -66,10 +65,10 @@ public class TimingService implements ITimingService {
 			ActivityRecordEntity newRecordEntity = createNewEntityFromRecord(record);
 			newRecordEntity.setTag(storedActivity.getTag());
 			List<ActivityRecordEntity> storedRecords = activityRecordRepository.findAllByActivityUuid(record.getActivityuuid());
+			String activityName = storedActivity.getName();
 			if (storedRecords.isEmpty()) {
 				activityRecordRepository.save(newRecordEntity);
-				result.setStatus(SUCCESS);
-				return result;
+				record = createNewRecordFromEntity(newRecordEntity);
 			} else {
 				ActivityRecordEntity lastRecordEntity = storedRecords.get(storedRecords.size() - 1);
 				if ("STARTED".equals(lastRecordEntity.getState())) {
@@ -78,15 +77,16 @@ public class TimingService implements ITimingService {
 					long duration = lastRecordEntity.getEndTime().toEpochSecond() - lastRecordEntity.getStartTime().toEpochSecond();
 					lastRecordEntity.setDuration(duration);
 					activityRecordRepository.save(lastRecordEntity);
-					record.setDuration((int) duration);
-					result.setPayload(record);
-
+					record = createNewRecordFromEntity(lastRecordEntity);
 				} else {
 					activityRecordRepository.save(newRecordEntity);
+					record = createNewRecordFromEntity(newRecordEntity);
 				}
-				result.setStatus(SUCCESS);
-				return result;
 			}
+			record.setActivityName(activityName);
+			result.setStatus(SUCCESS);
+			result.setPayload(record);
+			return result;
 		}
 	}
 
@@ -221,14 +221,15 @@ public class TimingService implements ITimingService {
 	}
 
 	@Override
-	public List<ActivityRecord> getRecordsForActivityAndUser(String activityUuid, String userUuid) {
+	public List<ActivityRecord> getRecordsForUserAndActivity(String activityUuid, String userUuid) {
 		List<ActivityRecord> userRecords = getRecordsForUser(userUuid);
+		List<ActivityRecord> result = new ArrayList<>();
 		for (ActivityRecord record : userRecords) {
-			if (!activityUuid.equals(record.getActivityuuid())) {
-				userRecords.remove(record);
+			if (activityUuid.equals(record.getActivityuuid())) {
+				result.add(record);
 			}
 		}
-		return userRecords;
+		return result;
 	}
 
 	private ActivityRecord createNewRecordFromEntity(ActivityRecordEntity recordEntity) {
@@ -236,7 +237,7 @@ public class TimingService implements ITimingService {
 		result.setDuration((int) recordEntity.getDuration());
 		result.setActivityuuid(recordEntity.getActivityUuid());
 		result.setState(StateEnum.valueOf(recordEntity.getState()));
-		System.out.println(result);
+		result.setTag(recordEntity.getTag());
 		return result;
 	}
 

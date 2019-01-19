@@ -32,8 +32,9 @@ public class TimingServiceController implements ActivitiesApi {
 	}
 
 	@Override
-	public ResponseEntity<OperationResponse> addActivityRecord(@Valid @RequestBody ActivityRecord record, @PathVariable String activityId) {
+	public ResponseEntity<OperationResponse> addActivityRecord(@PathVariable String activityId) {
 		String ownerUuid = getUserAuthentication();
+		ActivityRecord record = new ActivityRecord();
 		record.setOwneruuid(ownerUuid);
 		record.setActivityuuid(activityId);
 		OperationResult<ActivityRecord> result = timingService.addRecord(record);
@@ -115,20 +116,33 @@ public class TimingServiceController implements ActivitiesApi {
 	public ResponseEntity<OperationResponse> getActivityRecords(@PathVariable String activityId) {
 		OperationResponse response = new OperationResponse();
 		String userUuid = getUserAuthentication();
-		List<ActivityRecord> records = timingService.getRecordsForActivityAndUser(activityId, userUuid);
+		List<ActivityRecord> records = timingService.getRecordsForUserAndActivity(activityId, userUuid);
 		response.addDataItem(records);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@Override
-	public ResponseEntity<OperationResponse> getAllRecordsForUser(@Valid @RequestParam(value = "tag", required = false) String tag) {
+	public ResponseEntity<OperationResponse> getRecords(
+			@Valid @RequestParam(value = "tag", required = false) String tag,
+			@Valid @RequestParam(value = "activityUuid", required = false) String activityUuid
+	) {
 		OperationResponse response = new OperationResponse();
 		String userUuid = getUserAuthentication();
 		List<ActivityRecord> records;
-		records = tag == null ? timingService.getRecordsForUser(userUuid) : timingService.getRecordsForUserAndTag(userUuid, tag);
+		if(tag != null) {
+			records = timingService.getRecordsForUserAndTag(userUuid, tag);
+		}
+		else if (activityUuid != null) {
+			records = timingService.getRecordsForUserAndActivity(activityUuid, userUuid);
+		}
+		else {
+			records = timingService.getRecordsForUser(userUuid);
+		}
 		response.addDataItem(records);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+
 
 	private String getUserAuthentication() {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
