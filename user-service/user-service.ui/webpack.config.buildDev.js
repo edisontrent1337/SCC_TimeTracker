@@ -7,7 +7,6 @@ var target = path.resolve(
 	"../user-service.app/src/main/resources/static/dist"
 );
 
-const BASE_API_URL = 'http://iamtrent.de:8762';
 
 module.exports = {
 	entry: {
@@ -72,9 +71,8 @@ module.exports = {
 		// defines the mode in which the external component is rendered
 		new webpack.DefinePlugin({
 			MODE: JSON.stringify("external-component"),
-			BASE_API_URL: JSON.stringify(BASE_API_URL),
-			TIMING_SERVICE_BASE_API_URL: JSON.stringify(BASE_API_URL + '/timing-service'),
-			USER_SERVICE_BASE_API_URL: JSON.stringify(BASE_API_URL + '/user-service')
+			TIMING_SERVICE_BASE_API_URL: JSON.stringify('http://localhost:8080'),
+			USER_SERVICE_BASE_API_URL: JSON.stringify('http://localhost:8081')
 		})
 	],
 	externals: {

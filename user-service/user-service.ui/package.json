@@ -17,7 +17,8 @@
     "watch": "webpack --watch",
     "start": "webpack-dev-server --open --color --port 3001 --config webpack.config.dev.js",
     "prepublish": "rm -rf ../user-service.app/src/main/resources/static/dist && npm run build",
-    "build": "rimraf ../user-service.app/src/main/resources/static/dist &&  webpack --progress --profile"
+    "build": "rimraf ../user-service.app/src/main/resources/static/dist &&  webpack --progress --profile",
+    "buildDev": "rimraf ../user-service.app/src/main/resources/static/dist &&  webpack --progress --profile --config webpack.config.buildDev.js"
   },
   "babel": {
     "presets": [

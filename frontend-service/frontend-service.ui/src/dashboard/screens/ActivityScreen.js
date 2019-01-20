@@ -78,12 +78,12 @@ export default class ActivityScreen extends React.Component {
 			.then(res => res.json())
 			.then(res => this.setState({
 				activities: res.data[0].sort((a, b) => {
-						if (a.tag < b.tag)
-							return -1;
-						if (a.tag > b.tag)
-							return 1;
-						return 0;
-					}),
+					if (a.tag < b.tag)
+						return -1;
+					if (a.tag > b.tag)
+						return 1;
+					return 0;
+				}),
 				displayedActivities: res.data[0].sort((a, b) => {
 					if (a.tag < b.tag)
 						return -1;
@@ -228,22 +228,30 @@ export default class ActivityScreen extends React.Component {
 					}
 					{numberOfActivities > 0 &&
 					<div>
-						<div style={{borderBottom: "1px solid #eceff1", height: "41px", marginBottom: "10px"}}>
-							<div style={{float: "left", width: "80%"}}>
+						<div className={"row"}  style={{borderBottom: "1px solid #eceff1", height: "41px", marginBottom: "10px"}}>
+							<div className={"col-9"}>
 								<TabBar titles={this.state.tags} switchCallback={this.filterActivities}/>
 							</div>
-							<div style={{float: "right"}}>
+							<div className="col-3">
+								<div style={{marginLeft:"auto", marginRight:"0"}}>
+								<Button value="Records"
+										color={colors.grey["800"]}
+										onClick={() => location = '/dashboard'}
+								/>
 								<Button value="+ New"
 										color={colors.green["800"]}
 										onClick={this.openCreateModal}
 								/>
+								</div>
 							</div>
+
 							<div style={{clear: "both"}}></div>
 						</div>
 
 						{this.state.displayedActivities.map((activity, i) => {
 							return (<ActivityIndicator key={activity.uuid} activity={activity}
-													   handleDelete={() => this.deleteActivity(activity.uuid)} updateActivity={this.updateActivity}/>);
+													   handleDelete={() => this.deleteActivity(activity.uuid)}
+													   updateActivity={this.updateActivity}/>);
 						})}
 
 					</div>

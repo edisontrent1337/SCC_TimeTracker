@@ -31,8 +31,9 @@ function login(credentials) {
 				dispatch(action(userActionTypes.LOGIN_FAILURE, message));
 			}
 		).then(() => {
-            if(typeof localStorage.getItem("user") !== 'undefined') {
-				history.push("/dashboard");
+			if (localStorage.getItem("user") !== null) {
+				console.log("what");
+				history.push("/dashboard/activities");
 			}
 		});
 	};
