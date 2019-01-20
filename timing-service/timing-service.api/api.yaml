@@ -19,6 +19,12 @@ components:
         tag:
           type: string
           description: The tag of the activity
+        state:
+          type: string
+          description: The state of the activity
+        duration:
+          type: integer
+          description: The duration of the activity
         uuid:
           type: string
           description: The uuid of the activity
@@ -106,6 +112,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/operationResponse"
+    put:
+      security:
+      - bearerAuth: []
+      operationId: updateActivity
+      description: Updates the activity meta data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/activity"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
 
   /activities/{activityId}:
     get:
@@ -126,24 +150,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/operationResponse"
-    put:
-      security:
-      - bearerAuth: []
-      operationId: updateActivity
-      description: Updates the activity meta data.
-      parameters:
-      - name: activityId
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/operationResponse"
+
     delete:
       security:
       - bearerAuth: []
@@ -221,6 +228,11 @@ paths:
         schema:
           type: string
         description: The uuid of the activity of interest
+      - in: query
+        name: state
+        schema:
+          type: string
+        description: The state of the record
       responses:
         '200':
           description: OK

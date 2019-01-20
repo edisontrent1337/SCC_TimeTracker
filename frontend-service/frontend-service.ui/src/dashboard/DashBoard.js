@@ -6,24 +6,33 @@ import colors from "../web-react/colors/colors";
 import Button from "../web-react/button/Button";
 import "../web-react/table/table.fx.css";
 import Hint from "../web-react/hints/Hint";
+import Message from "../web-react/message/Message";
 
 export default class DashBoard extends React.Component {
 
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			records: [],
-			activities: []
-		};
 		this.loadRecords = this.loadRecords.bind(this);
 		this.convertDuration = this.convertDuration.bind(this);
+		this.state = {
+			records: [],
+			activities: [],
+			connectionError: undefined,
+			refresh: setInterval(this.loadRecords, 3000)
+		};
 	}
 
 	loadRecords() {
-		client.get('/activities/records')
-			.then(res => res.json())
-			.then(res => this.setState({records: res.data[0]}, () => console.log(this.state.records)));
+		if (this.state.refresh) {
+			client.get('/activities/records', this)
+				.then(res => res.json())
+				.then(res => this.setState({records: res.data[0]}, () => {
+					return this.setState({
+						refresh: false,
+						connectionError: undefined
+					});
+				}));
+		}
 	}
 
 	componentDidMount() {
@@ -35,6 +44,10 @@ export default class DashBoard extends React.Component {
 		return (
 			<div>
 				<div className="container">
+					{this.state.connectionError &&
+					<Message bsStyle={"danger"} heading={this.state.connectionError}
+							 message={"Timing Service is currently unavailable."}/>
+					}
 					{numberOfRecords > 0 &&
 					<div>
 						<div style={{borderBottom: "1px solid #eceff1", height: "41px", marginBottom: "10px"}}>

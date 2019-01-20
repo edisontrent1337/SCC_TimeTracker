@@ -11,4 +11,5 @@ public interface ActivityRepository extends CrudRepository<ActivityEntity, Long>
 	List<ActivityEntity> findAllByTag(String tag);
 
 	List<ActivityEntity> findAllByOwnerUuidAndTag(String ownerUuid, String tag);
+
 }

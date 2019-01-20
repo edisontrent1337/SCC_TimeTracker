@@ -31,4 +31,6 @@ public interface ITimingService {
 	long getTotalDurationOfActivity(String activityUuid);
 
 	List<Activity> getActivitiesForUser(String userUuid);
+
+	List<ActivityRecord> getRecordsForUserAndState(String userUuid, String state);
 }

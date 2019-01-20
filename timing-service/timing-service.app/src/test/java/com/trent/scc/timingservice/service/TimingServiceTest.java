@@ -73,6 +73,26 @@ public class TimingServiceTest {
 	}
 
 	@Test
+	public void updateActivityWorksCorrectly() {
+		Activity activity = createDefaultActivity();
+		timingService.addActivity(activity);
+		ActivityRecord record = createActivityRecord(activity);
+		assertAddRecord(record);
+		activity.setName("UpdatedName");
+		activity.setDescription("UpdatedDescription");
+		activity.setTag("UpdatedTag");
+		timingService.updateActivity(activity);
+
+		ActivityEntity entity = activityRepository.findByNameAndOwnerUuid("UpdatedName", activity.getOwneruuid());
+		assertNotNull("The updated activity was not found", entity);
+		assertEquals("The name was not updated", activity.getName(), entity.getName());
+		assertEquals("The description was not updated", activity.getDescription(), entity.getDescription());
+		assertEquals("The tag was not updated", activity.getTag(), entity.getTag());
+
+		assertEquals("The record was not updated", 1, activityRecordRepository.findAllByTag("UpdatedTag").size());
+	}
+
+	@Test
 	public void addActivityRecordWorksCorrectly() {
 		Activity activity = createDefaultActivity();
 		timingService.addActivity(activity);

@@ -56,6 +56,23 @@ public class TimingServiceController implements ActivitiesApi {
 	}
 
 	@Override
+	public ResponseEntity<OperationResponse> updateActivity(@RequestBody @Valid Activity activity) {
+		OperationResponse response = new OperationResponse();
+		OperationResult<Activity> result = timingService.updateActivity(activity);
+		Activity payload = result.getPayload();
+		switch (result.getStatus()) {
+			case SUCCESS:
+				response.addDataItem(payload);
+				return new ResponseEntity<>(response, HttpStatus.OK);
+			case NOT_EXISTING:
+				response.error("Can not create a record for " + activity.getUuid() + " as this activity does not exist.");
+				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		}
+		response.error("Unexpected error occurred.");
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@Override
 	public ResponseEntity<OperationResponse> getGlobalActivityStats() {
 		return null;
 	}
@@ -122,7 +139,8 @@ public class TimingServiceController implements ActivitiesApi {
 	@Override
 	public ResponseEntity<OperationResponse> getRecords(
 			@Valid @RequestParam(value = "tag", required = false) String tag,
-			@Valid @RequestParam(value = "activityUuid", required = false) String activityUuid
+			@Valid @RequestParam(value = "activityUuid", required = false) String activityUuid,
+			@Valid @RequestParam(value = "state", required = false) String state
 	) {
 		OperationResponse response = new OperationResponse();
 		String userUuid = getUserAuthentication();
@@ -133,6 +151,9 @@ public class TimingServiceController implements ActivitiesApi {
 		else if (activityUuid != null) {
 			records = timingService.getRecordsForUserAndActivity(activityUuid, userUuid);
 		}
+		else if (state != null) {
+			records = timingService.getRecordsForUserAndState(userUuid, state);
+		}
 		else {
 			records = timingService.getRecordsForUser(userUuid);
 		}
@@ -141,6 +162,22 @@ public class TimingServiceController implements ActivitiesApi {
 	}
 
 
+	@Override
+	public ResponseEntity<OperationResponse> deleteAcitity(@PathVariable String activityId) {
+		OperationResult<Activity> operationResult = timingService.removeActivity(activityId);
+		OperationStatus status = operationResult.getStatus();
+		OperationResponse response = new OperationResponse();
+		response.addDataItem(activityId);
+		switch (status) {
+			case SUCCESS:
+				return new ResponseEntity<>(response, HttpStatus.OK);
+			case NOT_EXISTING:
+				response.error("The activity with the id " + activityId + " does not exist");
+				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		}
+		response.error("An unexpected error occurred.");
+		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
 	private String getUserAuthentication() {
 		SecurityContext securityContext = SecurityContextHolder.getContext();

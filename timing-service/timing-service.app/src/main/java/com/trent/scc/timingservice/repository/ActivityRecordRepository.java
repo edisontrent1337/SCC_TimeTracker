@@ -7,4 +7,7 @@ import java.util.List;
 public interface ActivityRecordRepository extends CrudRepository<ActivityRecordEntity, Long> {
 	List<ActivityRecordEntity> findAllByActivityUuid(String activityUuid);
 	List<ActivityRecordEntity> findAllByTag(String tag);
+	List<ActivityRecordEntity> findAllByActivityUuidAndState(String activityUuid, String state);
+
+	void deleteAllByActivityUuid(String activityUuid);
 }

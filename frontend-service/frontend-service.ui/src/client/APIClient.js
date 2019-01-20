@@ -9,40 +9,30 @@ export const client = {
 	get,
 	post,
 	put,
+	del,
 	getUserNames,
 	getUserUuid
 };
 
 
-function post(url, body) {
-	return fetch(BASE_API_URL + url, {
-		method: "POST",
-		mode: "cors",
-		cache: "no-cache",
-		credentials: "same-origin",
-		headers: {
-			"Content-Type": "application/json; charset=utf-8",
-			"Authorization": "Bearer " + token
-		},
-		body: body
+function post(url, body, component) {
+	let headers = generateHeaders(token, body);
+	headers.method = "POST";
+	return fetch(TIMING_SERVICE_BASE_API_URL + url, headers
+	).catch((err) => handleError(err, component));
+}
 
-	});
+function del(url, component) {
+	let headers = generateHeaders(token);
+	headers.method = "DELETE";
+	return fetch(TIMING_SERVICE_BASE_API_URL + url, headers
+	).catch((err) => handleError(err, component));
 }
 
 function put(url, body, component) {
-	return fetch(BASE_API_URL + url, {
-		method: "PUT",
-		mode: "cors",
-		cache: "no-cache",
-		credentials: "same-origin",
-		headers: {
-			"Content-Type": "application/json; charset=utf-8",
-			"Authorization": "Bearer " + token
-		},
-		body: body
-
-	}).catch((err) => handleError(err, component));
-
+	let headers = generateHeaders(token, body);
+	headers.method = "PUT";
+	return fetch(TIMING_SERVICE_BASE_API_URL + url, headers).catch((err) => handleError(err, component));
 }
 
 function get(url, component) {
@@ -62,7 +52,6 @@ function getUserUuid(name, component) {
 			"Authorization": "Bearer " + token
 		}
 	}).catch((err) => handleError(err, component));
-	;
 }
 
 function getUserNames(body) {
@@ -73,7 +62,7 @@ function getUserNames(body) {
 
 function handleError(err, component) {
 	component.setState({
-		connectionError: err.message
+		connectionError: err.message,
 	})
 }
 

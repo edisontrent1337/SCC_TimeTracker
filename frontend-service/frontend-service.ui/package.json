@@ -20,6 +20,7 @@
     "single-spa-angularjs": "^3.0.1",
     "single-spa-react": "^2.5.4",
     "systemjs-plugin-babel": "0.0.25",
+    "typicons.font": "^2.0.9",
     "url-loader": "^1.1.1",
     "webpack-merge": "^4.1.5"
   },
@@ -36,7 +37,7 @@
     "css-loader": "^0.28.11",
     "html-loader": "^0.5.5",
     "react-bootstrap": "^0.32.4",
-    "react-modal": "^3.6.1",
+    "react-modal": "^3.8.1",
     "style-loader": "^0.21.0",
     "systemjs": "0.21.5",
     "webpack": "^4.12.0",
