@@ -6,7 +6,7 @@ var target = path.resolve(
 	__dirname,
 	"../frontend-service.app/src/main/resources/static/dist"
 );
-const BASE_API_URL = 'http://localhost:8762';
+const BASE_API_URL = 'http://dude.iamtrent.de';
 
 module.exports = {
 	mode: 'development',
