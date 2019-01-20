@@ -16,5 +16,10 @@ configuration:
   cors:
     allowedOrigins:
       - http://localhost:9123
+      - http://localhost
+      - http://dude.iamtrent.de
+      - https://dude.iamtrent.de
+      - https://iamtrent.de
+      - http://iamtrent.de
       - http://localhost:3000
       - http://localhost:3001

@@ -22,9 +22,13 @@ public class RedirectController {
 		return "forward:/";
 	}
 
-	@RequestMapping(value = "/dashboard")
-	public String projects() {
+	@RequestMapping(value = "/dashboard/{path:[^\\.]+}/**")
+	public String dashboard() {
 		return "forward:/";
 	}
 
+	@RequestMapping(value = "/dashboard")
+	public String dashboardInPlace() {
+		return "forward:/";
+	}
 }
