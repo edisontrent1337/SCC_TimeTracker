@@ -15,8 +15,11 @@
 \usepackage{threeparttable}
 \usepackage{geometry}
 \usepackage[normalem]{ulem}
+\usepackage{pdfpages}
+\usepackage{listings}
 \useunder{\uline}{\ul}{}
 \linespread{1.2} % Line spacing
+
 \graphicspath{{img/}} % Specifies the directory where pictures are stored
 
 \begin{document}
@@ -52,8 +55,8 @@ Dr.-Ing. Iris \textsc{Braun} % Supervisor's Name
 
 \end{minipage}\\[3cm]
 
+{\large \today}\\[2cm] % Date, change the \today to a set date if you want to be precise
 
-{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
 \begin{center}
 	\includegraphics[width=0.5\textwidth]{tu_logo.png}
 \end{center}
@@ -64,6 +67,12 @@ Dr.-Ing. Iris \textsc{Braun} % Supervisor's Name
 
 \tableofcontents % Include a table of contents
 
+
+\begin{figure}[!b]
+	\centering
+	\includegraphics[scale=1]{logo_TimeTracker.png}
+\end{figure}
+
 \newpage % Begins the essay on a new page instead of on the same page as the table of contents 
 
 \input{intro}
@@ -72,5 +81,12 @@ Dr.-Ing. Iris \textsc{Braun} % Supervisor's Name
 \input{manual}
 \input{feedback}
 
+\section{Anhang}
+\begin{itemize}
+	\item Generierte API-Dokumentation User Service 
+	\item Generierte API-Dokumentation Timing Service 
+	\item Generierte API-Dokumentation Frontend Service 
+\end{itemize}
+\include{anhang}
 
 \end{document}
