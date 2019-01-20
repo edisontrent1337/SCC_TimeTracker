@@ -21,6 +21,7 @@ Anmerkung: Die Andoid-App wurde nicht im Rahmen der Lehrveranstaltung fertig ges
 
 \subsection{Übersicht verwendeter Technologien}
 % Tabelle 
+\renewcommand{\arraystretch}{1.3} % Für die Abstände zwischen den Spalten 
 \begin{table}[H] 
 	% \small
 	\centering
@@ -28,32 +29,37 @@ Anmerkung: Die Andoid-App wurde nicht im Rahmen der Lehrveranstaltung fertig ges
 	\begin{tabularx}{\textwidth}{l|c|X}
 		\textbf{Name} & \textbf{Version} & \textbf{Verwendung} \\
 		\hline
-		Java & bla & bla \\
-		Mavent & 3.1.0 & bla \\
-		Spring boot & bla & bla \\
-		MySQL & bla & bla \\
-		Netflix Zuul & bla & bla \\
-		Netflix Eureka & bla & bla \\
-		JSON & bla & bla \\
-		REST & bla & bla \\
-		React & bla & bla \\
-		single.spa & bla & bla \\
-		OpenAPI + Swagger & bla & bla \\
-		Postman & bla & bla \\
-		Docker & bla & bla \\
+		Java & JDK 1.8.0 & Verwendete Programmiersprache \\
+		Mavent & 3.1.0  & Build-Management-Tool \\
+		Spring boot & 2.0.2 & Java Framework für Web-Systeme \\
+		MySQL & 5.7.0 & Relationale Datenbank \\
+		Netflix Zuul & 1.3.1 & Edge Service für dynamisches Routen, \newline Monitoring und Sicherheit  \\
+		Netflix Eureka & 1.9.2 & REST-basierter Service,  Zuordnen von Services   \\
+		JSON & - & Dateiformat bei Übermittlung \\
+		REST & - & Programmierparadigma für Webservices \\
+		React & 16.1.1 & JavaScript Bibliothek für User Interfaces  \\
+		single-spa & 2.6.0 & JavaScript Framework für Front-End Microservices \\
+		OpenAPI  (Swagger) & 3.0. & REST-Schnittstelle basiert auf Standard von OpenAPI,  Zum Entwerfen und Dokumentieren der RESTfull-Schnittellen wurde das Framework Swagger verwendet \\
+		Postman & 6.5.3 & API Development Environment \\
+		Docker & 18.09.0 & Umgebung für Container \\
 	\end{tabularx}
 	\label{tab:Technologien}
 \end{table}
 
-\subsection{Umsetzung}
-% benötigt? 
-
 \subsection{Schnittstellenbeschreibung}
-- von swagger? 
+% Links von Server mit http://editor.swagger.io/ oder https://swagger.io/tools/swagger-inspector/ or https://swagger.io/tools/swagger-ui/
 
+Die API wurde nach dem OpenAPI-Standard entwickelt und generierte automatisch ein Controller in Java. Eine Auflistung aller Methoden ist über die folgenden Links zu erreichen. Zusätzlich befindet sich im Anhang (Seite \pageref{Anhang}) ein Ausdruck der automatisch generierten Dokumentation.
+
+\begin{itemize}
+	\item frontend-service: 
+	\item timing-service: 
+	\item user-service:
+\end{itemize}
 
 \subsection{Sicherheit}
-JSON Web Token   
 
-HTTPS
+Die Sicherheit wurde mittels \textbf{JSON Web Token (JWT)} und umgesetzt. Dabei erhält der Benutzer beim Login eine UUID, mittels derer er sich gegenüber den Diensten authentifizieren kann. 
+
+Des weiteren wird die Sicherheit der Verbindung mittels der Transportverschlüsselung \textbf{HTTPS} gewährleistet. 
 

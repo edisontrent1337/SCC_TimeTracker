@@ -1,7 +1,10 @@
 % Bedienungsanleitung für Clients
 
 \section{Bedienungsanleitung des Clients}
+% So schön mit Bildern und so, erst bei fertiger Anwendung 
 
+Bei lokaler Installation: localhost:9123
+\newline
 TimeTracker bietet folgende Funktionen:
 \begin{itemize}
 	\item Time Tracking
@@ -9,3 +12,12 @@ TimeTracker bietet folgende Funktionen:
 	\item Tracking für verschiedene Aktivitäten
 	\item Abruf von Statistiken (Benutzer/Global)
 \end{itemize}
+
+\subsection{Fehlerbehandlung}
+
+Bei Fehlern im Root-Verzeichnisses des Projekts folgendes ausführen:
+
+\begin{lstlisting}[language=bash]
+	mvn clean install
+	docker-compose -f docker/docker-compose.yml up -d
+\end{lstlisting}
