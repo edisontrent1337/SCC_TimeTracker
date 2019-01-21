@@ -15,7 +15,6 @@ module.exports = merge.strategy({plugins: "prepend"})(baseConfig, {
 	devServer: {
 		contentBase: baseConfig.target,
 		compress: true,
-		port: 9000,
 		historyApiFallback: true
 	},
 	plugins: [

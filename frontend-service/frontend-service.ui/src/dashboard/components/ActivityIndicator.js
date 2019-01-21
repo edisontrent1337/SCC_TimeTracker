@@ -174,7 +174,7 @@ export default class ActivityIndicator extends React.Component {
 	render() {
 		const {activity, handleDelete} = this.props;
 		let isOn = this.state.isOn;
-		const color = (isOn ? colors.pink["300"] : colors.blue["200"]);
+		const color = (isOn ? colors.pink["400"] : colors.blue["200"]);
 		const borderWidth = "1px";
 		return (
 			<div style={{
@@ -183,7 +183,7 @@ export default class ActivityIndicator extends React.Component {
 				border: borderWidth + " solid " + color,
 				borderRadius: "8px",
 				marginBottom: "15px",
-			}} className="activityButton">
+			}}>
 				<div style={{float: "left"}}>
 					<Tag tag={activity.tag.toUpperCase()} color={colors.blue["500"]}/>
 					<div className={"cf"} style={{marginBottom: "20px"}}></div>

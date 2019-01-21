@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server --open --color --port 3000 --config webpack.config.dev.js",
+    "start": "webpack-dev-server --open --color --port 3000 --config webpack.config.js",
     "prepublish": "rm -rf ../frontend-service.app/src/main/resources/static/dist && npm run build",
     "build": "rimraf ../frontend-service.app/src/main/resources/static/dist &&  webpack --progress --profile"
   },

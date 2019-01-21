@@ -218,7 +218,8 @@ export default class ActivityScreen extends React.Component {
 					{(numberOfActivities === 0) &&
 					<div>
 						<Hint heading={"Nothing here!"}
-							  buttonText={"Create Activity"}
+							  buttonText={<span><i className={"typcn typcn-plus-outline"}></i>New Activity</span>}
+							  buttonColor={colors.pink["400"]}
 							  callback={this.openCreateModal}
 							  text={"There seem to be no activities yet. But don't worry - You can start time tracking now by creating the very first activity!"}
 						/>
@@ -233,7 +234,7 @@ export default class ActivityScreen extends React.Component {
 								<TabBar titles={this.state.tags} switchCallback={this.filterActivities}/>
 							</div>
 							<div style={{float: "right"}}>
-								<Button value={<span><i className={"typcn typcn-plus-outline"}></i>Add</span>}
+								<Button value={<span><i className={"typcn typcn-plus-outline"}></i>New...</span>}
 										color={colors.green["800"]}
 										onClick={this.openCreateModal}
 								/></div>
