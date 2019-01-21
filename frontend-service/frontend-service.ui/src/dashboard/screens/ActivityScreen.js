@@ -92,7 +92,6 @@ export default class ActivityScreen extends React.Component {
 					return 0;
 				})
 			}, () => {
-				console.log(this.state.activities);
 				let tags = ["All (" + this.state.activities.length + ")"];
 				for (let i = 0; i < this.state.activities.length; i++) {
 					tags.push(this.state.activities[i].tag);

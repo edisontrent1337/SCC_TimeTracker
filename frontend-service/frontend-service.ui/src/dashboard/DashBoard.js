@@ -14,6 +14,7 @@ export default class DashBoard extends React.Component {
 		super(props);
 		this.loadRecords = this.loadRecords.bind(this);
 		this.convertDuration = this.convertDuration.bind(this);
+		this.conevertTime = this.convertTime.bind(this);
 		this.state = {
 			records: [],
 			activities: [],
@@ -26,7 +27,7 @@ export default class DashBoard extends React.Component {
 		if (this.state.refresh) {
 			client.get('/activities/records', this)
 				.then(res => res.json())
-				.then(res => this.setState({records: res.data[0]}, () => {
+				.then(res => this.setState({records: res.data[0].filter((elem) => elem.state !== "STARTED")}, () => {
 					return this.setState({
 						refresh: false,
 						connectionError: undefined
@@ -55,9 +56,9 @@ export default class DashBoard extends React.Component {
 								<Tab title={"Your Records"}/>
 							</div>
 							<div style={{float: "right"}}>
-								<Button value="+ New"
-										color={colors.green["800"]}
-										onClick={this.openCreateModal}
+								<Button value={<span><i className={"typcn typcn-spiral"}></i>Activities</span>}
+										color={colors.pink["400"]}
+										onClick={() => location = '/dashboard/activities'}
 								/>
 							</div>
 							<div style={{clear: "both"}}></div>
@@ -67,8 +68,9 @@ export default class DashBoard extends React.Component {
 							<thead>
 							<tr>
 								<th>Name</th>
+								<th>Start</th>
+								<th>Finish</th>
 								<th>Duration</th>
-								<th></th>
 							</tr>
 							</thead>
 							<tbody>
@@ -76,9 +78,9 @@ export default class DashBoard extends React.Component {
 								return (
 									<tr key={i}>
 										<td width="30%">
-											<Circle url={""} title={record.activityName}/>
+											<Circle url={""} title={<i className={"typcn typcn-book"}></i>}/>
 											<a href={""} style={{
-												margin: "8px 0px 0px 10px",
+												margin: "14px 0px 0px 10px",
 												display: "inline-block",
 												padding: "0",
 												fontWeight: "bold",
@@ -87,18 +89,15 @@ export default class DashBoard extends React.Component {
 												{record.activityName}
 											</a>
 										</td>
-										<td width="50%" style={{color: colors.grey["600"]}}>
-											{this.convertDuration(record.duration)}
+
+										<td width="25%" style={{color: colors.grey["600"]}}>
+											{this.convertTime(record.startTime)}
 										</td>
-										<td width="20%">
-											<div align="right" style={{float: "right"}}>
-												<Button
-													style={{float: "right"}}
-													value={"Details"}
-													color={colors.blue["600"]}
-													onClick={() => location.href = url}
-												/>
-											</div>
+										<td width="25%" style={{color: colors.grey["600"]}}>
+											{this.convertTime(record.endTime)}
+										</td>
+										<td width="15%" style={{color: colors.grey["600"]}}>
+											{this.convertDuration(record.duration)}
 										</td>
 									</tr>
 								);
@@ -122,14 +121,25 @@ export default class DashBoard extends React.Component {
 		);
 	}
 
+	convertTime(time) {
+		return new Date(time).toString().substr(0, 11) + new Date(time).toString().substr(16, 5);
+	}
+
 	convertDuration(seconds) {
 		let minutes = Math.floor(seconds / 60);
+		let hours = Math.floor(minutes / 60);
 		console.log(minutes);
 		let remainingSeconds = seconds % 60;
+		let remainingMinutes = minutes % 60;
 		if (remainingSeconds < 10) {
 			remainingSeconds = "0" + remainingSeconds;
 		}
+		if (remainingMinutes < 10) {
+			remainingMinutes = "0" + remainingMinutes;
+		}
 
-		return minutes + ":" + remainingSeconds + " min";
+		let suffix = (hours > 0 ? "h" : (minutes > 0 ? "min" : "s"));
+
+		return (hours > 0 ? hours + ":" : "") + remainingMinutes + ":" + remainingSeconds + " " +  suffix;
 	}
 }

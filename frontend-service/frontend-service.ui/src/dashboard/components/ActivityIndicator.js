@@ -5,6 +5,7 @@ import Tag from "../../web-react/tag/Tag";
 import InputField from "../../web-react/input/InputField";
 import {client} from "../../client/APIClient";
 import "./activityIndicator.fx.css"
+import TextArea from "../../web-react/input/TextArea";
 
 export default class ActivityIndicator extends React.Component {
 
@@ -50,13 +51,8 @@ export default class ActivityIndicator extends React.Component {
 	}
 
 	postRecord() {
-		console.log("posting");
 		client.post('/activities/' + this.state.activity.uuid + "/records")
 			.then(res => res.json())
-			.then(res => {
-				console.log(res.data[0]);
-				return res;
-			})
 			.then(res => {
 				this.props.updateActivity(res.data[0]);
 			});
@@ -198,10 +194,20 @@ export default class ActivityIndicator extends React.Component {
 								color={colors.blue["600"]}
 								hint={["Use at least 3 characters."]}
 								width={300}/>
+					<TextArea name={"description"} clickable={true}
+							  placeholder={activity.description}
+							  handler={this.handleSubmit}
+							  onChange={this.handleChange}
+							  pattern={".{10,}"} hint={["Use at least 10 characters."]}
+							  editValidator={this.state.editActivityFormIsValid}
+							  loading={this.state.editActivityRequestSent}
+							  width={300}/>
+					<div className="cf"></div>
 					<div style={{fontSize: "18px"}}>
 
 						<i className={"fas fa-stopwatch" + (isOn ? " pulse" : "")}
 						   style={{color: color, marginRight: (isOn ? "10px" : "5px")}}></i>
+
 
 						<span
 							style={{color: colors.blue["200"]}}>{this.msToTime(this.state.time)}</span>
@@ -228,10 +234,7 @@ export default class ActivityIndicator extends React.Component {
 						/>
 					</div>
 				</div>
-
 				<div className={"cf"}></div>
-
-
 			</div>
 		);
 	}
