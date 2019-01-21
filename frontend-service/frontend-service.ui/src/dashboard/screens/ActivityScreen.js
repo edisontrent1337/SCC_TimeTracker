@@ -289,7 +289,7 @@ export default class ActivityScreen extends React.Component {
 										id: "name",
 										type: "text",
 										label: "NAME OF NEW ACTIVITY",
-										pattern: "[a-zA-Z0-9 ]+",
+										pattern: "[a-zA-Z0-9 \-_]{3,}",
 										hint: ["Use at least 3 characters."],
 
 									},
@@ -297,13 +297,13 @@ export default class ActivityScreen extends React.Component {
 										id: "description",
 										type: "textarea",
 										label: "DESCRIPTION",
-										pattern: "[a-zA-Z0-9 ]+",
+										pattern: "[a-zA-Z0-9._\\-]+",
 										hint: ["Describe shortly what the activity is all about. Use at least 10 characters."]
 									},
 									{
 										id: "tag",
 										type: "select",
-										options: ["Studies", "Sport", "Relaxation", "Work", "Hobby", "Travel"],
+										options: ["Studies", "Sport", "Relax", "Work", "Hobby", "Travel", "Self-care"],
 										label: "TAG",
 										hint: ["Tag your activity."]
 									},
@@ -314,6 +314,7 @@ export default class ActivityScreen extends React.Component {
 										validator: this.state.createActivityFormIsValid,
 										loading: this.state.activityCreationRequestSent,
 										color: colors.green["800"],
+
 									},
 									{
 										type: "button",
