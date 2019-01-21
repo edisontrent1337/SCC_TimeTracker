@@ -186,7 +186,7 @@ export default class ActivityIndicator extends React.Component {
 				color: colors.grey["500"],
 				border: borderWidth + " solid " + color,
 				borderRadius: "8px",
-				marginBottom: "15px"
+				marginBottom: "15px",
 			}} className="activityButton">
 				<div style={{float: "left"}}>
 					<Tag tag={activity.tag.toUpperCase()} color={colors.blue["500"]}/>

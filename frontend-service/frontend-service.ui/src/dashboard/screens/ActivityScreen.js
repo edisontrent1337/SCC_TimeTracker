@@ -228,23 +228,22 @@ export default class ActivityScreen extends React.Component {
 					}
 					{numberOfActivities > 0 &&
 					<div>
-						<div className={"row"}  style={{borderBottom: "1px solid #eceff1", height: "41px", marginBottom: "10px"}}>
-							<div className={"col-9"}>
+
+						<div style={{borderBottom: "1px solid #eceff1", height: "41px", marginBottom: "10px"}}>
+							<div style={{float: "left", width: "50%"}}>
 								<TabBar titles={this.state.tags} switchCallback={this.filterActivities}/>
 							</div>
-							<div className="col-3">
-								<div style={{marginLeft:"auto", marginRight:"0"}}>
-								<Button value="Records"
-										color={colors.grey["800"]}
-										onClick={() => location = '/dashboard'}
-								/>
-								<Button value="+ New"
+							<div style={{float: "right"}}>
+								<Button value={<span><i className={"typcn typcn-plus-outline"}></i>Add</span>}
 										color={colors.green["800"]}
 										onClick={this.openCreateModal}
+								/></div>
+							<div style={{float: "right"}}>
+								<Button value={<span><i className={"typcn typcn-document-text"}></i>Records</span>}
+										color={colors.blue["600"]}
+										onClick={() => location = "/dashboard"}
 								/>
-								</div>
 							</div>
-
 							<div style={{clear: "both"}}></div>
 						</div>
 
