@@ -35,41 +35,45 @@ export default class ActivityRecord extends React.Component {
                         </div>
                     </div>
                     <div style={{marginLeft: "80px", fontSize: "24px"}}>
+                        <div style={{marginTop:"10px"}}>
                         {record.activityName}
+                        </div>
                         <div style={{
                             fontSize: "14px",
                             color: colors.blue["500"],
-                            margin: "0px auto",
                             paddingBottom: "5px",
-                            paddingTop:"8px"
+                            width:"150px",
                         }}>
-                            <Tag tag={this.convertTime(record.startTime).toUpperCase()}
-                                 color={colors.pink["400"]}
-                                 padding={"5px 25px 5px 5px"}
-                            />
-                            <span style={{padding: "0 0px", margin: "0 -20px 0 0px"}}>
-                            <span style={{
-                                width: "70px",
-                                height: "26px",
-                                zIndex: "-100000",
-                                display: "inline-block",
+                            <div className={"cf"}>
+                                <i style={{
+                                    marginRight: "-20px",
+                                    borderRadius: "50% 0px 0px 50%",
+                                    backgroundColor: colors.pink["400"],
+                                    display: "inline-block",
+                                    color: "white",
+                                    textAlign: "center", width: "22px", height: "22px"
+                                }} className={"typcn typcn-media-play"}></i>
+                                <Tag tag={this.convertTime(record.startTime).toUpperCase()}
+                                     color={colors.pink["400"]}
+                                     padding={"5px 5px 5px 25px"}
+                                />
+                            </div>
+                            <div style={{
+                                margin: "14px, 0",
+                                display: "block",
                                 color: colors.grey["700"],
                             }}>
-                                <center style={{fontSize: "14px"}}>{this.convertDuration(record.duration)}</center>
-                            </span>
+                                <div style={{
+                                    fontSize: "14px",
+                                    padding: "15px 0",
+                                }}><i style={{color: colors.blue["500"]}}
+                                      className="fas fa-stopwatch"> </i>{this.convertDuration(record.duration)}</div>
+                            </div>
                             <i style={{
-                                marginLeft: "-90px",
-                                borderRadius: "50%", backgroundColor: colors.pink["400"],
-                                display: "inline-block",
-                                color: "white",
-                                textAlign: "center", width: "22px", height: "22px"
-                            }} className={"typcn typcn-media-play"}></i>
-                            <i style={{
-                                borderRadius: "50%",
-                                zIndex: "10000",
+                                borderRadius: "50% 0px 0px 50%",
                                 width: "25px",
-                                height: "25px",
-                                marginLeft: "66px",
+                                height: "26px",
+                                marginRight: "-20px",
                                 border: "2px solid white",
                                 backgroundColor: colors.blue["400"],
                                 display: "inline-block",
@@ -77,8 +81,7 @@ export default class ActivityRecord extends React.Component {
                                 color: "white",
                             }}
                                className={"typcn typcn-media-pause"}></i>
-                            </span>
-                            <Tag tag={this.convertTime(record.startTime).toUpperCase()}
+                            <Tag tag={this.convertTime(record.endTime).toUpperCase()}
                                  padding={"5px 5px 5px 25px"}
                                  color={colors.blue["400"]}/>
                         </div>
@@ -93,7 +96,6 @@ export default class ActivityRecord extends React.Component {
     convertTime(time) {
         return new Date(time).toString().substr(0, 11) + new Date(time).toString().substr(16, 5);
     }
-
 
 
     convertDuration(seconds) {
@@ -127,7 +129,7 @@ export function decideColor(tag) {
     };
 
     let result = colors[tag.toLowerCase()];
-    if(typeof result === "undefined") {
+    if (typeof result === "undefined") {
         result = "blue";
     }
 

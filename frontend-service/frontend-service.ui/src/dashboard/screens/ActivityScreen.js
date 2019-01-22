@@ -69,8 +69,11 @@ export default class ActivityScreen extends React.Component {
 
 	deleteActivity(id) {
 		client.del('/activities/' + id)
-			.then(res => res.json())
-			.then(location.reload());
+			.then(res => {
+				if(res.status === 200) {
+					location.reload();
+				}
+            });
 	}
 
 	loadActivities() {

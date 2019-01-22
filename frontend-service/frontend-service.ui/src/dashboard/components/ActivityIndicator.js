@@ -199,6 +199,8 @@ export default class ActivityIndicator extends React.Component {
                     <div style={{marginLeft: "80px", width: "170px", wordWrap: "break-word"}}>
                         <InputField name={"name"} clickable={true} placeholder={activity.name}
                                     pattern={".{3,}"}
+                                    handler={this.handleSubmit}
+                                    onChange={this.handleChange}
                                     color={colors.blue["600"]}
                                     hint={["Use at least 3 characters."]}
                                     width={190}/>
