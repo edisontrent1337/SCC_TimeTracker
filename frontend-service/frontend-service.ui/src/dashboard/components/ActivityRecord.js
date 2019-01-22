@@ -126,5 +126,10 @@ export function decideColor(tag) {
         "hobby": "green"
     };
 
-    return colors[tag.toLowerCase()];
+    let result = colors[tag.toLowerCase()];
+    if(typeof result === "undefined") {
+        result = "blue";
+    }
+
+    return result;
 }
