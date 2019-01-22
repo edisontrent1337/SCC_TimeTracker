@@ -17,6 +17,9 @@
 \usepackage[normalem]{ulem}
 \usepackage{pdfpages}
 \usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+\usepackage{wrapfig}
+\usepackage{epigraph}
 \useunder{\uline}{\ul}{}
 \linespread{1.2} % Line spacing
 
@@ -50,7 +53,7 @@ Wieland \textsc{Strauß}
 \begin{minipage}{0.4\textwidth}
 \begin{flushright} 
 \emph{Dozentin:} \\
-Dr.-Ing. Iris \textsc{Braun} % Supervisor's Name
+ Dr.-Ing. Iris \textsc{Braun} % Supervisor's Name
 \end{flushright}
 
 \end{minipage}\\[3cm]
@@ -78,7 +81,7 @@ Dr.-Ing. Iris \textsc{Braun} % Supervisor's Name
 \input{intro}
 \input{work}
 \input{technologien}
-\input{manual}
+\include{manual}
 \input{feedback}
 
 \section{Anhang}
