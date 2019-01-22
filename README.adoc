@@ -1,5 +1,5 @@
 
-:toc: right
+:toc:right
 
 # SCC_TimeTracker
 Repository for the seminar task of group 4 of the lecture Service and Cloud Computing by Dr. Braun, TU Dresden     
@@ -7,9 +7,9 @@ Repository for the seminar task of group 4 of the lecture Service and Cloud Comp
 
 ## Documentation + Presentations
 
-NOTE: 	[Documentation](orga/Documentation/documentation.pdf)    
-	[First Presentation](orga/SCC_TimeTracker_first_presentation.pdf)    
-	[Final Presentation](orga/SCC_TimeTracker_final_presentation.pdf)    
+[Documentation](orga/Documentation/documentation.pdf)     
+[First Presentation](orga/SCC_TimeTracker_first_presentation.pdf)        
+[Final Presentation](orga/SCC_TimeTracker_final_presentation.pdf)       
 
 ## Idea
 The idea is to create a web service that is capable of tracking time for certain activities. A user can use this service to track the amount of time he invests per day / week / month on certain tasks.
