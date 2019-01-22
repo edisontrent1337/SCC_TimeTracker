@@ -61,13 +61,15 @@ export default class ActivityRecord extends React.Component {
                             <div style={{
                                 margin: "14px, 0",
                                 display: "block",
+                                width:"120px",
                                 color: colors.grey["700"],
                             }}>
-                                <div style={{
+                                <center style={{
                                     fontSize: "14px",
-                                    padding: "15px 0",
-                                }}><i style={{color: colors.blue["500"]}}
-                                      className="fas fa-stopwatch"> </i>{this.convertDuration(record.duration)}</div>
+                                    padding: "10px 0",
+                                    paddingLeft:"5px"
+                                }}><i style={{color: colors.grey["500"], paddingRight:"5px"}}
+                                      className="fas fa-stopwatch"> </i>{this.convertDuration(record.duration)}</center>
                             </div>
                             <i style={{
                                 borderRadius: "50% 0px 0px 50%",
