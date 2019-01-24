@@ -154,7 +154,7 @@ paths:
     delete:
       security:
       - bearerAuth: []
-      operationId: deleteAcitity
+      operationId: deleteActivity
       description: Removes an activity with given id and all its associated records from the database.
       parameters:
       - name: activityId

@@ -320,7 +320,7 @@ public class TimingService implements ITimingService {
 		entity.setUuid(UUID.randomUUID().toString());
 		String tag = activity.getTag();
 		if (tag != null) {
-			entity.setTag(tag.toUpperCase());
+			entity.setTag(tag);
 		}
 		return entity;
 	}

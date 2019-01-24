@@ -10,7 +10,6 @@ export const userActions = {
 
 function login(credentials) {
 	return dispatch => {
-		console.log(credentials);
 		dispatch(action(userActionTypes.LOGIN_REQUEST, credentials));
 		userService.post("/login", credentials).then(
 			response => {
@@ -32,7 +31,6 @@ function login(credentials) {
 			}
 		).then(() => {
 			if (localStorage.getItem("user") !== null) {
-				console.log("what");
 				history.push("/dashboard/activities");
 			}
 		});

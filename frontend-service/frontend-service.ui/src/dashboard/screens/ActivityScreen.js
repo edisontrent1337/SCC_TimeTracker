@@ -1,7 +1,6 @@
 import React from 'react';
 import {client} from "../../client/APIClient";
 import Message from "../../web-react/message/Message";
-import Tab from "../../web-react/tab/Tab";
 import Button from "../../web-react/button/Button";
 import colors from "../../web-react/colors/colors";
 import ActivityIndicator from "../components/ActivityIndicator";
@@ -9,6 +8,10 @@ import Modal from "react-modal";
 import CredentialForm from "../../web-react/forms/CredentialForm";
 import TabBar from "../../web-react/tab/TabBar";
 import Hint from "../../web-react/hints/Hint";
+import {buttonFace} from "../../web-react/button/ButtonFactory";
+import {createDefaultModalStyle} from "../../web-react/utils/ModalFactory";
+import InputField from "../../web-react/input/InputField";
+import TextArea from "../../web-react/input/TextArea";
 
 export default class ActivityScreen extends React.Component {
 
@@ -19,11 +22,14 @@ export default class ActivityScreen extends React.Component {
 		this.loadStartedRecords = this.loadStartedRecords.bind(this);
 		this.reloadActivities = this.reloadActivities.bind(this);
 		this.openCreateModal = this.openCreateModal.bind(this);
+		this.openDeleteModal = this.openDeleteModal.bind(this);
+		this.closeDeleteModal = this.closeDeleteModal.bind(this);
 		this.closeCreateModal = this.closeCreateModal.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.filterActivities = this.filterActivities.bind(this);
 		this.updateActivity = this.updateActivity.bind(this);
+		this.deleteActivity = this.deleteActivity.bind(this);
 		this.state = {
 			activities: [],
 			displayedActivities: [],
@@ -33,7 +39,7 @@ export default class ActivityScreen extends React.Component {
 			refresh: setInterval(this.reloadActivities, 3000),
 			createActivityData: {},
 			createActivityFormIsValid: false,
-			activityCreationRequestSent: false
+			requestSent: false
 
 		};
 		this.loadActivities();
@@ -46,6 +52,22 @@ export default class ActivityScreen extends React.Component {
 		});
 	}
 
+	openDeleteModal(activityUuid) {
+		console.log("delete " + activityUuid + "?");
+		this.setState({
+			isDeleteModalOpen: true,
+			activityToBeDeleted: activityUuid
+		});
+	}
+
+	closeDeleteModal() {
+		this.setState({
+			isDeleteModalOpen: false,
+			activityToBeDeleted: undefined,
+			requestSent: false,
+		});
+	}
+
 	componentDidMount() {
 	}
 
@@ -53,7 +75,7 @@ export default class ActivityScreen extends React.Component {
 	closeCreateModal() {
 		this.setState({
 			isEditModalOpen: false,
-			activityCreationRequestSent: false,
+			requestSent: false,
 			createActivityData: {},
 		});
 	}
@@ -67,13 +89,13 @@ export default class ActivityScreen extends React.Component {
 		});
 	}
 
-	deleteActivity(id) {
-		client.del('/activities/' + id)
+	deleteActivity() {
+		client.del('/activities/' + this.state.activityToBeDeleted)
 			.then(res => {
-				if(res.status === 200) {
+				if (res.status === 200) {
 					location.reload();
 				}
-            });
+			});
 	}
 
 	loadActivities() {
@@ -153,7 +175,7 @@ export default class ActivityScreen extends React.Component {
 		return name.length > 2
 			&& description.length >= 10
 			&& tag.length > 0
-			&& !this.state.activityCreationRequestSent;
+			&& !this.state.requestSent;
 	}
 
 	handleChange(event) {
@@ -195,7 +217,7 @@ export default class ActivityScreen extends React.Component {
 				if (res.error) {
 					this.setState({
 						error: res.error,
-						activityCreationRequestSent: false
+						requestSent: false
 					});
 				}
 				else {
@@ -232,52 +254,33 @@ export default class ActivityScreen extends React.Component {
 					{numberOfActivities > 0 &&
 					<div>
 
-						<div style={{borderBottom: "1px solid #eceff1", height: "41px", marginBottom: "10px"}}>
+						<div style={{height: "41px", marginBottom: "10px"}}>
 							<div style={{float: "left", width: "50%"}}>
 								<TabBar titles={this.state.tags} switchCallback={this.filterActivities}/>
 							</div>
-							<div style={{float: "right"}}>
-								<Button value={<span><i className={"typcn typcn-plus-outline"}></i>New...</span>}
+							<div style={{float: "right", marginRight:"-10px"}}>
+								<Button value={buttonFace("plus-outline", "New...")}
 										color={colors.green["800"]}
 										onClick={this.openCreateModal}
 								/></div>
 							<div style={{float: "right"}}>
-								<Button value={<span><i className={"typcn typcn-document-text"}></i>Records</span>}
+								<Button value={buttonFace("document-text", "Records")}
 										color={colors.blue["600"]}
 										onClick={() => location = "/dashboard"}
 								/>
 							</div>
-							<div style={{clear: "both"}}></div>
 						</div>
 
 						{this.state.displayedActivities.map((activity, i) => {
 							return (<ActivityIndicator key={activity.uuid} activity={activity}
-													   handleDelete={() => this.deleteActivity(activity.uuid)}
+													   handleDelete={() => this.openDeleteModal(activity.uuid)}
 													   updateActivity={this.updateActivity}/>);
 						})}
 
 					</div>
 					}
 
-					<Modal ariaHideApp={false} defaultStyles={{
-						overlay: {
-							position: 'fixed',
-							top: 0,
-							left: 0,
-							right: 0,
-							bottom: 0,
-							backgroundColor: 'rgba(137, 137, 137, 0.75)'
-						},
-						content: {
-							position: 'absolute',
-							top: '0px',
-							left: '40px',
-							right: '40px',
-							overflow: 'auto',
-							WebkitOverflowScrolling: 'touch',
-							outline: 'none',
-						}
-					}}
+					<Modal ariaHideApp={false} defaultStyles={createDefaultModalStyle()}
 						   isOpen={this.state.isEditModalOpen}
 						   onRequestClose={this.closeCreateModal}
 					>
@@ -315,7 +318,7 @@ export default class ActivityScreen extends React.Component {
 										value: "Create activity",
 										handler: this.handleSubmit,
 										validator: this.state.createActivityFormIsValid,
-										loading: this.state.activityCreationRequestSent,
+										loading: this.state.requestSent,
 										color: colors.green["800"],
 
 									},
@@ -330,6 +333,39 @@ export default class ActivityScreen extends React.Component {
 							/>
 						</div>
 					</Modal>
+					<Modal ariaHideApp={false} defaultStyles={createDefaultModalStyle()}
+						   isOpen={this.state.isDeleteModalOpen}
+						   onRequestClose={this.closeDeleteModal}
+					>
+						<div className="col-lg-4" style={{margin: "50px auto"}}>
+							<CredentialForm
+								title="Delete activity"
+								hint={"Are you sure you want to delete this activity?"}
+								error={this.state.connectionError || this.state.error}
+								logo={logo}
+								inputs={[
+									{
+										type: "button",
+										value: buttonFace("trash", "Delete"),
+										handler: this.deleteActivity,
+										validator: () => true,
+										loading: this.state.requestSent,
+										color: colors.red["800"],
+									},
+									{
+										type: "button",
+										value: "Cancel",
+										color: colors.blue["800"],
+										handler: this.closeDeleteModal,
+										validator: () => true
+									},
+								]}
+							/>
+						</div>
+					</Modal>
+
+
+
 				</div>
 			</div>
 		);

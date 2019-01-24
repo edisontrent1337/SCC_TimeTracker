@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -163,7 +164,8 @@ public class TimingServiceController implements ActivitiesApi {
 
 
 	@Override
-	public ResponseEntity<OperationResponse> deleteAcitity(@PathVariable String activityId) {
+	@Transactional
+	public ResponseEntity<OperationResponse> deleteActivity(@PathVariable String activityId) {
 		OperationResult<Activity> operationResult = timingService.removeActivity(activityId);
 		OperationStatus status = operationResult.getStatus();
 		OperationResponse response = new OperationResponse();
