@@ -28,7 +28,7 @@ services:
     environment:
     - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql-scc-user-service:3306/scc_users?useSSL=false"
     - "SPRING_DATASOURCE_PASSWORD=root"
-    - "EUREKA_URI=https://scc-service:password@scc-service-registry:8761/eureka"
+    - "EUREKA_URI=https://scc-service:password@iamtrent.de:8761/eureka"
 
   scc-api-gateway:
     image: "scc-api-gateway:latest"
@@ -37,7 +37,7 @@ services:
     depends_on:
     - scc-service-registry
     environment:
-    - "EUREKA_URI=https://scc-service:password@scc-service-registry:8761/eureka"
+    - "EUREKA_URI=https://scc-service:password@iamtrent.de:8761/eureka"
     networks:
       scc:
 
@@ -60,7 +60,7 @@ services:
     environment:
     - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql-scc-timing-service:3306/scc_records?useSSL=false"
     - "SPRING_DATASOURCE_PASSWORD=root"
-    - "EUREKA_URI=https://scc-service:password@scc-service-registry:8761/eureka"
+    - "EUREKA_URI=https://scc-service:password@iamtrent.de:8761/eureka"
 
   scc-frontend-service:
     image: "scc-frontend-service:latest"
@@ -71,7 +71,7 @@ services:
     depends_on:
     - scc-service-registry
     environment:
-    - "EUREKA_URI=https://scc-service:password@scc-service-registry:8761/eureka"
+    - "EUREKA_URI=https://scc-service:password@iamtrent.de:8761/eureka"
 
 networks:
   scc:
