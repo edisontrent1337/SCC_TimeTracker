@@ -62,6 +62,13 @@ services:
     - "SPRING_DATASOURCE_PASSWORD=root"
     - "EUREKA_URI=http://scc-service:password@scc-service-registry:8761/eureka"
 
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+    - "80:80"
+    volumes:
+    - /var/run/docker.sock:/tmp/docker.sock:ro
+
   scc-frontend-service:
     image: "scc-frontend-service:latest"
     ports:
@@ -69,9 +76,11 @@ services:
     networks:
       scc:
     depends_on:
+    - nginx-proxy
     - scc-service-registry
     environment:
     - "EUREKA_URI=http://scc-service:password@scc-service-registry:8761/eureka"
+    - "VIRTUAL_HOST=http://iamtrent.de"
 
 networks:
   scc:
