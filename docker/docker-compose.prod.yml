@@ -68,11 +68,13 @@ services:
     - "80:80"
     volumes:
     - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      scc:        
 
   scc-frontend-service:
     image: "scc-frontend-service:latest"
-    expose:
-    - "9123"
+    ports:
+    - "80"
     networks:
       scc:
     depends_on:
@@ -80,7 +82,7 @@ services:
     - scc-service-registry
     environment:
     - "EUREKA_URI=http://scc-service:password@scc-service-registry:8761/eureka"
-    - "VIRTUAL_HOST=http://iamtrent.de"
+    - "VIRTUAL_HOST=iamtrent.de"
 
 networks:
   scc:

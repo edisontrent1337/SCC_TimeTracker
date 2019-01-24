@@ -3,7 +3,7 @@ spring:
     name: frontend-service
 
 server:
-  port: 9123
+  port: 80
 
 eureka:
   client:
