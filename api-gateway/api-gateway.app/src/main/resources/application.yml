@@ -31,3 +31,4 @@ zuul:
 ribbon:
   ReadTimeout: 3000
   ConnectTimeout: 3000
+  IsSecure: true
