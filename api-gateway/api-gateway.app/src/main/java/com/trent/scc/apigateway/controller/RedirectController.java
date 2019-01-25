@@ -36,4 +36,4 @@ public class RedirectController {
 		return "forward:/";
 	}
 }
-}
+
