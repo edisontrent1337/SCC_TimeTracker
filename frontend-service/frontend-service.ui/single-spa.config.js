@@ -15,10 +15,9 @@ SystemJS.config({
 
 registerApplication(
 	"login",
-	() =>
-		SystemJS.import(USER_SERVICE_BASE_API_URL + "/dist/bundle.js").then(
-			module => module.login
-		),
+	() => import("./src/user-service/src/index.js").then(
+		module => module.login
+	),
 	() => {
 		return pathNameEquals(["", "/", "/signup"]) & !localStorage.getItem("user")
 	}
