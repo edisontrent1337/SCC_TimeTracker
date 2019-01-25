@@ -65,7 +65,7 @@ services:
   scc-frontend-service:
     image: "scc-frontend-service:latest"
     ports:
-    - 443:9123
+    - 9123:9123
     deploy:
       replicas: 1
       labels:
@@ -80,7 +80,7 @@ services:
     depends_on:
     - scc-service-registry
     environment:
-      EUREKA_URI: https://scc-service:password@iamtrent.de:8761/eureka
+      EUREKA_URI: http://scc-service:password@iamtrent.de:8761/eureka
       METADATA:  proxy-handles-tls
 
 networks:
