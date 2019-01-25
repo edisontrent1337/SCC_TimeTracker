@@ -1,9 +1,14 @@
 spring:
   application:
     name: frontend-service
+  cloud:  
+    inetutils:
+      preferred-networks:
+        - 10.0.21        
 
 server:
   port: 9123
+  contextPath: /ui
 
 eureka:
   client:
