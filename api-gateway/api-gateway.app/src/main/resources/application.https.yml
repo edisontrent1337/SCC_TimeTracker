@@ -32,3 +32,10 @@ ribbon:
   ReadTimeout: 3000
   ConnectTimeout: 3000
   IsSecure: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false

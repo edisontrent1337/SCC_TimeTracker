@@ -33,11 +33,20 @@ services:
   scc-api-gateway:
     image: "scc-api-gateway:latest"
     ports:
-    - 8762:8762
+    - 443:8762
     depends_on:
     - scc-service-registry
+    deploy:
+      replicas: 1
+      labels:
+        com.docker.lb.hosts: iamtrent.de
+        com.docker.lb.network: scc
+        com.docker.lb.port: 8080
+        com.docker.lb.ssl_cert: scc-api-gateway_iamtrent.de.crt
+        com.docker.lb.ssl_key: scc-api-gateway_iamtrent.de.key
     environment:
-    - "EUREKA_URI=http://scc-service:password@iamtrent.de:8761/eureka"
+      EUREKA_URI: http://scc-service:password@iamtrent.de:8761/eureka
+      METADATA:  proxy-handles-tls
     networks:
       scc:
 
@@ -66,22 +75,12 @@ services:
     image: "scc-frontend-service:latest"
     ports:
     - 9123:9123
-    deploy:
-      replicas: 1
-      labels:
-        com.docker.lb.hosts: iamtrent.de
-        com.docker.lb.network: scc
-        com.docker.lb.port: 8080
-        com.docker.lb.ssl_cert: scc-frontend-service_iamtrent.de.crt
-        com.docker.lb.ssl_key: scc-frontend-service_iamtrent.de.key     
-        
     networks:
       scc:
     depends_on:
     - scc-service-registry
     environment:
       EUREKA_URI: http://scc-service:password@iamtrent.de:8761/eureka
-      METADATA:  proxy-handles-tls
 
 networks:
   scc:

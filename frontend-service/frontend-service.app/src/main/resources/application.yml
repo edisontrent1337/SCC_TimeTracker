@@ -12,6 +12,7 @@ eureka:
   instance:
     preferIpAddress: true
 
+
 configuration:
   cors:
     allowedOrigins:
