@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: frontend-service
+
+server:
+  port: 9123
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://scc-service:password@scc-service-registry:8761/eureka} # The URI where the Eureka service registry runs.
+  instance:
+    preferIpAddress: true
+
+configuration:
+  cors:
+    allowedOrigins:
+      - http://localhost:9123
+      - http://localhost
+      - http://dude.iamtrent.de
+      - https://dude.iamtrent.de
+      - https://iamtrent.de
+      - http://iamtrent.de
+      - http://localhost:3000
+      - http://localhost:3001

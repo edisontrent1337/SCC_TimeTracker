@@ -1,0 +1,94 @@
+version: '3.7'
+
+services:
+
+  mysql-scc-user-service:
+    image: "mysql:5.7"
+    restart: always
+    environment:
+    - MYSQL_DATABASE=scc_users
+    - MYSQL_ROOT_PASSWORD=root
+    networks:
+      scc:
+
+  scc-service-registry:
+    image: "scc-service-registry:latest"
+    ports:
+    - 8761:8761
+    networks:
+      scc:
+
+  scc-user-service:
+    image: "scc-user-service:latest"
+    networks:
+      scc:
+    depends_on:
+    - mysql-scc-user-service
+    - scc-service-registry
+    environment:
+    - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql-scc-user-service:3306/scc_users?useSSL=false"
+    - "SPRING_DATASOURCE_PASSWORD=root"
+    - "EUREKA_URI=http://scc-service:password@iamtrent.de:8761/eureka"
+
+  scc-api-gateway:
+    image: "scc-api-gateway:latest"
+    ports:
+    - 8762:8762
+    depends_on:
+    - scc-service-registry
+    environment:
+    - "EUREKA_URI=http://scc-service:password@iamtrent.de:8761/eureka"
+    networks:
+      scc:
+
+  mysql-scc-timing-service:
+    image: "mysql:5.7"
+    restart: always
+    environment:
+    - MYSQL_DATABASE=scc_records
+    - MYSQL_ROOT_PASSWORD=root
+    networks:
+      scc:
+
+  scc-timing-service:
+    image: "scc-timing-service:latest"
+    networks:
+    - scc
+    depends_on:
+    - mysql-scc-timing-service
+    - scc-service-registry
+    environment:
+    - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql-scc-timing-service:3306/scc_records?useSSL=false"
+    - "SPRING_DATASOURCE_PASSWORD=root"
+    - "EUREKA_URI=http://scc-service:password@iamtrent.de:8761/eureka"
+
+  scc-frontend-service:
+    image: "scc-frontend-service:latest"
+    ports:
+    - 443:9123
+    deploy:
+      replicas: 1
+      labels:
+        com.docker.lb.hosts: iamtrent.de
+        com.docker.lb.network: scc
+        com.docker.lb.port: 8080
+        com.docker.lb.ssl_cert: scc-frontend-service_iamtrent.de.crt
+        com.docker.lb.ssl_key: scc-frontend-service_iamtrent.de.key     
+        
+    networks:
+      scc:
+    depends_on:
+    - scc-service-registry
+    environment:
+      EUREKA_URI: https://scc-service:password@iamtrent.de:8761/eureka
+      METADATA:  proxy-handles-tls
+
+networks:
+  scc:
+    external:
+      name: scc
+secrets:
+  iamtrent.de.crt:
+    file: /etc/letsencrypt/live/iamtrent.de/iamtrent.de.crt
+  iamtrent.de.key:
+    file: /etc/letsencrypt/live/iamtrent.de/iamtrent.de.key      

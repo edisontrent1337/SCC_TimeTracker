@@ -1,13 +1,13 @@
 spring:
   application:
-    name: user-service
+    name: timing-service
   profiles:
     active: production
 
 
   ## Spring DATA SOURCE (DataSourceAutoConfiguration & DataSourceProperties)
   datasource:
-    url: "jdbc:mysql://localhost:3306/scc_users?useSSL=false&serverTimezone=UTC"
+    url: "jdbc:mysql://localhost:3306/scc_records?useSSL=false&serverTimezone=UTC"
     username: "root"
     password: "root"
 
@@ -27,17 +27,21 @@ spring:
       ddl-auto: "validate"
 
 server:
-  port: 8081
-
+  port: 8080
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: password
+    key-store-type: PKCS12
+    key-alias: tomcat
 configuration:
   cors:
     allowedOrigins:
+      - http://localhost:3000
       - http://localhost
       - http://dude.iamtrent.de
       - https://dude.iamtrent.de
       - https://iamtrent.de
       - http://iamtrent.de
-      - http://localhost:3000
       - http://localhost:3001
       - http://localhost:9123
 
