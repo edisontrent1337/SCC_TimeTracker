@@ -33,7 +33,7 @@ services:
   scc-api-gateway:
     image: "scc-api-gateway:latest"
     ports:
-    - 443:8762
+    - 80:8762
     depends_on:
     - scc-service-registry
     deploy:

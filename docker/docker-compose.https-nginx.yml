@@ -22,9 +22,14 @@ services:
     image: jwilder/nginx-proxy
     ports:
     - "80:80"
+    - "443:443"  
     volumes:
     - /var/run/docker.sock:/tmp/docker.sock:ro
     - /etc/letsencrypt/live/iamtrent.de/:/etc/nginx/certs
+    networks:
+      scc:
+    environment:          
+      HTTPS_METHOD: noredirect
 
   scc-user-service:
     image: "scc-user-service:latest"
@@ -44,6 +49,7 @@ services:
     - 8762:8762
     depends_on:
     - scc-service-registry
+    environment:  
       EUREKA_URI: http://scc-service:password@iamtrent.de:8761/eureka
       VIRTUAL_HOST: iamtrent.de
     networks:

@@ -26,7 +26,7 @@ zuul:
     ui:
       path: /ui/**
       serviceId: frontend-service
-      stripPrefix: true        
+      stripPrefix: false
       
 ribbon:
   ReadTimeout: 3000

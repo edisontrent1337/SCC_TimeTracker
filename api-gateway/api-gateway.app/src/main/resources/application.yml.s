@@ -27,6 +27,11 @@ management:
 
 zuul:
   sensitiveHeaders: Cookie,Set-Cookie
+  routes:
+    ui:
+      path: /ui/**
+      serviceId: frontend-service
+      stripPrefix: true      
 
 ribbon:
   ReadTimeout: 3000
