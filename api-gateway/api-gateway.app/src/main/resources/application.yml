@@ -21,8 +21,13 @@ management:
         include: "*"
 
 zuul:
-  sensitiveHeaders: Cookie,Set-Cookie             
-
+  sensitiveHeaders: Cookie,Set-Cookie        
+  routes:
+    ui:
+      path: /ui/**
+      serviceId: frontend-service
+      stripPrefix: true        
+      
 ribbon:
   ReadTimeout: 3000
   ConnectTimeout: 3000
@@ -32,4 +37,4 @@ hystrix:
     default:
       execution:
         timeout:
-          enabled: false                
+          enabled: false   

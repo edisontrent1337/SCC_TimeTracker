@@ -15,7 +15,7 @@ module.exports = {
 		"single-spa.config": "single-spa.config.js"
 	},
 	output: {
-		publicPath: "/",
+		publicPath: "/ui/",
 		filename: "[name].js",
 		chunkFilename: "[id][hash].js",
 		libraryTarget: "umd",

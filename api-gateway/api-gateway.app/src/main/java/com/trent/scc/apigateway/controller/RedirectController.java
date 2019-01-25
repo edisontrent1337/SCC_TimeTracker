@@ -9,6 +9,7 @@ public class RedirectController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String signUp() {
-		return "forward:/frontend-service";
+		System.out.println("sdsfdsfdsfdsfsdfdsfsdfsdjnsdklfjhsdklfhjlsdj");
+		return "forward:/ui/";
 	}
 }

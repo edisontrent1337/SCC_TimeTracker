@@ -15,6 +15,8 @@ services:
     image: "scc-service-registry:latest"
     ports:
     - 8761:8761
+    depends_on:
+    - scc_api-gateway          
     networks:
       scc:
 
