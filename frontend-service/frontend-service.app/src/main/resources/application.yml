@@ -8,7 +8,8 @@ spring:
 
 server:
   port: 9123
-  contextPath: /ui
+  servlet:
+    context-path: /ui
 
 eureka:
   client:
