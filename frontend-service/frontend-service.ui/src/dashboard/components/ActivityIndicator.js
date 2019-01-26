@@ -77,6 +77,7 @@ export default class ActivityIndicator extends React.Component {
 			.then(res => res.json())
 			.then(res => {
 				this.props.updateActivity(res.data[0]);
+				return res;
 			});
 	}
 
@@ -106,7 +107,7 @@ export default class ActivityIndicator extends React.Component {
 	stopTimer() {
 		this.setState({isOn: false});
 		clearInterval(this.timer);
-		this.postRecord();
+		this.postRecord().then(console.log("sfdsfdsf"));
 	}
 
 	resetTimer() {
@@ -159,7 +160,6 @@ export default class ActivityIndicator extends React.Component {
 
 
 	handleChange(event) {
-		console.log(this.state.activity);
 		let activityData = Object.assign(
 			{},
 			this.state.editActivityData
@@ -200,7 +200,6 @@ export default class ActivityIndicator extends React.Component {
 		const borderWidth = "1px";
 		const logo = <i style={{color: colors.blue["500"], fontSize: "60px"}}
 						className="fas fa-stopwatch"> </i>;
-						console.log(activity.tag);
 		return (
 			<div style={{
 				padding: "20px 10px",

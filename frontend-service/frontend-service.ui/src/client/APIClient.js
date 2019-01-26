@@ -1,10 +1,11 @@
 let token = JSON.parse(localStorage.getItem("user"));
 if (!token) {
-	token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1N2M3Y2RhOC1kYWJjLTQ2MzUtYmFlYi04Y2EwNGNjZWRjZTkiLCJ1c2VybmFtZSI6ImRlbW9fdXNlciIsImV4cCI6MTU0ODc2ODU0OH0.SV1qzfBJDMxq5QwLONsa6c_sNrz94IXUDhnj98zDCilA0UVwOL6y-9Mz3DH18B7MJ2c_KIzd-aGMiBuPA6Rb7w";
+	token = "";
 }
 else {
 	token = token.token;
 }
+
 export const client = {
 	get,
 	post,

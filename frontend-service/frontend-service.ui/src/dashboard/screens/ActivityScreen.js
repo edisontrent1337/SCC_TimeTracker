@@ -10,8 +10,6 @@ import TabBar from "../../web-react/tab/TabBar";
 import Hint from "../../web-react/hints/Hint";
 import {buttonFace} from "../../web-react/button/ButtonFactory";
 import {createDefaultModalStyle} from "../../web-react/utils/ModalFactory";
-import InputField from "../../web-react/input/InputField";
-import TextArea from "../../web-react/input/TextArea";
 
 export default class ActivityScreen extends React.Component {
 
@@ -56,14 +54,14 @@ export default class ActivityScreen extends React.Component {
 		console.log("delete " + activityUuid + "?");
 		this.setState({
 			isDeleteModalOpen: true,
-			activityToBeDeleted: activityUuid
+			recordToBeDeleted: activityUuid
 		});
 	}
 
 	closeDeleteModal() {
 		this.setState({
 			isDeleteModalOpen: false,
-			activityToBeDeleted: undefined,
+			recordToBeDeleted: undefined,
 			requestSent: false,
 		});
 	}
@@ -90,7 +88,7 @@ export default class ActivityScreen extends React.Component {
 	}
 
 	deleteActivity() {
-		client.del('/activities/' + this.state.activityToBeDeleted)
+		client.del('/activities/' + this.state.recordToBeDeleted)
 			.then(res => {
 				if (res.status === 200) {
 					location.reload();
