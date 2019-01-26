@@ -52,8 +52,9 @@ registerApplication(
 	"dashboard",
 	() => import("./src/dashboard/DashBoard.app.js").then(module => module.dashboard),
 	() => {
+		console.log(window.location.pathname &&! (localStorage.getItem("user") === null));
 		return pathnameContains(["/dashboard", "/dashboard"])
-		//&& localStorage.getItem("user")
+		|| (window.location.pathname &&! (localStorage.getItem("user") === null))
 	}
 );
 

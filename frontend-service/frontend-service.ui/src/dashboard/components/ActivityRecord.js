@@ -27,7 +27,7 @@ export default class ActivityRecord extends React.Component {
 					<div style={{float: "left", width: "70px"}}>
 						<div style={{width: "40px", margin: "0px auto"}}>
 							<Circle url={""} color={colors[decideColor(record.tag)]}
-									title={<i className={"typcn typcn-book"}></i>}/>
+									title={<i className={"typcn typcn-" + decideIcon(record.tag)}></i>}/>
 						</div>
 						<div style={{textAlign: "center", marginTop: "50px"}}>
 							<Tag tag={record.tag.toUpperCase()} color={colors[decideColor(record.tag)]["500"]}/>
@@ -59,7 +59,7 @@ export default class ActivityRecord extends React.Component {
 							<div style={{
 								margin: "14px, 0",
 								display: "block",
-								width: "120px",
+								width: "200px",
 								marginLeft: "18px",
 								background: "linear-gradient(to bottom," + colors.pink["100"] + "," + colors.blue["100"] + ")",
 							}}>
@@ -69,12 +69,12 @@ export default class ActivityRecord extends React.Component {
 									paddingLeft: "10px",
 									marginLeft: "4px",
 									backgroundColor: "white",
-									color:colors.grey["700"],
+									color:colors.blue["700"],
 									height: "60px"
 								}}>
 									{record.activityName}
 									<br/>
-									<span style={{color:colors.green["500"], fontWeight:"bold"}}>
+									<span style={{color:colors.green["500"]}}>
 									<i style={{color: colors.green["400"], paddingRight: "5px"}}
 									   className="fas fa-stopwatch"> </i>
 									{convertDuration(record.duration)}
@@ -157,6 +157,25 @@ export function decideColor(tag) {
 		"travel": "purple",
 		"self-care": "orange",
 		"hobby": "green"
+	};
+
+	let result = colors[tag.toLowerCase()];
+	if (typeof result === "undefined") {
+		result = "blue";
+	}
+
+	return result;
+}
+
+export function decideIcon(tag) {
+	const colors = {
+		"sport": "social-dribbble",
+		"relax": "weather-sunny",
+		"studies": "mortar-board",
+		"work": "coffee",
+		"travel": "plane-outline",
+		"self-care": "heart-outline",
+		"hobby": "leaf"
 	};
 
 	let result = colors[tag.toLowerCase()];

@@ -7,7 +7,7 @@ import {client} from "../../client/APIClient";
 import "./activityIndicator.fx.css"
 import TextArea from "../../web-react/input/TextArea";
 import Circle from "../../web-react/circle/Circle";
-import {convertDuration, decideColor} from "./ActivityRecord";
+import {convertDuration, decideColor, decideIcon} from "./ActivityRecord";
 import {buttonFace, createDeleteButton} from "../../web-react/button/ButtonFactory";
 import Modal from "react-modal";
 import {createDefaultModalStyle} from "../../web-react/utils/ModalFactory";
@@ -108,7 +108,7 @@ export default class ActivityIndicator extends React.Component {
 	stopTimer() {
 		this.setState({isOn: false});
 		clearInterval(this.timer);
-		this.setState({lastRecordedTime:convertDuration(this.state.time/1000)}, ()=>console.log(this.state.lastRecordedTime));
+		this.setState({lastRecordedTime:convertDuration(this.state.time/1000)});
 		this.postRecord();
 	}
 
@@ -210,7 +210,7 @@ export default class ActivityIndicator extends React.Component {
 				borderRadius: "8px",
 				marginBottom: "15px",
 			}}>
-				{this.state.lastRecordedTime && <Message dismissable={true} icon={"far fa-check-circle"} message={"You recorded " + this.state.lastRecordedTime}/>}
+				{this.state.lastRecordedTime && <Message dismissable={true} icon={"far fa-check-circle"} message={"Recorded " + this.state.lastRecordedTime + " of " + activity.name + "!"}/>}
 
 				<Modal ariaHideApp={false} defaultStyles={createDefaultModalStyle()}
 					   isOpen={this.state.isEditModalOpen}
@@ -272,7 +272,7 @@ export default class ActivityIndicator extends React.Component {
 					<div style={{float: "left", width: "70px"}}>
 						<div style={{width: "40px", margin: "0px auto"}}>
 							<Circle url={""} color={colors[decideColor(activity.tag)]}
-									title={<i className={"typcn typcn-book"}></i>}/>
+									title={<i className={"typcn typcn-" + decideIcon(activity.tag)}></i>}/>
 						</div>
 						<div style={{textAlign: "center", marginTop: "50px"}}>
 							<Tag tag={activity.tag.toUpperCase()} color={colors[decideColor(activity.tag)]["500"]}/>

@@ -55,6 +55,7 @@ class LoginScreen extends React.Component {
 	render() {
 		const logo = <i style={{color: colors.blue["500"], fontSize: "60px"}}
 						className="fas fa-stopwatch"> </i>;
+
 		return (
 			<Jumbotron
 				style={{
