@@ -7,13 +7,13 @@ import {client} from "../../client/APIClient";
 import "./activityIndicator.fx.css"
 import TextArea from "../../web-react/input/TextArea";
 import Circle from "../../web-react/circle/Circle";
-import {decideColor} from "./ActivityRecord";
+import {convertDuration, decideColor} from "./ActivityRecord";
 import {buttonFace, createDeleteButton} from "../../web-react/button/ButtonFactory";
 import Modal from "react-modal";
 import {createDefaultModalStyle} from "../../web-react/utils/ModalFactory";
 import CredentialForm from "../../web-react/forms/CredentialForm";
-import logo from "../../header/logo";
 import Select from "../../web-react/input/Select";
+import Message from "../../web-react/message/Message";
 
 export default class ActivityIndicator extends React.Component {
 
@@ -85,7 +85,8 @@ export default class ActivityIndicator extends React.Component {
 		this.setState({
 			isOn: true,
 			time: this.state.time,
-			start: Date.now() - this.state.time
+			start: Date.now() - this.state.time,
+			lastRecordedTime: false
 		});
 		this.timer = setInterval(() => this.setState({
 			time: Date.now() - this.state.start
@@ -107,7 +108,8 @@ export default class ActivityIndicator extends React.Component {
 	stopTimer() {
 		this.setState({isOn: false});
 		clearInterval(this.timer);
-		this.postRecord().then(console.log("sfdsfdsf"));
+		this.setState({lastRecordedTime:convertDuration(this.state.time/1000)}, ()=>console.log(this.state.lastRecordedTime));
+		this.postRecord();
 	}
 
 	resetTimer() {
@@ -208,6 +210,7 @@ export default class ActivityIndicator extends React.Component {
 				borderRadius: "8px",
 				marginBottom: "15px",
 			}}>
+				{this.state.lastRecordedTime && <Message dismissable={true} icon={"far fa-check-circle"} message={"You recorded " + this.state.lastRecordedTime}/>}
 
 				<Modal ariaHideApp={false} defaultStyles={createDefaultModalStyle()}
 					   isOpen={this.state.isEditModalOpen}
@@ -293,8 +296,8 @@ export default class ActivityIndicator extends React.Component {
 							<i className={"fas fa-stopwatch" + (isOn ? " pulse" : "")}
 							   style={{color: color, marginRight: (isOn ? "10px" : "5px")}}></i>
 							<span style={{color: colors.blue["200"]}}>{this.msToTime(this.state.time)}</span>
-						</div>
 
+						</div>
 					</div>
 					<div className="cf"></div>
 

@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.ENDED;
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.STARTED;
@@ -106,7 +104,18 @@ public class TimingService implements ITimingService {
 
 	@Override
 	public OperationResult<ActivityRecord> removeRecord(String recordUuid) {
-		return null;
+		OperationResult<ActivityRecord> result = new OperationResult<>();
+		ActivityRecordEntity recordEntity = activityRecordRepository.findByUuid(recordUuid);
+		if (recordEntity != null) {
+			activityRecordRepository.delete(recordEntity);
+			result.setStatus(SUCCESS);
+			result.setPayload(createNewRecordFromEntity(recordEntity));
+			return result;
+		} else {
+			result.setStatus(NOT_EXISTING);
+			result.setPayload(null);
+			return result;
+		}
 	}
 
 	@Override
@@ -219,6 +228,7 @@ public class TimingService implements ITimingService {
 		for (ActivityEntity activityEntity : userActivities) {
 			String activityUuid = activityEntity.getUuid();
 			List<ActivityRecordEntity> records = activityRecordRepository.findAllByActivityUuid(activityUuid);
+			records.sort(Comparator.comparingLong(entity -> entity.getStartTime().toEpochSecond()));
 			for (ActivityRecordEntity recordEntity : records) {
 				ActivityRecord record = createNewRecordFromEntity(recordEntity);
 				record.setActivityName(activityEntity.getName());

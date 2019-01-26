@@ -162,7 +162,6 @@ public class TimingServiceController implements ActivitiesApi {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-
 	@Override
 	@Transactional
 	public ResponseEntity<OperationResponse> deleteActivity(@PathVariable String activityId) {
@@ -175,6 +174,24 @@ public class TimingServiceController implements ActivitiesApi {
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			case NOT_EXISTING:
 				response.error("The activity with the id " + activityId + " does not exist");
+				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		}
+		response.error("An unexpected error occurred.");
+		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<OperationResponse> deleteActivityRecord(@PathVariable  String recordId) {
+		OperationResult<ActivityRecord> operationResult = timingService.removeRecord(recordId);
+		OperationStatus status = operationResult.getStatus();
+		OperationResponse response = new OperationResponse();
+		response.addDataItem(recordId);
+		switch (status) {
+			case SUCCESS:
+				return new ResponseEntity<>(response, HttpStatus.OK);
+			case NOT_EXISTING:
+				response.error("The record with the id " + recordId + " does not exist");
 				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 		response.error("An unexpected error occurred.");

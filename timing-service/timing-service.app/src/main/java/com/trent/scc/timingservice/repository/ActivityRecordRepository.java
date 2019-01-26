@@ -10,4 +10,6 @@ public interface ActivityRecordRepository extends CrudRepository<ActivityRecordE
 	List<ActivityRecordEntity> findAllByActivityUuidAndState(String activityUuid, String state);
 
 	void deleteAllByActivityUuid(String activityUuid);
+
+	ActivityRecordEntity findByUuid(String uuid);
 }

@@ -17,8 +17,6 @@ export default class DashBoard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.loadRecords = this.loadRecords.bind(this);
-		this.convertDuration = this.convertDuration.bind(this);
-		this.conevertTime = this.convertTime.bind(this);
 		this.deleteRecord = this.deleteRecord.bind(this);
 		this.openDeleteModal = this.openDeleteModal.bind(this);
 		this.closeDeleteModal = this.closeDeleteModal.bind(this);
@@ -153,24 +151,4 @@ export default class DashBoard extends React.Component {
 		);
 	}
 
-	convertTime(time) {
-		return new Date(time).toString().substr(0, 11) + new Date(time).toString().substr(16, 5);
-	}
-
-	convertDuration(seconds) {
-		let minutes = Math.floor(seconds / 60);
-		let hours = Math.floor(minutes / 60);
-		let remainingSeconds = seconds % 60;
-		let remainingMinutes = minutes % 60;
-		if (remainingSeconds < 10) {
-			remainingSeconds = "0" + remainingSeconds;
-		}
-		if (remainingMinutes < 10) {
-			remainingMinutes = "0" + remainingMinutes;
-		}
-
-		let suffix = (hours > 0 ? "h" : (minutes > 0 ? "min" : "s"));
-
-		return (hours > 0 ? hours + ":" : "") + remainingMinutes + ":" + remainingSeconds + " " + suffix;
-	}
 }

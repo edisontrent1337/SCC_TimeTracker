@@ -77,7 +77,7 @@ export default class ActivityRecord extends React.Component {
 									<span style={{color:colors.green["500"], fontWeight:"bold"}}>
 									<i style={{color: colors.green["400"], paddingRight: "5px"}}
 									   className="fas fa-stopwatch"> </i>
-									{this.convertDuration(record.duration)}
+									{convertDuration(record.duration)}
 									</span>
 
 								</div>
@@ -130,25 +130,24 @@ export default class ActivityRecord extends React.Component {
 	}
 
 
-	convertDuration(seconds) {
-		let minutes = Math.floor(seconds / 60);
-		let hours = Math.floor(minutes / 60);
-		let remainingSeconds = seconds % 60;
-		let remainingMinutes = minutes % 60;
-		if (remainingSeconds < 10) {
-			remainingSeconds = "0" + remainingSeconds;
-		}
-		if (remainingMinutes < 10) {
-			remainingMinutes = "0" + remainingMinutes;
-		}
-
-		let suffix = (hours > 0 ? "h" : (minutes > 0 ? "min" : "s"));
-
-		return (hours > 0 ? hours + ":" : "") + remainingMinutes + ":" + remainingSeconds + " " + suffix;
-	}
-
 }
 
+export function convertDuration(seconds) {
+	let minutes = Math.floor(seconds / 60);
+	let hours = Math.floor(minutes / 60);
+	let remainingSeconds = seconds % 60;
+	let remainingMinutes = minutes % 60;
+	if (remainingSeconds < 10) {
+		remainingSeconds = "0" + remainingSeconds;
+	}
+	if (remainingMinutes < 10) {
+		remainingMinutes = "0" + remainingMinutes;
+	}
+
+	let suffix = (hours > 0 ? "h" : (minutes > 0 ? "min" : "s"));
+
+	return (hours > 0 ? hours + ":" : "") + remainingMinutes + ":" + remainingSeconds + " " + suffix;
+}
 export function decideColor(tag) {
 	const colors = {
 		"sport": "red",
