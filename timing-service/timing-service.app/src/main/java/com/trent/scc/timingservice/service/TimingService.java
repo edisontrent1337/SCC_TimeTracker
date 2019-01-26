@@ -228,7 +228,7 @@ public class TimingService implements ITimingService {
 		for (ActivityEntity activityEntity : userActivities) {
 			String activityUuid = activityEntity.getUuid();
 			List<ActivityRecordEntity> records = activityRecordRepository.findAllByActivityUuid(activityUuid);
-			records.sort(Comparator.comparingLong(entity -> entity.getStartTime().toEpochSecond()));
+			//records.sort(Comparator.comparingLong(entity -> entity.getStartTime().toEpochSecond()));
 			for (ActivityRecordEntity recordEntity : records) {
 				ActivityRecord record = createNewRecordFromEntity(recordEntity);
 				record.setActivityName(activityEntity.getName());

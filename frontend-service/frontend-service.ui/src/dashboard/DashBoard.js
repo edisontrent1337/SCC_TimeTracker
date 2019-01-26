@@ -6,7 +6,7 @@ import Button from "../web-react/button/Button";
 import "../web-react/table/table.fx.css";
 import Hint from "../web-react/hints/Hint";
 import Message from "../web-react/message/Message";
-import ActivityRecord from "./components/ActivityRecord";
+import ActivityRecord, {convertDuration} from "./components/ActivityRecord";
 import Modal from "react-modal";
 import {createDefaultModalStyle} from "../web-react/utils/ModalFactory";
 import CredentialForm from "../web-react/forms/CredentialForm";
@@ -83,11 +83,11 @@ export default class DashBoard extends React.Component {
 					}
 					{numberOfRecords > 0 &&
 					<div>
-						<div style={{borderBottom: "1px solid #eceff1", height: "41px", marginBottom: "10px"}}>
+						<div style={{height: "41px", marginBottom: "10px"}}>
 							<div style={{float: "left", width: "50%"}}>
 								<Tab title={"Your Records"}/>
 							</div>
-							<div style={{float: "right"}}>
+							<div style={{float: "right", marginRight:"-10px"}}>
 								<Button value={<span><i className={"typcn typcn-spiral"}></i>Activities</span>}
 										color={colors.pink["400"]}
 										onClick={() => location = '/dashboard/activities'}
@@ -96,8 +96,16 @@ export default class DashBoard extends React.Component {
 							<div style={{clear: "both"}}></div>
 						</div>
 						{this.state.records.map((record, i) => {
+							console.log(this.state.records[i]);
+							let pause;
+							if(i + 1 < this.state.records.length) {
+								let date1 = new Date(this.state.records[i].endTime);
+								let date2 = new Date(this.state.records[i+1].startTime);
+								let timeDiff = Math.abs(date2.getTime() - date1.getTime());
+								pause = (convertDuration((date2.getTime()-date1.getTime())/1000));
+							}
 							return (
-								<ActivityRecord record={record} key={i} handleDelete={()=>this.openDeleteModal(record.uuid)}/>
+								<ActivityRecord record={record} key={i} pause={pause} handleDelete={()=>this.openDeleteModal(record.uuid)}/>
 							);
 						})
 						}

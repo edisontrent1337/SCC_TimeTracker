@@ -143,11 +143,12 @@ export default class ActivityRecord extends React.Component {
 									<div style={{marginLeft: "-25px"}}>
 
 										<div>
-											<Circle url={""} color={colors.grey}
-													title={<i className={"typcn typcn-time"}></i>}/>
+											<Circle fontSize={"16px"} url={""} color={colors.grey}
+													title={<i style={{paddingTop:"10px"}} className="fas fa-stop-circle"></i>}/>
 										</div>
-										<div>
-										</div>
+										<span style={{color:colors.grey["400"], backgroundColor:"white", margin:"7px 0 0 10px", padding:"5px", display:"inline-block"}}>
+											{this.props.pause}
+										</span>
 									</div>
 								</div>
 							</div>
