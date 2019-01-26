@@ -25,15 +25,14 @@ export default class ActivityRecord extends React.Component {
 				}}>
 
 					<div style={{float: "left", width: "70px"}}>
-						<div style={{width: "40px", margin: "0px auto"}}>
-							<Circle url={""} color={colors[decideColor(record.tag)]}
-									title={<i className={"typcn typcn-" + decideIcon(record.tag)}></i>}/>
-						</div>
-						<div style={{textAlign: "center", marginTop: "50px"}}>
-							<Tag tag={record.tag.toUpperCase()} color={colors[decideColor(record.tag)]["500"]}/>
-						</div>
-						<div style={{width:"60px", margin:"10px auto 0 auto", display:"block"}}>
-							<Button value={buttonFace("trash", "")} width={60} color={colors.red["600"]} onClick={handleDelete}/>
+						<div style={{width: "60px", margin: "0px auto 0 auto", display: "block"}}>
+							<div className={"cf"}>
+								<Button value={buttonFace("edit", "")} width={60} color={colors.green["600"]}/>
+							</div>
+							<div style={{marginTop: "10px"}}>
+								<Button value={buttonFace("trash", "")} width={60} color={colors.red["600"]}
+										onClick={handleDelete}/>
+							</div>
 						</div>
 
 					</div>
@@ -69,15 +68,33 @@ export default class ActivityRecord extends React.Component {
 									paddingLeft: "10px",
 									marginLeft: "4px",
 									backgroundColor: "white",
-									color:colors.blue["700"],
-									height: "60px"
+									color: colors.blue["700"],
+									height: "100px"
 								}}>
-									{record.activityName}
-									<br/>
-									<span style={{color:colors.green["500"]}}>
+
+									<div style={{marginLeft: "-32px"}}>
+										<Circle url={""} color={colors[decideColor(record.tag)]}
+												title={<i className={"typcn typcn-" + decideIcon(record.tag)}></i>}/>
+									</div>
+									<span style={{marginLeft: "10px", display: "inline-block"}}>
+											{record.activityName}
+										<div style={{display: "block", marginTop: "8px"}}>
+											<Tag tag={record.tag.toUpperCase()}
+												 color={colors[decideColor(record.tag)]["500"]}/>
+									</div>
+
+									<span style={{
+										color: colors.green["500"],
+										display: "inline-block",
+										marginTop: "8px"
+									}}>
 									<i style={{color: colors.green["400"], paddingRight: "5px"}}
 									   className="fas fa-stopwatch"> </i>
-									{convertDuration(record.duration)}
+										{convertDuration(record.duration)}
+									</span>
+		<div>
+									</div>
+
 									</span>
 
 								</div>
@@ -104,17 +121,35 @@ export default class ActivityRecord extends React.Component {
 								width: "120px",
 								marginLeft: "18px",
 								background: "linear-gradient(to bottom," + colors.blue["100"] + "," + colors.pink["100"] + ")",
-								height: "60px"
+								height: "70px",
 							}}>
-								<center style={{
+								<div style={{
 									fontSize: "14px",
 									padding: "10px 0",
 									paddingLeft: "5px",
 									marginLeft: "4px",
 									backgroundColor: "white",
-									height: "60px"
+									height: "70px",
+									paddingTop: "35px"
 								}}>
-								</center>
+									<hr style={{
+										height: "1px",
+										margin: "0 0 -25px -100px",
+										padding: "0",
+										display: "block"
+									}}/>
+
+
+									<div style={{marginLeft: "-25px"}}>
+
+										<div>
+											<Circle url={""} color={colors.grey}
+													title={<i className={"typcn typcn-time"}></i>}/>
+										</div>
+										<div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 
@@ -148,6 +183,7 @@ export function convertDuration(seconds) {
 
 	return (hours > 0 ? hours + ":" : "") + remainingMinutes + ":" + remainingSeconds + " " + suffix;
 }
+
 export function decideColor(tag) {
 	const colors = {
 		"sport": "red",
