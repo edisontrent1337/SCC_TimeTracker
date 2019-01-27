@@ -1,15 +1,15 @@
 
 # SCC_TimeTracker
-Repository for the seminar task of group 4 of the lecture Service and Cloud Computing by Dr. Braun, TU Dresden     
+Repository for the seminar task of group 4 of the lecture Service and Cloud Computing by Dr. Braun, TU Dresden
 https://tu-dresden.de/ing/informatik/sya/professur-fuer-rechnernetze/studium/lehrveranstaltungen/lehrveranstaltungsdetails?ln=de&lv_id=49[Link to the lecture]
 
 ## Documentation + Presentations
 
-link:orga/Documentation/documentation.pdf[Documentation]     
+link:orga/Documentation/documentation.pdf[Documentation]
 
-link:orga/SCC_TimeTracker_first_presentation.pdf[First Presentation]    
+link:orga/SCC_TimeTracker_first_presentation.pdf[First Presentation]
 
-link:orga/SCC_TimeTracker_final_presentation.pdf[Final Presentation]       
+link:orga/SCC_TimeTracker_final_presentation.pdf[Final Presentation]
 
 ## Idea
 The idea is to create a web service that is capable of tracking time for certain activities. A user can use this service to track the amount of time he invests per day / week / month on certain tasks.
@@ -27,12 +27,13 @@ We are planning to compose three micro services that make up our application: a 
 We will use a Zuul API-Gateway to redirect requests from a client to the specific service instance that is needed.
 
 ## Cloud Service Provider
-We are planning to use a droplet on DigitalOcean to host our service.
+~~We are planning to use a droplet on DigitalOcean to host our service.~~
+We did it. Take a look at link:https://iamtrent.de[https://iamtrent.de]
 
 ## Functions
-.API: (send data, send data2; expected data)   
+.API: (send data, send data2; expected data)
 * User
-** CRM    
+** CRM
 *** register (username, password)
 *** login (username, password; token)
 *** logout
@@ -54,13 +55,13 @@ We are planning to use a droplet on DigitalOcean to host our service.
 ** Same options as for User
 ** All tracked hours / activities and so on
 
-.Main activities     
-* sleep  
+.Main activities
+* sleep
 * study / learn
 * sport
 * work
 
-.Additional expansions if we have enough time   
+.Additional expansions if we have enough time
 * Social component
 ** add friends
 ** compare tracked activities (overlaying graphics)
@@ -72,45 +73,43 @@ We are planning to use a droplet on DigitalOcean to host our service.
 ** Auszug aus Folien siehe unten
 ** Idee
 ** Umsetzung
-** Technologien 
+** Technologien
 ** Sicherheitskonzepte
-** API 
+** API
 *** Mit Swagger automatisiert?
 * Features
-** UI für Anlegen von Aktivitäten 
+** UI für Anlegen von Aktivitäten
 ** UI für Record erstellen
-** UI Statistik (privat/global) 
+** UI Statistik (privat/global)
 ** HTTPS
-** CRUD-Operationen für Records vollständig implementiere 
+** CRUD-Operationen für Records vollständig implementiere
 ** Statistiktool im Backend
-* Präsentation 
-* Roll-out 
-* Anlegen von Records für Präsentation der Statistiken bei Abgabe 
- 
+* Präsentation
+* Roll-out
+* Anlegen von Records für Präsentation der Statistiken bei Abgabe
 
 
-#### Aus den Folien zur Abgabe: 
 
-* Gesamtergebnis mit Client-Applikationen und Sicherheits-Erweiterungen, Docker-Container 
+#### Aus den Folien zur Abgabe:
+
+* Gesamtergebnis mit Client-Applikationen und Sicherheits-Erweiterungen, Docker-Container
 * Software
 ** Quellcode im BitBucket-Repro
 ** *Packages zum direkten Deployment als Docker-Container*
 ** Deployment des Service in Cloud-Infrastruktur
-* Dokumentation 
-** Angaben zum Team, Vorgehensweise 
-** Verwendete Plattform /Software (Installationshinweise, Versionen) 
+* Dokumentation
+** Angaben zum Team, Vorgehensweise
+** Verwendete Plattform /Software (Installationshinweise, Versionen)
 ** *Schnittstellenbeschreibung des Web Services (WSDL/WADL/Swagger, ...)*
-** Bedienungsanleitung für Clients 
+** Bedienungsanleitung für Clients
 ** Feedback + Kritik am Praktikum
 
 
 ## Deadlines
 [options="header", cols="1,10"]
 |==========
-| Datum          | Ziel                                                                                    
-| 11.+18.12.2018 | Technologieauswahl, Web Service mit Test-Clients                                        
-| 28.01.2019     | Finale Abgabe                                                                           
-| 29.01.2019     | Gesamtergebnis mit Client-Applikationen und Sicherheits-Erweiterungen, Docker-Container 
+| Datum          | Ziel
+| 11.+18.12.2018 | Technologieauswahl, Web Service mit Test-Clients
+| 28.01.2019     | Finale Abgabe
+| 29.01.2019     | Gesamtergebnis mit Client-Applikationen und Sicherheits-Erweiterungen, Docker-Container
 |=====
-
-
