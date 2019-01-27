@@ -5,7 +5,7 @@
 % So schön mit Bildern und so, erst bei fertiger Anwendung 
 
 \begin{center}
-	\textit{Your Time is precius. \newline Track your investments!}
+	\textit{Your Time is precious. \newline Track your investments!}
 \end{center}
 
 
@@ -20,12 +20,11 @@ TimeTracker bietet folgende Funktionen:
 
 
 Der Dienst ist online zu erreichen unter \url{https://iamtrent.de}
-
-Lokale Installationen sind zu erreichen unter localhost:9123
+Lokale Installationen sind zu erreichen unter \url{localhost}
 
 \subsection{Build}
 
-Zum Bild bitte folgende Zeilen Ausführen:
+Um die Anwendung zu bauen und lokal hochzufahren, wechseln Sie bitte in das Wurzelverzeichnis und führen Sie folgende Kommandos aus:
 \begin{lstlisting}[language=bash]
 	mvn clean install
 	docker-compose -f docker/docker-compose.yml up -d
@@ -60,16 +59,16 @@ Du hast noch kein Benutzerkonto? Kein Problem, unterhalb des \textit{Sign In} Bu
 %		\label{fig:register}
 %\end{wrapfigure}
 
-Um die zu registrieren musst du nur einen Usernamen oder eine Email, sowie ein Passwort eintragen. Beachte, dass das Passwort mindestens 8 Zeichen haben muss, vorher ist der Button nicht anklickbar! 
-Nach dem du dich erfolgreich registriert hast wirst du wieder auf unsere Startseite (Abb. \ref{fig:login}) geleitet, wo du dich ab sofort mit deinen Nutzerdaten anmelden kannst. 
+Um sich zu registrieren, wähle einen Usernamen sowie ein Passwort und klicke dann auf "Sign Up". Beachte bitte, dass das Passwort mindestens 8 Zeichen lang sein muss. Bitte merke Dir deine ausgewählten Credentials, da bislang noch keine Registrierungsbestätigung per Mail versendet wird.
+Nachdem Du dich erfolgreich registriert haben, wirst Du wieder auf unsere Startseite (Abb. \ref{fig:login}) geleitet, wo Du dich ab sofort mit Deinen Nutzerdaten anmelden können. 
 
-Wenn du einmal angemeldet bist kannst du dich jeder Zeit mit einem Klick auf \textit{Logout} oben rechts wieder abmelden.
+Wenn Du einmal angemeldet bist, kannst Du dich jederzeit mit einem Klick auf \textit{Logout} oben rechts wieder abmelden.
 
 \subsection{TimeTracken}
 
-Wenn du dich das erste mal einloggst, sind noch keine Aktivitäten vorhanden. 
-Aktivitäten sind die Aktionen, für die du deine Zeit trackst. 
-Füge einfach eine neue Aktivität hinzu, in dem du auf \textit{+ New Aktivity} klickst (Abb. \ref{fig:no_activity}). 
+Wenn Du dich das erste mal einloggst, sind noch keine Aktivitäten vorhanden. 
+Aktivitäten sind alltägliche Aktionen, für die Du die Zeit trackst, die Du in sie investierst. Zum Beispiel Lernen, Reisen, Einkaufen, Sport treiben und so weiter. 
+Füge einfach eine neue Aktivität hinzu, in dem Du auf \textit{+ New Activity} klickst (Abb. \ref{fig:no_activity}). 
 
 \begin{figure}[H]
 	\hspace{-1.5cm}
@@ -87,14 +86,13 @@ Füge einfach eine neue Aktivität hinzu, in dem du auf \textit{+ New Aktivity} 
 	\label{fig:create_activity}
 \end{figure}
 
-Nun kannst du eine Aktivität anlegen (Abb. \ref{fig:create_activity}. 
-Gibt ihr einen Namen und eine Beschreibung, damit du später weißt, wofür du sie angelegt hast. 
+Nun kannst Du die Aktivität genauer beschreiben (Abb. \ref{fig:create_activity}. 
+Gib ihr einen Namen und eine Beschreibung, damit Du später weißt, wofür Du sie angelegt hast. 
 Der Name darf keine Umlaute wie \glqq Ä, Ö, Ü\grqq{}  enthalten und die Beschreibung muss mindeste 10 Zeichen lang sein. 
-Danach verbindest du deine Aktivität mit einem Tag. Tags sind sowas wie Kategorien. 
-Jede Aktivität hat ein Tag und dadurch eine Zuordnung zu einem deiner Lebensbereiche. 
-
+Danach verbindest Du deine Aktivität mit einem Tag. Tags helfen Dir dabei, deine Activities zu kategorisieren.
+Jede Aktivität hat ein Tag und dadurch eine Zuordnung zu einem Deiner Lebensbereiche. 
 Tags sind beispielsweise Studies, Sport und Relax. 
-Mit Hilfe der Tags kannst du später schauen, wie viel Sport du gemacht hast, auch wenn du deine Zeit in den Aktivitäten "Schwimmen" und "Rad fahren" aufgenommen hast. 
+Mit Hilfe der Tags kannst Du später schauen, wie viel Sport du gemacht hast, auch wenn Du deine Zeit in den Aktivitäten "Schwimmen" und "Rad fahren" aufgenommen hast. 
 
 
 \begin{figure}[H]
@@ -105,13 +103,13 @@ Mit Hilfe der Tags kannst du später schauen, wie viel Sport du gemacht hast, au
 	\label{fig:activitys}
 \end{figure}
 
-Nun hast du Aktivitäten und eine Übersicht (Abb. \ref{fig:activitys}. Hier kannst du mit einem Klick auf  \textit{Start}  ein Record beginnen. Records sind die einzelnen Aufnahmen, die du machst. Zusammen addiert ergeben sie die gesamte Zeit, die du für eine Aktivität aufbringst. Wie du siehst, blinkt nun die Uhr und die Zeit läuft. 
+Nun hast Du Aktivitäten und eine Übersicht (Abb. \ref{fig:activitys}. Hier kannst Du mit einem Klick auf  \textit{Start} ein Record beginnen. Records sind die einzelnen Aufnahmen, die Du machst, um investierte Zeit zu tracken. Summiert ergeben sie die gesamte Zeit, die du für eine Aktivität aufbringst. Nach einem Klick auf "Start" wirst Du sehen, dass die Stopuhr blinkt und die Zeit läuft. 
 Mit einem Klick auf den selben Button stoppst du das Tracking deiner Aktivität und beendest den Record. Die Zeit des Records wird dir nun angezeigt.
- Du kannst dich zwischendurch auch abmelden oder von einem anderen Gerät aus einloggen, die Aufnahme geht einfach weiter. 
+Du kannst dich zwischendurch auch abmelden oder von einem anderen Gerät aus einloggen, die Aufnahme geht einfach weiter. 
 
-Mit dem Button \textit{+ New} kannst du weitere Aktivitäten anlegen und mit dem Button \textit{Delete} die jeweilige auch wieder löschen. In dem du auf \textit{Edit} klickst kannst du die Inhalte updaten. 
+Mit dem Button \textit{+ New} kannst du weitere Aktivitäten anlegen und mit dem Button \textit{Delete} die jeweilige auch wieder löschen. In dem du auf \textit{Edit} klickst kannst Du Namen, Beschreibung und Tag deiner Activities anpassen.
 
-Über die Reiter oben kannst du deine Aktivität nach den von dir genutzten Tags filtern. 
+Wenn du auf einem Desktop TimeTracker nutzt, kannst Du über die Reiter oben die Ansicht nach Tags filtern. 
 
 \begin{figure}[H]
 	\hspace{-1.5cm}
@@ -121,5 +119,5 @@ Mit dem Button \textit{+ New} kannst du weitere Aktivitäten anlegen und mit dem
 	\label{fig:records}
 \end{figure}
 
-Wenn du \textit{Records} anwählst kommst du zu einer Übersicht all deiner Zeitaufnahmen (Abb. \ref{fig:records}). Hier steht für welche Aktivität und Tag, von wann bis wann und wie lange die Aufnahmen war. Ebenso kannst du Records löschen. 
+Wenn du \textit{Records} anwählst, kommst Du zu einer Übersicht all deiner Zeitaufnahmen (Abb. \ref{fig:records}). Hier kannst Du genau sehen, wie viel Zeit Du für welche Aktivität investiert hast. Außerdem kannst Du von hier aus auch Records löschen.
 

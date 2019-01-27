@@ -6,9 +6,10 @@
 
 \subsection{Übersicht verwendeter Technologien, Software  \newline und Formate}
 
-Die in der Anwendung implementierten Technologien aus Tabelle \ref{tab:Technologien}  sind in Abbildung \ref{fig:TechStack} noch einmal schematisch zugeordnet. 
-Die Anwendung (blau) läuft in einem Docker-Container (dunkelblau). Über die API (grün) kommuniziert die Weboberfläche (hellblau) mit der Anwendung. Die sich in Planung befindende App hat den gleichen Zugriffspunkt. 
 
+Die Anwendung besteht aus verteilten Micro-Services, die mit Hilfe von Docker containerisiert wurden. Jeder Micro-Service basiert auf einem Spring-Boot Container und nutzt den Netflix-Stack (Eureka und Zuul), um sich bei einer Service-Registry zu registrieren. Die nun auffindbaren Services können gegenseitig miteinander kommunizieren und ein API-Gateway (Zuul) delegiert Requests an die entsprechenden Services.
+Die Micro-Services bieten jeweils eine eigene REST-API an, die mit Hilfe des Web-Frontends konsumiert werden kann. 
+Die in der Anwendung genutzten Technologien aus Tabelle \ref{tab:Technologien}  sind in Abbildung \ref{fig:TechStack} noch einmal schematisch zugeordnet. 
 Eine Zuordnung der Technologien zur Architektur erfolgt in Abbildung \ref{fig:ArchitekturTech}
 
 Anmerkung: Die Andoid-App wurde nicht im Rahmen der Lehrveranstaltung fertig gestellt und ist somit noch ausstehend. Da sie aber für eine spätere Nutzung angedacht ist und sie ebenfalls über die REST-Schnittstelle kommuniziert wurde sie im Entwurf berücksichtigt. 
@@ -70,7 +71,7 @@ Anmerkung: Die Andoid-App wurde nicht im Rahmen der Lehrveranstaltung fertig ges
 
 
 
-\paragraph{Die Funktionen der Services}
+\paragraph{Funktionalität der Services}
 \begin{itemize}
 	\item User Service
 	\begin{itemize}
@@ -94,16 +95,16 @@ Anmerkung: Die Andoid-App wurde nicht im Rahmen der Lehrveranstaltung fertig ges
 	\item API Gateway
 	\begin{itemize}
 		\item Nutzt Service Registry
-		\item Mapping der Requests auf Service
+		\item Mapping der Requests auf entsprechenden Service
 	\end{itemize}
 \end{itemize}
 
-Durch die Micro Service Architektur war es möglich rolling Updates zu machen, was insbesondere im Bereich der UI zum Einsatz kam. 
+Die Dockerisierung und Nutzung von docker compose sowie docker stack ermöglicht das Ausrollen kontinuierlicher Updates.
 
 \subsection{Schnittstellen}
 % Links von Server mit http://editor.swagger.io/ oder https://swagger.io/tools/swagger-inspector/ or https://swagger.io/tools/swagger-ui/
 
-Die API wurde nach dem OpenAPI-Standard entwickelt und generierte automatisch ein Interface in Java. Eine Auflistung aller Methoden ist über die folgenden Links zu erreichen. Zusätzlich befindet sich im Anhang (Seite \pageref{Anhang}) ein Ausdruck der automatisch generierten Dokumentation.
+Die API wurde mit Hilfe von OpenAPI und Swagger definiert und entwickelt. Mit Hilfe eines Swagger-Plugins für Maven wurden automatisch Java-Interfaces generiert, welche dann von Spring-Rest-Controllern implementiert werden konnten. Eine Auflistung aller Methoden ist über die folgenden Links zu erreichen. Zusätzlich befindet sich im Anhang (Seite \pageref{Anhang}) ein Ausdruck der automatisch generierten Dokumentation.
 
 \begin{itemize}
 	\item frontend-service: \newline  \url{https://app.swaggerhub.com/apis/SCC_Group4/frontend-service/}
@@ -113,6 +114,6 @@ Die API wurde nach dem OpenAPI-Standard entwickelt und generierte automatisch ei
 
 \subsection{Sicherheit}
 
-Die Sicherheit wurde mittels \textbf{JSON Web Token (JWT)} und umgesetzt. Dabei erhält der Benutzer beim Login einen Token, mittels derer er sich gegenüber den Diensten authentifizieren kann. Das Token wird im localStorage des Browsers gespeichert und bei jedem Request im Header mitgeführt. 
+Die sichere und authentifizierte Kommunikation mit den Micro-Services wurde mit Hilfe von \textbf{JSON Web Token (JWT)} und HTTPS umgesetzt. Bei erfolgreichem Login erhält der Benutzer ein Token, mit dem er sich bei den Diensten authentifizieren kann.  Das Token wird im localStorage des Browsers gespeichert und bei jedem Request im Header mitgeführt. Dank Spring ist jedem Dienst dabei frei überlassen, wie das Token interpretiert wird, da ein entsprechendes Interface für jeden Service frei implementiert werden kann. So kann zum Beispiel Autorisierung auf Basis von Rollen realisiert werden. In unserer Anwendung findet dieses Feature jedoch keine Bedeutung, so dass jeder Micro-Service für sich nur die Validität des Tokens überprüft.
 
-Des Weiteren wird die Sicherheit der Verbindung mittels der Transportverschlüsselung \textbf{HTTPS} gewährleistet. 
+Des Weiteren wird die Sicherheit der Verbindung mittels der Transportverschlüsselung \textbf{HTTPS} gewährleistet.  Dazu wird im Produktionsbetrieb der gesamten Architektur ein nginx-Server vorgeschoben, der HTTPS-Requests entgegen nimmt, TLS-Termination vornimmt und die dann entschlüsselte Kommunikation an das API-Gateway weiterleitet. Die Kommunikation innerhalb des V-Servers, also zwischen den Micro-Services selbst, ist folglich weiterhin unverschlüsselt (HTTP). Wir haben uns bewusst dazu entschieden, da Verteilung von Zertifikaten sowie das ständige Ver- und Entschlüsseln der Kommunikation die Performance sichtlich beeinflusste.
