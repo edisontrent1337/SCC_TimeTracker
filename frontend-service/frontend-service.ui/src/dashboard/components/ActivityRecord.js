@@ -41,7 +41,7 @@ export default class ActivityRecord extends React.Component {
 						<div style={{
 							fontSize: "14px",
 							color: colors.blue["500"],
-							width: "150px",
+							width: "230px",
 						}}>
 							<i style={{
 								marginRight: "-20px",
@@ -58,7 +58,8 @@ export default class ActivityRecord extends React.Component {
 							<div style={{
 								margin: "14px, 0",
 								display: "block",
-								width: "200px",
+								width: "230px",
+								wordWrap: "break-word",
 								marginLeft: "18px",
 								background: "linear-gradient(to bottom," + colors.pink["100"] + "," + colors.blue["100"] + ")",
 							}}>
@@ -69,14 +70,13 @@ export default class ActivityRecord extends React.Component {
 									marginLeft: "4px",
 									backgroundColor: "white",
 									color: colors.blue["700"],
-									height: "100px"
 								}}>
 
 									<div style={{marginLeft: "-32px"}}>
 										<Circle url={""} color={colors[decideColor(record.tag)]}
 												title={<i className={"typcn typcn-" + decideIcon(record.tag)}></i>}/>
 									</div>
-									<span style={{marginLeft: "10px", display: "inline-block"}}>
+									<span style={{marginLeft: "10px", display: "inline-block", border:"1px solid red"}}>
 											{record.activityName}
 										<div style={{display: "block", marginTop: "8px"}}>
 											<Tag tag={record.tag.toUpperCase()}
@@ -162,6 +162,7 @@ export default class ActivityRecord extends React.Component {
 	}
 
 	convertTime(time) {
+		console.log(time);
 		return new Date(time).toString().substr(0, 11) + new Date(time).toString().substr(16, 5);
 	}
 
