@@ -33,7 +33,7 @@ services:
   scc-api-gateway:
     image: "scc-api-gateway:latest"
     ports:
-      - 8762:8762
+      - 80:8762
     depends_on:
       - scc-service-registry
     environment:
@@ -65,7 +65,7 @@ services:
   scc-frontend-service:
     image: "scc-frontend-service:latest"
     ports:
-    - 80:9123
+    - 9123:9123
     networks:
       scc:
     depends_on:
