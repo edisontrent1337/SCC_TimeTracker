@@ -58,7 +58,6 @@ export default class ActivityRecord extends React.Component {
 							<div style={{
 								margin: "14px, 0",
 								display: "block",
-								width: "230px",
 								wordWrap: "break-word",
 								marginLeft: "18px",
 								background: "linear-gradient(to bottom," + colors.pink["100"] + "," + colors.blue["100"] + ")",
@@ -72,30 +71,30 @@ export default class ActivityRecord extends React.Component {
 									color: colors.blue["700"],
 								}}>
 
-									<div style={{marginLeft: "-32px"}}>
+									<div style={{marginLeft: "-32px", float: "left"}}>
 										<Circle url={""} color={colors[decideColor(record.tag)]}
 												title={<i className={"typcn typcn-" + decideIcon(record.tag)}></i>}/>
 									</div>
-									<span style={{marginLeft: "10px", display: "inline-block", border:"1px solid red"}}>
-											{record.activityName}
+									<div style={{marginLeft: "10px"}}>
+										{record.activityName}
 										<div style={{display: "block", marginTop: "8px"}}>
 											<Tag tag={record.tag.toUpperCase()}
 												 color={colors[decideColor(record.tag)]["500"]}/>
-									</div>
+										</div>
 
-									<span style={{
-										color: colors.green["500"],
-										display: "inline-block",
-										marginTop: "8px"
-									}}>
+										<span style={{
+											color: colors.green["500"],
+											display: "inline-block",
+											marginTop: "8px"
+										}}>
 									<i style={{color: colors.green["400"], paddingRight: "5px"}}
 									   className="fas fa-stopwatch"> </i>
-										{convertDuration(record.duration)}
+											{convertDuration(record.duration)}
 									</span>
-		<div>
-									</div>
+										<div>
+										</div>
 
-									</span>
+									</div>
 
 								</div>
 							</div>
@@ -144,9 +143,16 @@ export default class ActivityRecord extends React.Component {
 
 										<div>
 											<Circle fontSize={"16px"} url={""} color={colors.grey}
-													title={<i style={{paddingTop:"10px"}} className="fas fa-stop-circle"></i>}/>
+													title={<i style={{paddingTop: "10px"}}
+															  className="fas fa-stop-circle"></i>}/>
 										</div>
-										<span style={{color:colors.grey["400"], backgroundColor:"white", margin:"7px 0 0 10px", padding:"5px", display:"inline-block"}}>
+										<span style={{
+											color: colors.grey["400"],
+											backgroundColor: "white",
+											margin: "7px 0 0 10px",
+											padding: "5px",
+											display: "inline-block"
+										}}>
 											{this.props.pause}
 										</span>
 									</div>

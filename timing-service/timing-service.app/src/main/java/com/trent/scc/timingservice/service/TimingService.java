@@ -52,7 +52,7 @@ public class TimingService implements ITimingService {
 	@Override
 	public OperationResult<ActivityRecord> addRecord(ActivityRecord record) {
 		if (record.getTime() == null) {
-			record.setTime(OffsetDateTime.now().plusMinutes(50));
+			record.setTime(OffsetDateTime.now());
 		}
 		ActivityEntity storedActivity = findActivityForRecord(record);
 		OperationResult<ActivityRecord> result = new OperationResult<>();
