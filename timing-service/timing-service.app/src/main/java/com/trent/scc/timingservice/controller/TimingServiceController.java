@@ -198,6 +198,8 @@ public class TimingServiceController implements ActivitiesApi {
 		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+
+
 	private String getUserAuthentication() {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		Authentication authentication = securityContext.getAuthentication();
