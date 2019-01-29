@@ -252,7 +252,7 @@ export default class ActivityScreen extends React.Component {
 					{numberOfActivities > 0 &&
 					<div>
 
-						<div style={{height: "41px", marginBottom: "10px"}}>
+						<div style={{height: "41px", marginBottom: "50px"}}>
 							<div style={{float: "left", width: "50%"}}>
 								<TabBar titles={this.state.tags} switchCallback={this.filterActivities}/>
 							</div>
@@ -268,7 +268,7 @@ export default class ActivityScreen extends React.Component {
 								/>
 							</div>
 						</div>
-
+						<div className={"cf"}></div>
 						{this.state.displayedActivities.map((activity, i) => {
 							return (<ActivityIndicator key={activity.uuid} activity={activity}
 													   handleDelete={() => this.openDeleteModal(activity.uuid)}
