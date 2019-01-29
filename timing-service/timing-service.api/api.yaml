@@ -81,6 +81,15 @@ components:
           enum:
           - STARTED
           - ENDED
+
+    applicationStatistics:
+      description:
+      properties:
+        mostTrackedTag:
+          type: string
+        mostTrackedTagHours:
+          type: integer
+
 paths:
   /activities/:
     post:

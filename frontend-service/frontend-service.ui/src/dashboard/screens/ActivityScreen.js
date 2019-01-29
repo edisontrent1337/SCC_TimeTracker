@@ -138,7 +138,7 @@ export default class ActivityScreen extends React.Component {
 	}
 
 	filterActivities(name) {
-		if (name.includes("All (")) {
+		if (name.includes("ALL (")) {
 			this.setState({
 				displayedActivities: this.state.activities
 			});
@@ -146,7 +146,7 @@ export default class ActivityScreen extends React.Component {
 		}
 		let activities = this.state.activities;
 		let filteredActivities = activities.filter((item) => {
-			return item.tag === name.toUpperCase();
+			return item.tag.toUpperCase() === name.toUpperCase();
 		});
 		this.setState({
 			displayedActivities: filteredActivities
