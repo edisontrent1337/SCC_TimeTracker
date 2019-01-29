@@ -118,7 +118,7 @@ export default class DashBoard extends React.Component {
 							  buttonColor={colors.pink["400"]}
 							  buttonText={<span><i className={"typcn typcn-spiral"}></i>View Activities</span>}
 							  text={"There seem to be no records yet. Head over to your activities to start time tracking!"}
-							  callback={() => location += "/activities"}
+							  callback={() => location = "/dashboard/activities"}
 						/>
 
 					</div>
