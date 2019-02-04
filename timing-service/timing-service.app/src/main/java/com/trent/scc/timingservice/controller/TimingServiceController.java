@@ -73,10 +73,6 @@ public class TimingServiceController implements ActivitiesApi {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@Override
-	public ResponseEntity<OperationResponse> getGlobalActivityStats() {
-		return null;
-	}
 
 	@Override
 	public ResponseEntity<OperationResponse> createActivity(@RequestBody @Valid Activity activity) {
@@ -205,4 +201,6 @@ public class TimingServiceController implements ActivitiesApi {
 		Authentication authentication = securityContext.getAuthentication();
 		return authentication.getName();
 	}
+
+
 }

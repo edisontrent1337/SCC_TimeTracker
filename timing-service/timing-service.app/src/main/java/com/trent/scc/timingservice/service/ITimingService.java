@@ -3,6 +3,7 @@ package com.trent.scc.timingservice.service;
 
 import com.trent.scc.timingservice.api.model.Activity;
 import com.trent.scc.timingservice.api.model.ActivityRecord;
+import com.trent.scc.timingservice.api.model.ServiceStatistic;
 import com.trent.scc.timingservice.repository.ActivityRecordEntity;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface ITimingService {
 	OperationResult<ActivityRecord> updateRecord(ActivityRecord record);
 	OperationResult<ActivityRecord> removeRecord(String recordUuid);
 
-	OperationResult<?> getApplicationStatistics();
+	OperationResult<ServiceStatistic> getServiceStatistics();
 
 	ActivityRecordEntity getLatestRecordForActivity(String activityUuid) throws NoSuchElementException;
 

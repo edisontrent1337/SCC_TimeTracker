@@ -4,6 +4,7 @@ package com.trent.scc.timingservice.service;
 import com.trent.scc.timingservice.api.model.Activity;
 import com.trent.scc.timingservice.api.model.ActivityRecord;
 import com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum;
+import com.trent.scc.timingservice.api.model.ServiceStatistic;
 import com.trent.scc.timingservice.repository.ActivityEntity;
 import com.trent.scc.timingservice.repository.ActivityRecordEntity;
 import com.trent.scc.timingservice.repository.ActivityRecordRepository;
@@ -129,11 +130,6 @@ public class TimingService implements ITimingService {
 	}
 
 	@Override
-	public OperationResult<?> getApplicationStatistics() {
-		return null;
-	}
-
-	@Override
 	public OperationResult<Activity> removeActivity(String activityUuid) {
 		ActivityEntity entity = activityRepository.findByUuid(activityUuid);
 		OperationResult<Activity> result = new OperationResult<>();
@@ -235,7 +231,7 @@ public class TimingService implements ITimingService {
 			}
 		}
 		Collections.sort(result, Comparator.comparing(ActivityRecord::getStartTime));
-		for(ActivityRecord record : result) {
+		for (ActivityRecord record : result) {
 			LOGGER.info(record.getActivityName());
 		}
 		return result;
@@ -285,6 +281,50 @@ public class TimingService implements ITimingService {
 				result.add(record);
 			}
 		}
+		return result;
+	}
+
+
+	@Override
+	public OperationResult<ServiceStatistic> getServiceStatistics() {
+		OperationResult<ServiceStatistic> result = new OperationResult<>();
+		ServiceStatistic serviceStatistic = new ServiceStatistic();
+		serviceStatistic.setTotalTrackedRecords((int) activityRecordRepository.count());
+		serviceStatistic.setTotalCreatedActivities((int) activityRepository.count());
+		Map<String, Integer> tagTimes = new HashMap<>();
+		Set<String> userUUIDs = new HashSet<>();
+		for (ActivityEntity activityEntity : activityRepository.findAll()) {
+			if (!tagTimes.containsKey(activityEntity.getTag())) {
+				tagTimes.put(activityEntity.getTag(), 0);
+			}
+			userUUIDs.add(activityEntity.getOwnerUuid());
+		}
+		serviceStatistic.setTimeTrackingUsers(userUUIDs.size());
+		String mostTrackedTag = null;
+		String mostActiveUserUUID = null;
+		int mostTrackedTagTime = 0;
+		for (ActivityRecordEntity recordEntity : activityRecordRepository.findAll()) {
+			if (recordEntity.getState().equals(STARTED.toString())) {
+				continue;
+			}
+			String recordTag = recordEntity.getTag();
+			if (tagTimes.containsKey(recordTag)) {
+				int accumulatedTime = tagTimes.get(recordTag);
+				accumulatedTime += recordEntity.getDuration();
+				tagTimes.put(recordTag, accumulatedTime);
+				if (accumulatedTime > mostTrackedTagTime) {
+					mostTrackedTagTime = accumulatedTime;
+					mostTrackedTag = recordTag;
+					mostActiveUserUUID = activityRepository.findByUuid(recordEntity.getActivityUuid()).getOwnerUuid();
+				}
+			}
+		}
+
+		serviceStatistic.setMostTrackedTag(mostTrackedTag);
+		serviceStatistic.setMostTrackedTagTime(mostTrackedTagTime);
+		serviceStatistic.setMostActiveUserUUID(mostActiveUserUUID);
+		result.setStatus(SUCCESS);
+		result.setPayload(serviceStatistic);
 		return result;
 	}
 

@@ -46,6 +46,29 @@ components:
           items:
             type: object
 
+    serviceStatistic:
+      description: Statistics for this service
+      properties:
+        timeTrackingUsers:
+          description: Number of users that use timing service
+          type: integer
+        totalTrackedRecords:
+          type: integer
+        totalCreatedActivities:
+          type: integer
+        mostTrackedTag:
+          description: The tag that got tracked most of the time
+          type: string
+        mostTrackedTagTime:
+          type: integer
+          description: Number of seconds the most tracked tag was tracked
+        mostActiveUserUUID:
+          type: string
+          description: UUID of user that tracked most of the time
+        timeForUserWithMostTrackedTime:
+          description: Total number of seconds the mvp user tracked
+          type: integer
+
     activityRecord:
       description: A record of an activity that a user has submitted
       properties:
@@ -82,13 +105,6 @@ components:
           - STARTED
           - ENDED
 
-    applicationStatistics:
-      description:
-      properties:
-        mostTrackedTag:
-          type: string
-        mostTrackedTagHours:
-          type: integer
 
 paths:
   /activities/:
@@ -270,12 +286,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/operationResponse"
 
-  /activities/stats:
+  /stats:
     get:
       security:
       - bearerAuth: []
-      operationId: getGlobalActivityStats
-      description: Returns statistics for this application
+      operationId: getServiceStatistics
+      description: Returns statistics for this service
       responses:
         '200':
           description: OK

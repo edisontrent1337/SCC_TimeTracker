@@ -3,6 +3,7 @@ package com.trent.scc.timingservice.service;
 import com.trent.scc.timingservice.TimingServiceApp;
 import com.trent.scc.timingservice.api.model.Activity;
 import com.trent.scc.timingservice.api.model.ActivityRecord;
+import com.trent.scc.timingservice.api.model.ServiceStatistic;
 import com.trent.scc.timingservice.repository.ActivityEntity;
 import com.trent.scc.timingservice.repository.ActivityRecordEntity;
 import com.trent.scc.timingservice.repository.ActivityRecordRepository;
@@ -21,8 +22,10 @@ import java.util.UUID;
 
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.ENDED;
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.STARTED;
+import static com.trent.scc.timingservice.service.OperationStatus.SUCCESS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TimingServiceApp.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -56,7 +59,7 @@ public class TimingServiceTest {
 		Activity activity = createDefaultActivity();
 		OperationResult<Activity> operationResult = timingService.addActivity(activity);
 		OperationStatus status = operationResult.getStatus();
-		assertEquals("The operation status is wrong.", OperationStatus.SUCCESS, status);
+		assertEquals("The operation status is wrong.", SUCCESS, status);
 		assertEquals("The number of saved activities is wrong", 1, activityRepository.count());
 
 		operationResult = timingService.addActivity(activity);
@@ -185,9 +188,38 @@ public class TimingServiceTest {
 		timingService.addActivity(activity);
 		String activityUuid = activity.getUuid();
 		OperationResult<Activity> result = timingService.getActivity(activityUuid);
-		assertEquals("The retrieval of the activity was unsuccessful", OperationStatus.SUCCESS, result.getStatus());
+		assertEquals("The retrieval of the activity was unsuccessful", SUCCESS, result.getStatus());
 		assertNotNull("The retrieved activity was null", result.getPayload());
 		assertEquals("The retrieved activity differs from the submitted one", activity, result.getPayload());
+	}
+
+	@Test
+	public void getServiceStatisticsWorksCorrectly() {
+		Activity activity = createDefaultActivity();
+		Activity otherActivity = createNamedActivity("Other activity");
+		timingService.addActivity(activity);
+		timingService.addActivity(otherActivity);
+		ActivityRecord record = createActivityRecord(activity);
+		ActivityRecord otherRecord = createActivityRecord(otherActivity);
+		for (int i = 0; i < 10; i++) {
+			record.setTime(OffsetDateTime.now().plusMinutes(i));
+			assertAddRecord(record);
+			otherRecord.setTime(OffsetDateTime.now().plusMinutes(2 * i));
+			assertAddRecord(otherRecord);
+		}
+		assertTotalDurationForActivity(activity.getUuid(), 300);
+		assertTotalDurationForActivity(otherActivity.getUuid(), 600);
+
+		OperationResult<ServiceStatistic> operationResult = timingService.getServiceStatistics();
+		ServiceStatistic serviceStatistic = operationResult.getPayload();
+		assertNotNull(serviceStatistic);
+		assertEquals(SUCCESS, operationResult.getStatus());
+		assertEquals("The most tracked tag is wrong", DEFAULT_ACTIVITY_TAG, serviceStatistic.getMostTrackedTag());
+		assertEquals("The most tracked tag time is wrong", 900, (int) serviceStatistic.getMostTrackedTagTime());
+		assertEquals("The amount of total records is wrong", 10, (int) serviceStatistic.getTotalTrackedRecords());
+		assertEquals("The amount of total activities is wrong", 2, (int) serviceStatistic.getTotalCreatedActivities());
+		assertEquals("The uuid of user with most tracked time is wrong", UUID.nameUUIDFromBytes(DEFAULT_USER_NAME.getBytes()).toString(), serviceStatistic.getMostActiveUserUUID());
+		assertEquals("The number of time tracking users is wrong", 1, (int) serviceStatistic.getTimeTrackingUsers());
 	}
 
 	private void assertNumberOfRecordsFor(String activityUuid, int expectedLength) {
@@ -197,7 +229,7 @@ public class TimingServiceTest {
 
 	private void assertTotalDurationForActivity(String activityUuid, long expectedDuration) {
 		long duration = timingService.getTotalDurationOfActivity(activityUuid);
-		assertEquals("The total duration for " + activityUuid + " was wrong.", expectedDuration, duration);
+		assertTrue("The total duration for " + activityUuid + " was wrong.", duration - expectedDuration <= 1);
 	}
 
 	private void assertTotalNumberOfRecords(int expectedLength) {
@@ -237,7 +269,7 @@ public class TimingServiceTest {
 	private void assertAddRecord(ActivityRecord record) {
 		OperationResult<ActivityRecord> operationResult = timingService.addRecord(record);
 		OperationStatus status = operationResult.getStatus();
-		assertEquals("There was an error creating a record for an activity.", OperationStatus.SUCCESS, status);
+		assertEquals("There was an error creating a record for an activity.", SUCCESS, status);
 	}
 
 	private ActivityRecord createActivityRecord(Activity activity) {
@@ -259,8 +291,12 @@ public class TimingServiceTest {
 	}
 
 	private Activity createDefaultActivity() {
+		return createNamedActivity(DEFAULT_ACTIVITY_NAME);
+	}
+
+	private Activity createNamedActivity(String name) {
 		return new Activity()
-				.name(DEFAULT_ACTIVITY_NAME)
+				.name(name)
 				.description(DEFAULT_ACTIVITY_DESCRIPTION)
 				.tag(DEFAULT_ACTIVITY_TAG)
 				.owneruuid(UUID.nameUUIDFromBytes(DEFAULT_USER_NAME.getBytes()).toString());
