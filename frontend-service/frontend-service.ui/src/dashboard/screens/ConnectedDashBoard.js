@@ -3,6 +3,7 @@ import ActivityScreen from "./ActivityScreen";
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import ActivityDetailScreen from "./ActivityDetailScreen";
 import DashBoard from "../DashBoard";
+import StatisticsScreen from "./StatisticsScreen";
 
 export default class ConnectedFacilityOverviewScreen extends React.Component {
 
@@ -16,6 +17,7 @@ export default class ConnectedFacilityOverviewScreen extends React.Component {
 					<Route exact path="/dashboard/activities/:activityId" component={ActivityDetailScreen}/>
 					<Route exact path="/dashboard" component={DashBoard}/>
 					<Route exact path="/" component={DashBoard}/>
+					<Route exact path="/stats" component={StatisticsScreen}/>
 				</Switch>
 			</BrowserRouter>
 		);

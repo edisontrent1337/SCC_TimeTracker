@@ -323,6 +323,20 @@ public class TimingService implements ITimingService {
 		serviceStatistic.setMostTrackedTag(mostTrackedTag);
 		serviceStatistic.setMostTrackedTagTime(mostTrackedTagTime);
 		serviceStatistic.setMostActiveUserUUID(mostActiveUserUUID);
+
+		List<ActivityEntity> activitiesForMostActiveUser = activityRepository.findAllByOwnerUuid(mostActiveUserUUID);
+		Set<ActivityRecordEntity> recordsForMostActiveUser = new HashSet<>();
+		for (ActivityEntity activityEntity : activitiesForMostActiveUser) {
+			String activityUUID = activityEntity.getUuid();
+			recordsForMostActiveUser.addAll(activityRecordRepository.findAllByActivityUuid(activityUUID));
+		}
+		int durationForMostActiveUser = 0;
+		for (ActivityRecordEntity recordEntity : recordsForMostActiveUser) {
+			if (recordEntity.getState().equals(ENDED.toString())) {
+				durationForMostActiveUser += recordEntity.getDuration();
+			}
+		}
+		serviceStatistic.setTimeForUserWithMostTrackedTime(durationForMostActiveUser);
 		result.setStatus(SUCCESS);
 		result.setPayload(serviceStatistic);
 		return result;

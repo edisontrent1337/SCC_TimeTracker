@@ -12,6 +12,7 @@ export const client = {
 	put,
 	del,
 	getUserNames,
+	getUserName,
 	getUserUuid
 };
 
@@ -57,8 +58,14 @@ function getUserUuid(name, component) {
 
 function getUserNames(body) {
 	let headers = generateHeaders(token, body);
-	header.method = "GET";
+	headers.method = "GET";
 	return fetch(USER_SERVICE_BASE_API_URL + "/users/info", headers);
+}
+
+function getUserName(uuid) {
+	let headers = generateHeaders(token);
+	headers.method = "GET";
+	return fetch(USER_SERVICE_BASE_API_URL + '/users/' + uuid, headers);
 }
 
 function handleError(err, component) {

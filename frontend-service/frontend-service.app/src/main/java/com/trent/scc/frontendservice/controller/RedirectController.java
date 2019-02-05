@@ -31,4 +31,9 @@ public class RedirectController {
 	public String dashboardInPlace() {
 		return "forward:/";
 	}
+
+	@RequestMapping(value = "/stats/{path:[^\\.]+}/**")
+	public String stats() {
+		return "forward:/";
+	}
 }
