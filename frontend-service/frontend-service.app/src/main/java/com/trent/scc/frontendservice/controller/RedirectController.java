@@ -36,4 +36,9 @@ public class RedirectController {
 	public String stats() {
 		return "forward:/";
 	}
+
+	@RequestMapping(value = "/stats")
+	public String statsInPlace() {
+		return "forward:/";
+	}
 }
