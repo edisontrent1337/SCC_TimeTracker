@@ -30,6 +30,9 @@ components:
         duration:
           type: integer
           description: The to be achieved duration
+        uuid:
+          type: string
+          description: The uuid of the achievement
         progress:
           type: integer
           description: The progress that was already made

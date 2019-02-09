@@ -81,6 +81,7 @@ public class EntityCreator {
 		entity.setProgress(achievement.getProgress());
 		entity.setFrom(achievement.getFrom());
 		entity.setTo(achievement.getTo());
+		entity.setUuid(UUID.randomUUID().toString());
 		return entity;
 	}
 

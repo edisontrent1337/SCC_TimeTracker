@@ -32,7 +32,7 @@ public interface ITimingService {
 	List<ActivityRecord> getRecordsForUserAndActivity(String activityUuid, String userUuid);
 	List<ActivityRecord> getRecordsForTag(String tag);
 
-	OperationResult<Achievement> createAchievement(Achievement achievement);
+	OperationResult<Achievement> addAchievement(Achievement achievement);
 	OperationResult<Achievement> updateAchievement(Achievement achievement);
 	OperationResult<Achievement> getAchievement(String achievementUuid);
 	OperationResult<List<Achievement>> getAchievements();

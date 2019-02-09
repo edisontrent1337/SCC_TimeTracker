@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.ENDED;
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.STARTED;
+import static com.trent.scc.timingservice.service.OperationStatus.DUPLICATE_FAILURE;
 import static com.trent.scc.timingservice.service.OperationStatus.SUCCESS;
 import static org.junit.Assert.*;
 
@@ -243,6 +244,18 @@ public class TimingServiceTest {
 		Activity activity = createDefaultActivity();
 		timingService.addActivity(activity);
 		Achievement achievement = new Achievement();
+		achievement
+				.activityUuid(activity.getUuid())
+				.ownerUuid(getUuidFromName(DEFAULT_USER_NAME))
+				.from(null)
+				.to(null)
+				.duration(3600)
+				.progress(0);
+		OperationResult<Achievement> result = timingService.addAchievement(achievement);
+		assertNotNull("The payload should not be null", result.getPayload());
+		assertEquals("Creating an achievement should be successful", SUCCESS, result.getStatus());
+		result = timingService.addAchievement(achievement);
+		assertEquals("Creating the same achievement twice should fail", DUPLICATE_FAILURE, result.getStatus());
 
 	}
 

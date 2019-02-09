@@ -23,15 +23,15 @@ import static com.trent.scc.timingservice.service.OperationStatus.*;
 public class TimingService implements ITimingService {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(TimingService.class);
-
 	private final ActivityRepository activityRepository;
-
 	private final ActivityRecordRepository activityRecordRepository;
+	private final AchievementRepository achievementRepository;
 
 	@Autowired
-	public TimingService(ActivityRepository activityRepository, ActivityRecordRepository activityRecordRepository) {
+	public TimingService(ActivityRepository activityRepository, ActivityRecordRepository activityRecordRepository, AchievementRepository achievementRepository) {
 		this.activityRepository = activityRepository;
 		this.activityRecordRepository = activityRecordRepository;
+		this.achievementRepository = achievementRepository;
 	}
 
 	@Override
@@ -346,8 +346,22 @@ public class TimingService implements ITimingService {
 	}
 
 	@Override
-	public OperationResult<Achievement> createAchievement(Achievement achievement) {
-		return null;
+	public OperationResult<Achievement> addAchievement(Achievement achievement) {
+		AchievementEntity entity = EntityCreator.achievementEntity(achievement);
+		OperationResult<Achievement> result = new OperationResult<>();
+		if (achievementRepository.findByActivivtyUuidAndFromAndToAndOwnerUuid(
+				achievement.getActivityUuid(),
+				achievement.getFrom(),
+				achievement.getTo(),
+				achievement.getOwnerUuid()) != null) {
+			result.setStatus(DUPLICATE_FAILURE);
+			result.setPayload(achievement);
+		} else {
+			achievementRepository.save(entity);
+			result.setStatus(SUCCESS);
+			result.setPayload(achievement);
+		}
+		return result;
 	}
 
 	@Override

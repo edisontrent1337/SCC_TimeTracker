@@ -26,6 +26,9 @@ public class AchievementEntity {
 	@Column(name = "duration")
 	private long duration;
 
+	@Column(name="uuid")
+	private String uuid;
+
 	@DecimalMin("0.00")
 	@DecimalMax("1.00")
 	@Column(name = "progress")
@@ -85,5 +88,13 @@ public class AchievementEntity {
 
 	public void setProgress(float progress) {
 		this.progress = progress;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 }
