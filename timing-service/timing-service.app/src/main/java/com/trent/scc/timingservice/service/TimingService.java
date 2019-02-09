@@ -1,6 +1,7 @@
 package com.trent.scc.timingservice.service;
 
 
+import com.trent.scc.timingservice.api.model.Achievement;
 import com.trent.scc.timingservice.api.model.Activity;
 import com.trent.scc.timingservice.api.model.ActivityRecord;
 import com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum;
@@ -359,6 +360,26 @@ public class TimingService implements ITimingService {
 		result.setStatus(SUCCESS);
 		result.setPayload(serviceStatistic);
 		return result;
+	}
+
+	@Override
+	public OperationResult<Achievement> createAchievement(Achievement achievement) {
+		return null;
+	}
+
+	@Override
+	public OperationResult<Achievement> updateAchievement(Achievement achievement) {
+		return null;
+	}
+
+	@Override
+	public OperationResult<Achievement> getAchievement(String achievementUuid) {
+		return null;
+	}
+
+	@Override
+	public OperationResult<List<Achievement>> getAchievements() {
+		return null;
 	}
 
 	private ActivityRecord createNewRecordFromEntity(ActivityRecordEntity recordEntity) {

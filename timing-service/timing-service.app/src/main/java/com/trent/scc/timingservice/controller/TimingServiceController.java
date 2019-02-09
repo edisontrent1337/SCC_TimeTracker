@@ -1,9 +1,7 @@
 package com.trent.scc.timingservice.controller;
 
-import com.trent.scc.timingservice.api.ActivitiesApi;
-import com.trent.scc.timingservice.api.model.Activity;
-import com.trent.scc.timingservice.api.model.ActivityRecord;
-import com.trent.scc.timingservice.api.model.OperationResponse;
+import com.trent.scc.timingservice.api.TimingApi;
+import com.trent.scc.timingservice.api.model.*;
 import com.trent.scc.timingservice.service.OperationResult;
 import com.trent.scc.timingservice.service.OperationStatus;
 import com.trent.scc.timingservice.service.TimingService;
@@ -24,7 +22,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestController
-public class TimingServiceController implements ActivitiesApi {
+public class TimingServiceController implements TimingApi {
 
 	private final TimingService timingService;
 
@@ -73,7 +71,6 @@ public class TimingServiceController implements ActivitiesApi {
 		response.error("Unexpected error occurred.");
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
 
 	@Override
 	public ResponseEntity<OperationResponse> createActivity(@RequestBody @Valid Activity activity) {
@@ -197,7 +194,41 @@ public class TimingServiceController implements ActivitiesApi {
 		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	@Override
+	public ResponseEntity<OperationResponse> getServiceStatistics() {
+		OperationResponse response = new OperationResponse();
+		ServiceStatistic serviceStatistic = timingService.getServiceStatistics().getPayload();
+		response.addDataItem(serviceStatistic);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
+	@Override
+	public ResponseEntity<OperationResponse> createAchievement(@Valid @RequestBody Achievement achievement) {
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<OperationResponse> deleteAchievement(@PathVariable String achievementId) {
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<OperationResponse> getAchievement(@PathVariable String achievementId) {
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<OperationResponse> getAchievements(
+			@Valid @RequestParam(value = "activityUuid", required = false) String activityUuid,
+			@Valid @RequestParam(value = "state", required = false) String state,
+			@Valid @RequestParam(value = "day", required = false) OffsetDateTime day) {
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<OperationResponse> updateAchievement(@Valid Achievement body) {
+		return null;
+	}
 
 	private String getUserAuthentication() {
 		SecurityContext securityContext = SecurityContextHolder.getContext();

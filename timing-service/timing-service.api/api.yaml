@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.0.1
+  version: 0.0.2
   title: Timing Service
 
 components:
@@ -129,9 +129,8 @@ components:
           - STARTED
           - ENDED
 
-
 paths:
-  /activities/:
+  /timing/activities/:
     post:
       security:
       - bearerAuth: []
@@ -180,7 +179,113 @@ paths:
               schema:
                 $ref: "#/components/schemas/operationResponse"
 
-  /activities/{activityId}:
+  /timing/achievements/:
+    post:
+      security:
+      - bearerAuth: []
+      operationId: createAchievement
+      description: Creates an achievement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/achievement"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/operationResponse'
+    put:
+      security:
+      - bearerAuth: []
+      operationId: updateAchievement
+      description: Updates the achievement meta data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/achievement'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getAchievements
+      description: Gets all achievements
+      parameters:
+      - in: query
+        name: activityUuid
+        schema:
+          type: string
+        description: The uuid of the activity of interest
+      - in: query
+        name: state
+        schema:
+          type: string
+        description: The state of the achievement
+      - in: query
+        name: day
+        schema:
+          type: string
+          format: date-time
+        description: The date for which records are to be retrieved
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/operationResponse'
+
+  /timing/achievements/{achievementId}:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getAchievement
+      description: Returns an achievement with given id
+      parameters:
+      - name: achievementId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+    delete:
+      security:
+      - bearerAuth: []
+      operationId: deleteAchievement
+      description: Removes an achievement with given id from the database.
+      parameters:
+      - name: achievementId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+  /timing/activities/{activityId}:
     get:
       security:
       - bearerAuth: []
@@ -219,9 +324,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/operationResponse"
 
-
-
-  /activities/{activityId}/records:
+  /timing/activities/{activityId}/records:
     get:
       security:
       - bearerAuth: []
@@ -260,7 +363,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/operationResponse"
 
-  /activities/records:
+  /timing/activities/records:
     get:
       security:
       - bearerAuth: []
@@ -296,7 +399,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/operationResponse"
 
-  /activities/records/{recordId}:
+  /timing/activities/records/{recordId}:
     delete:
       security:
       - bearerAuth: []
@@ -316,7 +419,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/operationResponse"
 
-  /stats:
+  /timing/stats:
     get:
       security:
       - bearerAuth: []

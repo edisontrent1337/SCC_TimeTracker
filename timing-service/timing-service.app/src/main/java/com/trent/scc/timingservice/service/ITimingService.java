@@ -1,6 +1,7 @@
 package com.trent.scc.timingservice.service;
 
 
+import com.trent.scc.timingservice.api.model.Achievement;
 import com.trent.scc.timingservice.api.model.Activity;
 import com.trent.scc.timingservice.api.model.ActivityRecord;
 import com.trent.scc.timingservice.api.model.ServiceStatistic;
@@ -30,6 +31,11 @@ public interface ITimingService {
 	List<ActivityRecord> getRecordsForUserAndTag(String userUuid, String tag);
 	List<ActivityRecord> getRecordsForUserAndActivity(String activityUuid, String userUuid);
 	List<ActivityRecord> getRecordsForTag(String tag);
+
+	OperationResult<Achievement> createAchievement(Achievement achievement);
+	OperationResult<Achievement> updateAchievement(Achievement achievement);
+	OperationResult<Achievement> getAchievement(String achievementUuid);
+	OperationResult<List<Achievement>> getAchievements();
 
 	long getTotalDurationOfActivity(String activityUuid);
 
