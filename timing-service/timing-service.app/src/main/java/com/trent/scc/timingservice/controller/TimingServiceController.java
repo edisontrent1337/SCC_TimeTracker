@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestController
@@ -137,7 +138,9 @@ public class TimingServiceController implements ActivitiesApi {
 	public ResponseEntity<OperationResponse> getRecords(
 			@Valid @RequestParam(value = "tag", required = false) String tag,
 			@Valid @RequestParam(value = "activityUuid", required = false) String activityUuid,
-			@Valid @RequestParam(value = "state", required = false) String state
+			@Valid @RequestParam(value = "state", required = false) String state,
+			@Valid @RequestParam(value = "day", required = false) OffsetDateTime day
+
 	) {
 		OperationResponse response = new OperationResponse();
 		String userUuid = getUserAuthentication();

@@ -183,6 +183,23 @@ public class TimingServiceTest {
 	}
 
 	@Test
+	public void getRecordsForUserAndDayWorksCorrectly() {
+		Activity activity = createDefaultActivity();
+		timingService.addActivity(activity);
+		ActivityRecord record = createActivityRecord(activity);
+		OffsetDateTime dayOfInterest = OffsetDateTime.parse("2019-01-29T00:00:00+01:00");
+
+		for (int i = 0; i < 8; i++) {
+			record.setTime(OffsetDateTime.from(dayOfInterest.plusHours(4*i)));
+			System.out.println(record.getTime());
+			assertAddRecord(record);
+		}
+		String userUuid = getUuidFromName(DEFAULT_USER_NAME);
+		List<ActivityRecord> recordsForDayOfInterest = timingService.getRecordsForUserAndDay(userUuid, dayOfInterest);
+		assertEquals("The number of records for the day was not correct", 3, recordsForDayOfInterest.size());
+	}
+
+	@Test
 	public void getActivityWorksCorrectly() {
 		Activity activity = createDefaultActivity();
 		timingService.addActivity(activity);

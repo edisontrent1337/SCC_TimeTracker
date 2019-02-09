@@ -6,6 +6,7 @@ import com.trent.scc.timingservice.api.model.ActivityRecord;
 import com.trent.scc.timingservice.api.model.ServiceStatistic;
 import com.trent.scc.timingservice.repository.ActivityRecordEntity;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public interface ITimingService {
@@ -24,6 +25,7 @@ public interface ITimingService {
 
 	ActivityRecordEntity getLatestRecordForActivity(String activityUuid) throws NoSuchElementException;
 
+	List<ActivityRecord> getRecordsForUserAndDay(String userUuid, OffsetDateTime dateTime);
 	List<ActivityRecord> getRecordsForUser(String userUuid);
 	List<ActivityRecord> getRecordsForUserAndTag(String userUuid, String tag);
 	List<ActivityRecord> getRecordsForUserAndActivity(String activityUuid, String userUuid);

@@ -10,6 +10,30 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    achievement:
+      description: An achievement that can be reached
+      properties:
+        ownerUuid:
+          type: string
+          description: The uuid of the owner
+        from:
+          type: string
+          format: date-time
+          description: Start point of the achievement time span
+        to:
+          type: string
+          format: date-time
+          description: End point of the achievement time span
+        activityUuid:
+          type: string
+          description: UUID of the activity
+        duration:
+          type: integer
+          description: The to be achieved duration
+        progress:
+          type: integer
+          description: The progress that was already made
+
     activity:
       description: An activity that can be tracked
       properties:
@@ -258,6 +282,12 @@ paths:
         schema:
           type: string
         description: The state of the record
+      - in: query
+        name: day
+        schema:
+          type: string
+          format: date-time
+        description: The date for which records are to be retrieved
       responses:
         '200':
           description: OK

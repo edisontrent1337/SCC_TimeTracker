@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -255,6 +256,24 @@ public class TimingService implements ITimingService {
 			List<ActivityRecordEntity> recordEntities = activityRecordRepository.findAllByActivityUuid(activityEntity.getUuid());
 			for (ActivityRecordEntity recordEntity : recordEntities) {
 				result.add(createNewRecordFromEntity(recordEntity));
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public List<ActivityRecord> getRecordsForUserAndDay(String userUuid, OffsetDateTime day) {
+		List<ActivityRecord> recordsForUser = getRecordsForUser(userUuid);
+		List<ActivityRecord> result = new ArrayList<>();
+		for (ActivityRecord record : recordsForUser) {
+			System.out.println(record);
+			@Valid OffsetDateTime startTime = record.getStartTime();
+			@Valid OffsetDateTime endTime = record.getEndTime();
+			int startDay = startTime.getDayOfYear();
+			int endDay = endTime.getDayOfYear();
+
+			if (startDay == day.getDayOfYear() && endDay == day.getDayOfYear()) {
+				result.add(record);
 			}
 		}
 		return result;
