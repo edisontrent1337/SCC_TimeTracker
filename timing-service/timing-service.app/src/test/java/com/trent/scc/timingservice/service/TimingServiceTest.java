@@ -1,6 +1,7 @@
 package com.trent.scc.timingservice.service;
 
 import com.trent.scc.timingservice.TimingServiceApp;
+import com.trent.scc.timingservice.api.model.Achievement;
 import com.trent.scc.timingservice.api.model.Activity;
 import com.trent.scc.timingservice.api.model.ActivityRecord;
 import com.trent.scc.timingservice.api.model.ServiceStatistic;
@@ -23,9 +24,7 @@ import java.util.UUID;
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.ENDED;
 import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.STARTED;
 import static com.trent.scc.timingservice.service.OperationStatus.SUCCESS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TimingServiceApp.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -51,7 +50,6 @@ public class TimingServiceTest {
 		activityRecordRepository.deleteAll();
 		activityRepository.deleteAll();
 	}
-
 
 	@Test
 	public void createActivityWorksCorrectly() {
@@ -190,7 +188,7 @@ public class TimingServiceTest {
 		OffsetDateTime dayOfInterest = OffsetDateTime.parse("2019-01-29T00:00:00+01:00");
 
 		for (int i = 0; i < 8; i++) {
-			record.setTime(OffsetDateTime.from(dayOfInterest.plusHours(4*i)));
+			record.setTime(OffsetDateTime.from(dayOfInterest.plusHours(4 * i)));
 			System.out.println(record.getTime());
 			assertAddRecord(record);
 		}
@@ -238,6 +236,16 @@ public class TimingServiceTest {
 		assertEquals("The uuid of user with most tracked time is wrong", UUID.nameUUIDFromBytes(DEFAULT_USER_NAME.getBytes()).toString(), serviceStatistic.getMostActiveUserUUID());
 		assertEquals("The number of time tracking users is wrong", 1, (int) serviceStatistic.getTimeTrackingUsers());
 	}
+
+
+	@Test
+	public void createAchievementWorksCorrectly() {
+		Activity activity = createDefaultActivity();
+		timingService.addActivity(activity);
+		Achievement achievement = new Achievement();
+
+	}
+
 
 	private void assertNumberOfRecordsFor(String activityUuid, int expectedLength) {
 		int count = activityRecordRepository.findAllByActivityUuid(activityUuid).size();

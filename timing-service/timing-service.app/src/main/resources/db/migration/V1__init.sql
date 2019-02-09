@@ -21,3 +21,4 @@ CREATE TABLE activity_records (
     duration bigint(20),
     PRIMARY KEY (id)
 );
+
