@@ -14,6 +14,7 @@
 		<module>user-service</module>
 		<module>timing-service</module>
 		<module>frontend-service</module>
+		<module>python-test</module>
 	</modules>
 
 	<build>

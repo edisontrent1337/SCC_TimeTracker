@@ -1,0 +1,437 @@
+openapi: 3.0.0
+info:
+  version: 0.0.2
+  title: Python Test Service
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    achievement:
+      description: An achievement that can be reached
+      properties:
+        ownerUuid:
+          type: string
+          description: The uuid of the owner
+        from:
+          type: string
+          format: date-time
+          description: Start point of the achievement time span
+        to:
+          type: string
+          format: date-time
+          description: End point of the achievement time span
+        activityUuid:
+          type: string
+          description: UUID of the activity
+        duration:
+          type: integer
+          description: The to be achieved duration
+        uuid:
+          type: string
+          description: The uuid of the achievement
+        progress:
+          type: integer
+          description: The progress that was already made
+
+    activity:
+      description: An activity that can be tracked
+      properties:
+        name:
+          type: string
+          description: The name of the activity
+        tag:
+          type: string
+          description: The tag of the activity
+        state:
+          type: string
+          description: The state of the activity
+        duration:
+          type: integer
+          description: The duration of the activity
+        uuid:
+          type: string
+          description: The uuid of the activity
+        description:
+          type: string
+          description: The description of the activity
+        owneruuid:
+          type: string
+          description: The uuid of the user that owns this activity
+
+    operationResponse:
+      properties:
+        error:
+          type: string
+          description: Used to indicate error messages. Null if no error occured
+        data:
+          type: array
+          description: Attached data of response
+          items:
+            type: object
+
+    serviceStatistic:
+      description: Statistics for this service
+      properties:
+        timeTrackingUsers:
+          description: Number of users that use timing service
+          type: integer
+        totalTrackedRecords:
+          type: integer
+        totalCreatedActivities:
+          type: integer
+        mostTrackedTag:
+          description: The tag that got tracked most of the time
+          type: string
+        mostTrackedTagTime:
+          type: integer
+          description: Number of seconds the most tracked tag was tracked
+        mostActiveUserUUID:
+          type: string
+          description: UUID of user that tracked most of the time
+        timeForUserWithMostTrackedTime:
+          description: Total number of seconds the mvp user tracked
+          type: integer
+
+    activityRecord:
+      description: A record of an activity that a user has submitted
+      properties:
+        activityuuid:
+          type: string
+          description: The uuid of the activity.
+        activityName:
+          type: string
+          description: The name of the activity.
+        time:
+          type: string
+          format: date-time
+          description: The point in time a record update was issued (e.g. the request was sent to the server)
+        startTime:
+          type: string
+          format: date-time
+          description: The point in time this record was created
+        endTime:
+          type: string
+          format: date-time
+          description: The point in time this record ended
+        uuid:
+          type: string
+          description: The uuid of this record
+        duration:
+          type: integer
+          description: The duration of the record
+        tag:
+          type: string
+          description: The tag of the activity
+        state:
+          type: string
+          enum:
+          - STARTED
+          - ENDED
+
+paths:
+  /timing/activities/:
+    post:
+      security:
+      - bearerAuth: []
+      operationId: createActivity
+      requestBody:
+        description: Creates a new activity.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/activity"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+    get:
+      operationId: getActivities
+      description: Returns all activities
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+    put:
+      security:
+      - bearerAuth: []
+      operationId: updateActivity
+      description: Updates the activity meta data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/activity"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+  /timing/achievements/:
+    post:
+      security:
+      - bearerAuth: []
+      operationId: createAchievement
+      description: Creates an achievement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/achievement"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/operationResponse'
+    put:
+      security:
+      - bearerAuth: []
+      operationId: updateAchievement
+      description: Updates the achievement meta data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/achievement'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getAchievements
+      description: Gets all achievements
+      parameters:
+      - in: query
+        name: activityUuid
+        schema:
+          type: string
+        description: The uuid of the activity of interest
+      - in: query
+        name: state
+        schema:
+          type: string
+        description: The state of the achievement
+      - in: query
+        name: day
+        schema:
+          type: string
+          format: date-time
+        description: The date for which records are to be retrieved
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/operationResponse'
+
+  /timing/achievements/{achievementId}:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getAchievement
+      description: Returns an achievement with given id
+      parameters:
+      - name: achievementId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+    delete:
+      security:
+      - bearerAuth: []
+      operationId: deleteAchievement
+      description: Removes an achievement with given id from the database.
+      parameters:
+      - name: achievementId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+  /timing/activities/{activityId}:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getActivity
+      description: Returns activity with given id
+      parameters:
+      - name: activityId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+    delete:
+      security:
+      - bearerAuth: []
+      operationId: deleteActivity
+      description: Removes an activity with given id and all its associated records from the database.
+      parameters:
+      - name: activityId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+  /timing/activities/{activityId}/records:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getActivityRecords
+      description: Returns all records for an activity
+      parameters:
+      - name: activityId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+    post:
+      security:
+      - bearerAuth: []
+      operationId: addActivityRecord
+      description: Triggers start or end of a record for a given activityID
+      parameters:
+      - name: activityId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+  /timing/activities/records:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getRecords
+      description: Returns all records for a user
+      parameters:
+      - in: query
+        name: tag
+        schema:
+          type: string
+        description: The tag filter for user records
+      - in: query
+        name: activityUuid
+        schema:
+          type: string
+        description: The uuid of the activity of interest
+      - in: query
+        name: state
+        schema:
+          type: string
+        description: The state of the record
+      - in: query
+        name: day
+        schema:
+          type: string
+          format: date-time
+        description: The date for which records are to be retrieved
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+  /timing/activities/records/{recordId}:
+    delete:
+      security:
+      - bearerAuth: []
+      operationId: deleteActivityRecord
+      description: Deletes a record with the given id,
+      parameters:
+      - name: recordId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+  /timing/stats:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getServiceStatistics
+      description: Returns statistics for this service
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"

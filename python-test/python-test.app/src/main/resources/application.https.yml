@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: python-test
+  profiles:
+    active: production
+
+
+  ## Spring DATA SOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+  datasource:
+    url: "jdbc:mysql://localhost:3306/python_test?useSSL=false&serverTimezone=UTC"
+    username: "root"
+    password: "root"
+
+
+  ## Hibernate Properties
+  # The SQL dialect makes Hibernate generate better SQL for the chosen database
+  jpa:
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.MySQL5Dialect"
+        id:
+          new_generator_mappings: false
+
+    ## Hibernate properties
+    # ddl auto (create, create-drop, validate, update)
+    hibernate:
+      ddl-auto: "validate"
+
+server:
+  port: 8084
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: password
+    key-store-type: PKCS12
+    key-alias: tomcat
+configuration:
+  cors:
+    allowedOrigins:
+      - http://localhost:3000
+      - http://localhost
+      - http://dude.iamtrent.de
+      - https://dude.iamtrent.de
+      - https://iamtrent.de
+      - http://iamtrent.de
+      - http://localhost:3001
+      - http://localhost:9123
+
+
+## Eureka properties
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://scc-service:password@localhost:8761/eureka}
+  instance:
+    preferIpAddress: true

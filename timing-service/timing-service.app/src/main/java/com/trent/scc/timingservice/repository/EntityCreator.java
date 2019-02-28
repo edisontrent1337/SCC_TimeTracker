@@ -9,15 +9,13 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.STARTED;
-
 @Service
 public class EntityCreator {
 
 	public static ActivityRecordEntity recordEntity(ActivityRecord record) {
 		ActivityRecordEntity entity = new ActivityRecordEntity();
 		entity.setActivityUuid(record.getActivityuuid());
-		entity.setState(STARTED.toString());
+		entity.setState(ActivityRecord.StateEnum.STARTED.toString());
 		entity.setUuid(UUID.randomUUID().toString());
 		entity.setTag(record.getTag());
 		if (record.getTime() != null) {
@@ -51,10 +49,10 @@ public class EntityCreator {
 		activity.setOwneruuid(entity.getOwnerUuid());
 		activity.setTag(entity.getTag());
 
-		List<ActivityRecordEntity> startedRecord = activityRecordRepository.findAllByActivityUuidAndState(entity.getUuid(), STARTED.toString());
+		List<ActivityRecordEntity> startedRecord = activityRecordRepository.findAllByActivityUuidAndState(entity.getUuid(), ActivityRecord.StateEnum.STARTED.toString());
 		if (startedRecord.size() == 1) {
 			ActivityRecordEntity record = startedRecord.get(0);
-			activity.setState(STARTED.toString());
+			activity.setState(ActivityRecord.StateEnum.STARTED.toString());
 			activity.setDuration((int) (OffsetDateTime.now().toEpochSecond() - record.getStartTime().toEpochSecond()));
 		}
 

@@ -1,6 +1,6 @@
 package com.trent.scc.timingservice.controller;
 
-import com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum;
+import com.trent.scc.timingservice.api.model.ActivityRecord;
 import com.trent.scc.timingservice.jwt.JWTConstants;
 import com.trent.scc.timingservice.repository.ActivityRecordRepository;
 import com.trent.scc.timingservice.repository.ActivityRepository;
@@ -20,7 +20,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.OffsetDateTime;
 
-import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.STARTED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -58,7 +57,7 @@ public class TimingServiceControllerTest {
 			JSONArray array = response.getJSONArray("data");
 			JSONObject data = new JSONObject(array.get(0).toString());
 			String activityUuid = activityRepository.findByNameAndOwnerUuid("Working", data.get("owneruuid").toString()).getUuid();
-			HttpEntity<String> httpEntityForRecord = createHttpEntityForRecord(activityUuid, OffsetDateTime.now(), STARTED);
+			HttpEntity<String> httpEntityForRecord = createHttpEntityForRecord(activityUuid, OffsetDateTime.now(), ActivityRecord.StateEnum.STARTED);
 			assertAddRecord(httpEntityForRecord, activityUuid);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -93,7 +92,7 @@ public class TimingServiceControllerTest {
 		assertEquals("No error should be thrown when adding a record", responseJSON.getString("error"), "null");
 	}
 
-	private HttpEntity<String> createHttpEntityForRecord(String activityUuid, OffsetDateTime time, StateEnum state) {
+	private HttpEntity<String> createHttpEntityForRecord(String activityUuid, OffsetDateTime time, ActivityRecord.StateEnum state) {
 		HttpHeaders headers = createAuthorizedHeaders();
 		String body = getRecordAsJson(activityUuid, time, state).toString();
 		return new HttpEntity<>(body, headers);
@@ -111,7 +110,7 @@ public class TimingServiceControllerTest {
 		return responseJSON;
 	}
 
-	private JSONObject getRecordAsJson(String activityUuid, OffsetDateTime time, StateEnum state) {
+	private JSONObject getRecordAsJson(String activityUuid, OffsetDateTime time, ActivityRecord.StateEnum state) {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			jsonObject.put("activityuuid", activityUuid);

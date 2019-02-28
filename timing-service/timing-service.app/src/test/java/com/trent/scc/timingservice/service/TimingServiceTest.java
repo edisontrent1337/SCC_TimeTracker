@@ -9,6 +9,7 @@ import com.trent.scc.timingservice.repository.ActivityEntity;
 import com.trent.scc.timingservice.repository.ActivityRecordEntity;
 import com.trent.scc.timingservice.repository.ActivityRecordRepository;
 import com.trent.scc.timingservice.repository.ActivityRepository;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +22,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.ENDED;
-import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.STARTED;
-import static com.trent.scc.timingservice.service.OperationStatus.DUPLICATE_FAILURE;
-import static com.trent.scc.timingservice.service.OperationStatus.SUCCESS;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -58,7 +55,7 @@ public class TimingServiceTest {
 		Activity activity = createDefaultActivity();
 		OperationResult<Activity> operationResult = timingService.addActivity(activity);
 		OperationStatus status = operationResult.getStatus();
-		assertEquals("The operation status is wrong.", SUCCESS, status);
+		Assert.assertEquals("The operation status is wrong.", OperationStatus.SUCCESS, status);
 		assertEquals("The number of saved activities is wrong", 1, activityRepository.count());
 
 		operationResult = timingService.addActivity(activity);
@@ -106,9 +103,9 @@ public class TimingServiceTest {
 			record.setTime(OffsetDateTime.now().plusMinutes(i));
 			assertAddRecord(record);
 			if (i % 2 == 0) {
-				assertLatestRecordState(STARTED, activityUuid);
+				assertLatestRecordState(ActivityRecord.StateEnum.STARTED, activityUuid);
 			} else {
-				assertLatestRecordState(ENDED, activityUuid);
+				assertLatestRecordState(ActivityRecord.StateEnum.ENDED, activityUuid);
 				expectedTotalRecords++;
 				assertTotalNumberOfRecords(expectedTotalRecords);
 				assertLatestRecordDuration(activityUuid, 60);
@@ -125,7 +122,7 @@ public class TimingServiceTest {
 		assertAddRecord(otherRecord);
 		assertTotalNumberOfRecords(3);
 		String otherActivityUuid = otherRecord.getActivityuuid();
-		assertLatestRecordState(STARTED, otherActivityUuid);
+		assertLatestRecordState(ActivityRecord.StateEnum.STARTED, otherActivityUuid);
 
 		assertNumberOfRecordsFor(otherActivityUuid, 1);
 
@@ -204,7 +201,7 @@ public class TimingServiceTest {
 		timingService.addActivity(activity);
 		String activityUuid = activity.getUuid();
 		OperationResult<Activity> result = timingService.getActivity(activityUuid);
-		assertEquals("The retrieval of the activity was unsuccessful", SUCCESS, result.getStatus());
+		Assert.assertEquals("The retrieval of the activity was unsuccessful", OperationStatus.SUCCESS, result.getStatus());
 		assertNotNull("The retrieved activity was null", result.getPayload());
 		assertEquals("The retrieved activity differs from the submitted one", activity, result.getPayload());
 	}
@@ -229,7 +226,7 @@ public class TimingServiceTest {
 		OperationResult<ServiceStatistic> operationResult = timingService.getServiceStatistics();
 		ServiceStatistic serviceStatistic = operationResult.getPayload();
 		assertNotNull(serviceStatistic);
-		assertEquals(SUCCESS, operationResult.getStatus());
+		Assert.assertEquals(OperationStatus.SUCCESS, operationResult.getStatus());
 		assertEquals("The most tracked tag is wrong", DEFAULT_ACTIVITY_TAG, serviceStatistic.getMostTrackedTag());
 		assertEquals("The most tracked tag time is wrong", 900, (int) serviceStatistic.getMostTrackedTagTime());
 		assertEquals("The amount of total records is wrong", 10, (int) serviceStatistic.getTotalTrackedRecords());
@@ -253,9 +250,9 @@ public class TimingServiceTest {
 				.progress(0);
 		OperationResult<Achievement> result = timingService.addAchievement(achievement);
 		assertNotNull("The payload should not be null", result.getPayload());
-		assertEquals("Creating an achievement should be successful", SUCCESS, result.getStatus());
+		Assert.assertEquals("Creating an achievement should be successful", OperationStatus.SUCCESS, result.getStatus());
 		result = timingService.addAchievement(achievement);
-		assertEquals("Creating the same achievement twice should fail", DUPLICATE_FAILURE, result.getStatus());
+		Assert.assertEquals("Creating the same achievement twice should fail", OperationStatus.DUPLICATE_FAILURE, result.getStatus());
 
 	}
 
@@ -307,7 +304,7 @@ public class TimingServiceTest {
 	private void assertAddRecord(ActivityRecord record) {
 		OperationResult<ActivityRecord> operationResult = timingService.addRecord(record);
 		OperationStatus status = operationResult.getStatus();
-		assertEquals("There was an error creating a record for an activity.", SUCCESS, status);
+		Assert.assertEquals("There was an error creating a record for an activity.", OperationStatus.SUCCESS, status);
 	}
 
 	private ActivityRecord createActivityRecord(Activity activity) {

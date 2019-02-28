@@ -7,6 +7,6 @@ CREATE TABLE achievements (
     from_date DATETIME,
     to_date DATETIME,
     duration bigint(20),
-    progress DECIMAL(20,10),
+    progress FLOAT (20,10),
     PRIMARY KEY (id)
 );

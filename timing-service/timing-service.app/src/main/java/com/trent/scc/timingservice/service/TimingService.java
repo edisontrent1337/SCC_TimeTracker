@@ -15,10 +15,6 @@ import javax.validation.Valid;
 import java.time.OffsetDateTime;
 import java.util.*;
 
-import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.ENDED;
-import static com.trent.scc.timingservice.api.model.ActivityRecord.StateEnum.STARTED;
-import static com.trent.scc.timingservice.service.OperationStatus.*;
-
 @Service
 public class TimingService implements ITimingService {
 
@@ -42,9 +38,9 @@ public class TimingService implements ITimingService {
 			ActivityEntity entity = EntityCreator.activityEntity(activity);
 			activityRepository.save(entity);
 			activity.setUuid(entity.getUuid());
-			return new OperationResult<>(activity, SUCCESS);
+			return new OperationResult<>(activity, OperationStatus.SUCCESS);
 		} else {
-			return new OperationResult<>(activity, DUPLICATE_FAILURE);
+			return new OperationResult<>(activity, OperationStatus.DUPLICATE_FAILURE);
 		}
 	}
 
@@ -56,7 +52,7 @@ public class TimingService implements ITimingService {
 		ActivityEntity storedActivity = findActivityForRecord(record);
 		OperationResult<ActivityRecord> result = new OperationResult<>();
 		if (storedActivity == null) {
-			result.setStatus(NOT_EXISTING);
+			result.setStatus(OperationStatus.NOT_EXISTING);
 			return result;
 		} else {
 			ActivityRecordEntity newRecordEntity = EntityCreator.recordEntity(record);
@@ -69,7 +65,7 @@ public class TimingService implements ITimingService {
 			} else {
 				ActivityRecordEntity lastRecordEntity = storedRecords.get(storedRecords.size() - 1);
 				if ("STARTED".equals(lastRecordEntity.getState())) {
-					lastRecordEntity.setState(ENDED.toString());
+					lastRecordEntity.setState(ActivityRecord.StateEnum.ENDED.toString());
 					lastRecordEntity.setEndTime(record.getTime());
 					long duration = lastRecordEntity.getEndTime().toEpochSecond() - lastRecordEntity.getStartTime().toEpochSecond();
 					lastRecordEntity.setDuration(duration);
@@ -81,7 +77,7 @@ public class TimingService implements ITimingService {
 				}
 			}
 			record.setActivityName(activityName);
-			result.setStatus(SUCCESS);
+			result.setStatus(OperationStatus.SUCCESS);
 			result.setPayload(record);
 			return result;
 		}
@@ -93,11 +89,11 @@ public class TimingService implements ITimingService {
 		ActivityRecordEntity recordEntity = activityRecordRepository.findByUuid(recordUuid);
 		if (recordEntity != null) {
 			activityRecordRepository.delete(recordEntity);
-			result.setStatus(SUCCESS);
+			result.setStatus(OperationStatus.SUCCESS);
 			result.setPayload(EntityCreator.toRecord(recordEntity));
 			return result;
 		} else {
-			result.setStatus(NOT_EXISTING);
+			result.setStatus(OperationStatus.NOT_EXISTING);
 			result.setPayload(null);
 			return result;
 		}
@@ -120,9 +116,9 @@ public class TimingService implements ITimingService {
 		if (entity != null) {
 			activityRepository.delete(entity);
 			activityRecordRepository.deleteAllByActivityUuid(activityUuid);
-			result.setStatus(SUCCESS);
+			result.setStatus(OperationStatus.SUCCESS);
 		} else {
-			result.setStatus(NOT_EXISTING);
+			result.setStatus(OperationStatus.NOT_EXISTING);
 		}
 
 		return result;
@@ -134,7 +130,7 @@ public class TimingService implements ITimingService {
 		String activityUuid = updatedActivity.getUuid();
 		ActivityEntity entity = activityRepository.findByUuid(activityUuid);
 		if (entity == null) {
-			result.setStatus(NOT_EXISTING);
+			result.setStatus(OperationStatus.NOT_EXISTING);
 			return result;
 		} else {
 			entity.setName(updatedActivity.getName());
@@ -148,7 +144,7 @@ public class TimingService implements ITimingService {
 			}
 
 			activityRepository.save(entity);
-			result.setStatus(SUCCESS);
+			result.setStatus(OperationStatus.SUCCESS);
 			result.setPayload(updatedActivity);
 			return result;
 		}
@@ -159,12 +155,12 @@ public class TimingService implements ITimingService {
 		OperationResult<Activity> result = new OperationResult<>();
 		ActivityEntity entity = activityRepository.findByUuid(activityUuid);
 		if (entity == null) {
-			result.setStatus(NOT_EXISTING);
+			result.setStatus(OperationStatus.NOT_EXISTING);
 			return result;
 		} else {
 			Activity activity = EntityCreator.toActivity(entity, activityRecordRepository);
 			result.setPayload(activity);
-			result.setStatus(SUCCESS);
+			result.setStatus(OperationStatus.SUCCESS);
 			return result;
 		}
 	}
@@ -191,7 +187,7 @@ public class TimingService implements ITimingService {
 	}
 
 	@Override
-	public ActivityRecordEntity getLatestRecordForActivity(String activityUuid) throws NoSuchElementException {
+	public ActivityRecordEntity getLatestRecordForActivity(String activityUuid) throws com.trent.scc.timingservice.service.NoSuchElementException {
 		List<ActivityRecordEntity> records = activityRecordRepository.findAllByActivityUuid(activityUuid);
 		if (records == null || records.isEmpty()) {
 			throw new NoSuchElementException("There exist no records for activity " + activityUuid);
@@ -307,7 +303,7 @@ public class TimingService implements ITimingService {
 		String mostActiveUserUUID = null;
 		int mostTrackedTagTime = 0;
 		for (ActivityRecordEntity recordEntity : activityRecordRepository.findAll()) {
-			if (recordEntity.getState().equals(STARTED.toString())) {
+			if (recordEntity.getState().equals(ActivityRecord.StateEnum.STARTED.toString())) {
 				continue;
 			}
 			String recordTag = recordEntity.getTag();
@@ -335,12 +331,12 @@ public class TimingService implements ITimingService {
 		}
 		int durationForMostActiveUser = 0;
 		for (ActivityRecordEntity recordEntity : recordsForMostActiveUser) {
-			if (recordEntity.getState().equals(ENDED.toString())) {
+			if (recordEntity.getState().equals(ActivityRecord.StateEnum.ENDED.toString())) {
 				durationForMostActiveUser += recordEntity.getDuration();
 			}
 		}
 		serviceStatistic.setTimeForUserWithMostTrackedTime(durationForMostActiveUser);
-		result.setStatus(SUCCESS);
+		result.setStatus(OperationStatus.SUCCESS);
 		result.setPayload(serviceStatistic);
 		return result;
 	}
@@ -354,11 +350,11 @@ public class TimingService implements ITimingService {
 				achievement.getFrom(),
 				achievement.getTo(),
 				achievement.getOwnerUuid()) != null) {
-			result.setStatus(DUPLICATE_FAILURE);
+			result.setStatus(OperationStatus.DUPLICATE_FAILURE);
 			result.setPayload(achievement);
 		} else {
 			achievementRepository.save(entity);
-			result.setStatus(SUCCESS);
+			result.setStatus(OperationStatus.SUCCESS);
 			result.setPayload(achievement);
 		}
 		return result;
