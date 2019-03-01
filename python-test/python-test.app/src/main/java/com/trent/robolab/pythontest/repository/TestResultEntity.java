@@ -4,19 +4,21 @@ import javax.persistence.*;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "testresults")
+@Table(name = "test_results")
 public class TestResultEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	@Column(name = "martricle_number")
-	private int matricleNumber;
-	@Column(name = "activity_uuid")
-	private String activivtyUuid;
+
+	@Column(name = "martriculation_number")
+	private int matriculationNumber;
 
 	@Column(name = "creationDate")
 	private OffsetDateTime creationDate;
+
+	@Column(name = "answers")
+	private String answers;
 
 	@Column(name="uuid")
 	private String uuid;
@@ -25,24 +27,24 @@ public class TestResultEntity {
 		return id;
 	}
 
+	public String getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(String answers) {
+		this.answers = answers;
+	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
 
-	public int getMatricleNumber() {
-		return matricleNumber;
+	public int getMatriculationNumber() {
+		return matriculationNumber;
 	}
 
-	public void setMatricleNumber(int matricleNumber) {
-		this.matricleNumber = matricleNumber;
-	}
-
-	public String getActivivtyUuid() {
-		return activivtyUuid;
-	}
-
-	public void setActivivtyUuid(String activivtyUuid) {
-		this.activivtyUuid = activivtyUuid;
+	public void setMatriculationNumber(int matriculationNumber) {
+		this.matriculationNumber = matriculationNumber;
 	}
 
 	public OffsetDateTime getCreationDate() {

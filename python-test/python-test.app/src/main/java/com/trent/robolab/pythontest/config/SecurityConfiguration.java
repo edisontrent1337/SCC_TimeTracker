@@ -1,6 +1,7 @@
 package com.trent.robolab.pythontest.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -14,9 +15,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.csrf()
 				.disable()
 				.authorizeRequests()
-				.anyRequest()
-				.authenticated();
-		http.addFilter(new JWTAuthorizationFilter(authenticationManager()));
+				.antMatchers(HttpMethod.POST, "/py/test/**").permitAll()
+				//.anyRequest()
+				//.authenticated()
+				.and()
+				.addFilter(new JWTAuthorizationFilter(authenticationManager()));
 	}
 
 }

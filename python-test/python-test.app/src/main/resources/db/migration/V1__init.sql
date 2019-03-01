@@ -1,11 +1,16 @@
 CREATE TABLE test_results (
     id bigint(20) NOT NULL AUTO_INCREMENT,
-    uuid VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    tag VARCHAR(255) NOT NULL,
-    description VARCHAR(1000),
+    martriculation_number int(20) NOT NULL,
     creation_date DATETIME NOT NULL,
-    modification_date DATETIME NOT NULL,
-    owner_uuid VARCHAR(255) NOT NULL,
+    answers VARCHAR(255) NOT NULL,
+    uuid VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE correct_answers (
+    id bigint(20) NOT NULL AUTO_INCREMENT,
+    creation_date DATETIME NOT NULL,
+    answers VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
