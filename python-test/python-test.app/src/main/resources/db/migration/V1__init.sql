@@ -4,6 +4,7 @@ CREATE TABLE test_results (
     creation_date DATETIME NOT NULL,
     answers VARCHAR(255) NOT NULL,
     uuid VARCHAR(255) NOT NULL,
+    self_evaluation VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );
 

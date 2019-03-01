@@ -20,7 +20,18 @@ public class TestResultEntity {
 	@Column(name = "answers")
 	private String answers;
 
-	@Column(name="uuid")
+	@Column(name = "self_evaluation")
+	private String selfEvaluation;
+
+	public String getSelfEvaluation() {
+		return selfEvaluation;
+	}
+
+	public void setSelfEvaluation(String selfEvaluation) {
+		this.selfEvaluation = selfEvaluation;
+	}
+
+	@Column(name = "uuid")
 	private String uuid;
 
 	public long getId() {

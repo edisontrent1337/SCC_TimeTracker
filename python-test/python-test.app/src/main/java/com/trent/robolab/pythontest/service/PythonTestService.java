@@ -47,6 +47,7 @@ public class PythonTestService implements IPythonTestService {
 				builder.append(Integer.toString(answer));
 			}
 			entity.setAnswers(builder.toString());
+			entity.setSelfEvaluation(testResult.getSelfEvaluation1()+testResult.getSelfEvaluation2());
 			testResultRepository.save(entity);
 			LOGGER.info("Successfully saved result for matriculation number " + testResult.getMatriculationNumber());
 			result.setStatus(OperationStatus.SUCCESS);
@@ -86,6 +87,7 @@ public class PythonTestService implements IPythonTestService {
 			testResultEntity.setCreationDate(OffsetDateTime.now());
 			testResultEntity.setUuid(UUID.randomUUID().toString());
 			testResultEntity.setAnswers("");
+			testResultEntity.setSelfEvaluation("");
 			testResultRepository.save(testResultEntity);
 		}
 		operationResult.setStatus(OperationStatus.SUCCESS);
@@ -123,6 +125,10 @@ public class PythonTestService implements IPythonTestService {
 			builder
 					.append(resultEntity.getMatriculationNumber())
 					.append(",");
+			builder.append(resultEntity.getSelfEvaluation().split("")[0]);
+			builder.append(",");
+			builder.append(resultEntity.getSelfEvaluation().split("")[1]);
+			builder.append(",");
 			for (int i = 0; i < givenAnswers.length; i++) {
 				String answer = givenAnswers[i];
 				String correctAnswer = correctAnswers[i];
@@ -131,6 +137,7 @@ public class PythonTestService implements IPythonTestService {
 					builder.append(",");
 				}
 			}
+
 			builder.append("\n");
 		}
 		OperationResult<String> result = new OperationResult<>();
