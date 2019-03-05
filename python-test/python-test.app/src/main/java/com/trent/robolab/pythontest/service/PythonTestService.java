@@ -120,6 +120,10 @@ public class PythonTestService implements IPythonTestService {
 		List<TestResultEntity> results = (List<TestResultEntity>) testResultRepository.findAll();
 		StringBuilder builder = new StringBuilder();
 		for (TestResultEntity resultEntity : results) {
+			if ("".equals(resultEntity.getAnswers()) || "".equals(resultEntity.getSelfEvaluation())) {
+				LOGGER.info("The student " + resultEntity.getMatriculationNumber() + " has not answered.");
+				continue;
+			}
 			String[] givenAnswers = resultEntity.getAnswers().split("(?!^)");
 			String[] correctAnswers = correctAnswersRepository.findById(1).getAnswers().split("(?!^)");
 			builder
