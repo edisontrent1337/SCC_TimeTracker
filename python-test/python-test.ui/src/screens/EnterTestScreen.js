@@ -3,6 +3,7 @@ import CredentialForm from "../web-react/forms/CredentialForm";
 import colors from "../web-react/colors/colors";
 import Message from "../web-react/message/Message";
 import {client} from "../client/APIClient";
+import Footer from "../components/footer/Footer";
 
 export default class EnterTestScreen extends React.Component {
 	constructor(props) {
@@ -97,6 +98,7 @@ export default class EnterTestScreen extends React.Component {
 
 
 					</div>
+					<Footer/>
 				</div>
 			</div>
 		);
