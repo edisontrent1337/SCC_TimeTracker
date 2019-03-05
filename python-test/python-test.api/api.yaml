@@ -76,8 +76,8 @@ paths:
       security:
       - bearerAuth: []
       operationId: setParticipants
+      description: Sets the marticle numbers of allowed participants.
       requestBody:
-        description: Sets the marticle numbers of allowed participants.
         required: true
         content:
           application/json:
@@ -90,6 +90,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/operationResponse"
+  /pytest/enter:
+    post:
+      operationId: enterTest
+      description: Authorizes users that want to access the python test.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/participants"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
   /pytest/results:
     get:
       operationId: getAllTestResults

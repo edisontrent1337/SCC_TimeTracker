@@ -8,6 +8,7 @@ public interface IPythonTestService {
 
 	OperationResult<TestResult> createTestResult(TestResult result);
 	OperationResult<Participants> setParticipants(Participants participants);
+	OperationResult<Participants> enterTest(Participants participants);
 	OperationResult<CorrectAnswers> setCorrectAnswers(CorrectAnswers correctAnswers);
 	OperationResult<String> getTestResults();
 

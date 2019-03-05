@@ -24,6 +24,7 @@
 	<modules>
 		<module>${project.directory}.api</module>
 		<module>${project.directory}.app</module>
+		<module>${project.directory}.ui</module>
 	</modules>
 
 	<dependencyManagement>

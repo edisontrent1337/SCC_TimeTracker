@@ -47,7 +47,7 @@ public class PythonTestService implements IPythonTestService {
 				builder.append(Integer.toString(answer));
 			}
 			entity.setAnswers(builder.toString());
-			entity.setSelfEvaluation(testResult.getSelfEvaluation1()+testResult.getSelfEvaluation2());
+			entity.setSelfEvaluation(testResult.getSelfEvaluation1() + testResult.getSelfEvaluation2());
 			testResultRepository.save(entity);
 			LOGGER.info("Successfully saved result for matriculation number " + testResult.getMatriculationNumber());
 			result.setStatus(OperationStatus.SUCCESS);
@@ -143,6 +143,27 @@ public class PythonTestService implements IPythonTestService {
 		OperationResult<String> result = new OperationResult<>();
 		result.setStatus(OperationStatus.SUCCESS);
 		result.setPayload(builder.toString());
+		return result;
+	}
+
+	@Override
+	public OperationResult<Participants> enterTest(Participants participants) {
+		OperationResult<Participants> result = new OperationResult<>();
+		List<Integer> matriculationNumbers = participants.getMatriculationNumbers();
+		result.setPayload(participants);
+		if (matriculationNumbers.size() != 1) {
+			result.setStatus(OperationStatus.FAILURE);
+			return result;
+		} else {
+			int matriculationNumber = matriculationNumbers.get(0);
+			TestResultEntity resultEntity = testResultRepository.findByMatriculationNumber(matriculationNumber);
+
+			if (resultEntity == null) {
+				result.setStatus(OperationStatus.UNAUTHORIZED);
+				return result;
+			}
+		}
+		result.setStatus(OperationStatus.SUCCESS);
 		return result;
 	}
 }

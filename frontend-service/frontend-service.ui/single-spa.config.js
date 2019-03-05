@@ -15,7 +15,7 @@ SystemJS.config({
 
 registerApplication(
 	"login",
-	() => import("./src/user-service/src/index.js").then(
+	() => import("./src/user-service/index.js").then(
 		module => module.login
 	),
 	() => {

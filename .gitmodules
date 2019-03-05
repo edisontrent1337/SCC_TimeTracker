@@ -7,3 +7,6 @@
 [submodule "frontend-service/frontend-service.ui/src/web-react"]
 	path = frontend-service/frontend-service.ui/src/web-react
 	url = https://github.com/edisontrent1337/web-react
+[submodule "python-test/python-test.ui/src/web-react"]
+	path = python-test/python-test.ui/src/web-react
+	url = https://github.com/edisontrent1337/web-react

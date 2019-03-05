@@ -93,4 +93,27 @@ public class PythonTestController implements PytestApi {
 		}
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+	@Override
+	public ResponseEntity<OperationResponse> enterTest(@Valid @RequestBody Participants participants) {
+		OperationResult<Participants> result = pythonTestService.enterTest(participants);
+		OperationResponse response = new OperationResponse();
+		switch (result.getStatus()) {
+			case SUCCESS:
+				response.addDataItem(participants);
+				break;
+			case FAILURE:
+				String error = "You did not provide correct data to enter the test.";
+				response.error(error);
+				LOGGER.error(error);
+				return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+			case UNAUTHORIZED:
+				error = "The matriculation number " + participants.getMatriculationNumbers().get(0) + " is not " +
+						"authorized to participate. Maybe a typo? Please try again or talk to the organizers.";
+				response.error(error);
+				LOGGER.error(error);
+				return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }
