@@ -41,4 +41,10 @@ public class RedirectController {
 	public String statsInPlace() {
 		return "forward:/";
 	}
+
+
+	@RequestMapping(value = "/test")
+	public String testInPlace() {
+		return "forward:/";
+	}
 }

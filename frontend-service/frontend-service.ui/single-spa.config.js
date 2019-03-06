@@ -13,16 +13,6 @@ SystemJS.config({
 	}
 });
 
-/*registerApplication(
-	"login",
-	() => import("./src/user-service/index.js").then(
-		module => module.login
-	),
-	() => {
-		return pathNameEquals(["", "/", "/signup"]) & !localStorage.getItem("user")
-	}
-);*/
-
 registerApplication(
 	"python-test",
 	() => import("./src/python-test/index.js").then(
@@ -50,23 +40,6 @@ function pathnameContains(pathNames) {
 	}
 	return false;
 }
-
-registerApplication(
-	"header",
-	() => import("./src/header/header.app.js").then(module => module.header),
-	() => true
-);
-
-
-registerApplication(
-	"dashboard",
-	() => import("./src/dashboard/DashBoard.app.js").then(module => module.dashboard),
-	() => {
-		console.log(window.location.pathname &&! (localStorage.getItem("user") === null));
-		return pathnameContains(["/dashboard", "/dashboard"])
-		|| (window.location.pathname &&! (localStorage.getItem("user") === null))
-	}
-);
 
 
 start();
