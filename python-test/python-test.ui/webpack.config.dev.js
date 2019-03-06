@@ -1,6 +1,8 @@
+
 const merge = require("webpack-merge");
 const baseConfig = require("./webpack.config.js");
 const webpack = require("webpack");
+const analyzer = require("webpack-bundle-analyzer");
 
 module.exports = merge.strategy({plugins: "prepend"})(baseConfig, {
 	mode: "development",
@@ -16,6 +18,7 @@ module.exports = merge.strategy({plugins: "prepend"})(baseConfig, {
 			MODE: JSON.stringify("standalone"),
 			PYTHON_TEST_SERVICE_BASE_API_URL: JSON.stringify('http://localhost:8084'),
 			USER_SERVICE_BASE_API_URL: JSON.stringify('http://localhost:8081')
-		})
+		}),
+		new analyzer.BundleAnalyzerPlugin()
 	]
 });

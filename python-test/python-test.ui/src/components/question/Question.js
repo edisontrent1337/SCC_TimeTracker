@@ -1,12 +1,6 @@
 import React from 'react';
 import colors from "../../web-react/colors/colors";
 import Answer from "./Answer";
-import q3 from "../../../img/q3_x4.png";
-import q4 from "../../../img/q4.png";
-import q5 from "../../../img/q5.png";
-import q6 from "../../../img/q6.png";
-import q7 from "../../../img/q7.png";
-import q8 from "../../../img/q8.png";
 import Highlight from "react-highlight";
 
 export default class Question extends React.Component {
@@ -50,25 +44,6 @@ export default class Question extends React.Component {
 	}
 
 	getImage() {
-		const {image} = this.props;
-		if (image === "q3") {
-			return q3;
-		}
-		if (image === "q4") {
-			return q4;
-		}
-		if (image === "q5") {
-			return q5;
-		}
-		if (image === "q6") {
-			return q6;
-		}
-		if (image === "q7") {
-			return q7;
-		}
-		if (image === "q8") {
-			return q8;
-		}
 	}
 
 }
