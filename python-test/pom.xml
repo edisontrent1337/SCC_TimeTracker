@@ -22,9 +22,9 @@
 	</properties>
 
 	<modules>
+		<module>${project.directory}.ui</module>
 		<module>${project.directory}.api</module>
 		<module>${project.directory}.app</module>
-		<module>${project.directory}.ui</module>
 	</modules>
 
 	<dependencyManagement>
