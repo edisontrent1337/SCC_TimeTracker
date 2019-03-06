@@ -13,13 +13,23 @@ SystemJS.config({
 	}
 });
 
-registerApplication(
+/*registerApplication(
 	"login",
 	() => import("./src/user-service/index.js").then(
 		module => module.login
 	),
 	() => {
 		return pathNameEquals(["", "/", "/signup"]) & !localStorage.getItem("user")
+	}
+);*/
+
+registerApplication(
+	"python-test",
+	() => import("./src/python-test/index.js").then(
+		module => module.pythonTest
+	),
+	() => {
+		return pathNameEquals(["", "/", "/test"])
 	}
 );
 

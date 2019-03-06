@@ -7,6 +7,7 @@ import q5 from "../../../img/q5.png";
 import q6 from "../../../img/q6.png";
 import q7 from "../../../img/q7.png";
 import q8 from "../../../img/q8.png";
+import Highlight from "react-highlight";
 
 export default class Question extends React.Component {
 
@@ -18,7 +19,6 @@ export default class Question extends React.Component {
 			clickedAnswer: undefined,
 			id: this.props.id
 		};
-		console.log(this.state);
 		this.selectAnswer = this.selectAnswer.bind(this);
 		this.getImage = this.getImage.bind(this);
 	}
@@ -33,17 +33,18 @@ export default class Question extends React.Component {
 	render() {
 		const {question, answers, additionalInformation} = this.props;
 		const answerList = answers.map((answer, i) => {
-			console.log("Answer " + i);
 			return <Answer key={i} id={i} selected={i === this.state.clickedAnswer} answer={answer}
 						   onClick={() => this.selectAnswer(this.state.id, i)}/>
 		});
+		console.log(this.props.code);
 		return (
 			<div style={{color: colors.blueGrey["800"]}}>
 				<h4>{question}</h4>
 				<i>{additionalInformation}</i>
-				<center style={{padding: "20px 0"}}>
-					{this.props.image && <img src={this.getImage()} style={{maxWidth: "100%"}}/>}
-				</center>
+				<div style={{padding: "20px 0", maxWidth: "100%"}}>
+
+					{this.props.code && <Highlight className={this.props.code.language}> {this.props.code.code}</Highlight>}
+				</div>
 				{answerList}
 			</div>
 		);

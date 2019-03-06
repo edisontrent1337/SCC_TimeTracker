@@ -64,6 +64,15 @@ services:
     networks:
       scc:
 
+  mysql-python-test:
+    image: "mysql:5.7"
+    restart: always
+    environment:
+    - MYSQL_DATABASE=python_test
+    - MYSQL_ROOT_PASSWORD=root
+    networks:
+      scc:
+
   scc-timing-service:
     image: "scc-timing-service:latest"
     networks:
@@ -86,6 +95,18 @@ services:
     - scc-service-registry
     environment:
       EUREKA_URI: http://scc-service:password@iamtrent.de:8761/eureka
+
+  python-test-service:
+    image: "python-test:latest"
+    networks:
+    - scc
+    depends_on:
+    - mysql-python-test
+    - scc-service-registry
+    environment:
+    - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql-python-test:3306/python_test?useSSL=false"
+    - "SPRING_DATASOURCE_PASSWORD=root"
+    - "EUREKA_URI=http://scc-service:password@iamtrent.de:8761/eureka"
 
 networks:
   scc:
