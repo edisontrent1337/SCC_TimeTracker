@@ -50,27 +50,6 @@ services:
     networks:
       scc:
 
-  mysql-scc-timing-service:
-    image: "mysql:5.7"
-    restart: always
-    environment:
-      - MYSQL_DATABASE=scc_records
-      - MYSQL_ROOT_PASSWORD=root
-    networks:
-      scc:
-
-  scc-timing-service:
-    image: "scc-timing-service:latest"
-    networks:
-      - scc
-    depends_on:
-      - mysql-scc-timing-service
-      - scc-service-registry
-    environment:
-    - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql-scc-timing-service:3306/scc_records?useSSL=false"
-    - "SPRING_DATASOURCE_PASSWORD=root"
-    - "EUREKA_URI=http://scc-service:password@scc-service-registry:8761/eureka"
-
   python-test-service:
     image: "python-test:latest"
     networks:

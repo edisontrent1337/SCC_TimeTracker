@@ -15,7 +15,7 @@ SystemJS.config({
 
 registerApplication(
 	"python-test",
-	() => import("./src/python-test/index.js").then(
+	() => SystemJS.import(PYTHON_TEST_SERVICE_BASE_API_URL + "/dist/bundle.js").then(
 		module => module.pythonTest
 	),
 	() => {
