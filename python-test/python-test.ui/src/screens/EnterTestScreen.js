@@ -1,9 +1,10 @@
 import React from "react";
 import CredentialForm from "../web-react/forms/CredentialForm";
 import colors from "../web-react/colors/colors";
-import Message from "../web-react/message/Message";
 import {client} from "../client/APIClient";
 import Footer from "../components/footer/Footer";
+import robolab from "../../img/robolab.png";
+import Header from "../components/header/Header";
 
 export default class EnterTestScreen extends React.Component {
 	constructor(props) {
@@ -64,14 +65,11 @@ export default class EnterTestScreen extends React.Component {
 		return (
 			<div>
 				<div className="container">
-					<Message heading={"Important hint"}
-							 message={"This test is not part of the examination or your grade. It only serves as " +
-							 "an orientation for the organizers of Robolab to ensure balanced and fair groups."}
-							 dismissable={true}/>
+					<Header/>
 					<div className="col-lg-4" style={{margin: "50px auto"}}>
 						<CredentialForm
 							color={colors.green["500"]}
-							title={<span>Robolab 2019 <br/> Python Test</span>}
+							title={<span>Python Skill Test</span>}
 							onChange={this.handleChange}
 							error={this.state.error}
 							logo={logo}

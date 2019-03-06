@@ -36,12 +36,11 @@ export default class Question extends React.Component {
 			return <Answer key={i} id={i} selected={i === this.state.clickedAnswer} answer={answer}
 						   onClick={() => this.selectAnswer(this.state.id, i)}/>
 		});
-		console.log(this.props.code);
 		return (
-			<div style={{color: colors.blueGrey["800"]}}>
-				<h4>{question}</h4>
-				<i>{additionalInformation}</i>
-				<div style={{padding: "20px 0", maxWidth: "100%"}}>
+			<div style={{color: colors.blueGrey["800"], marginBottom:"30px"}}>
+				<h4><i style={{padding:"0 10px 0 0"}} className="far fa-lightbulb"></i>{question}</h4>
+				<i style={{fontSize:"20px"}}>{additionalInformation}</i>
+				<div style={{padding:"10px 0", maxWidth: "100%"}}>
 
 					{this.props.code && <Highlight className={this.props.code.language}> {this.props.code.code}</Highlight>}
 				</div>

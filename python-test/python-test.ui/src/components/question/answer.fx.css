@@ -1,0 +1,7 @@
+.answer, .radio {
+    transition: 0.3s;
+}
+
+.answer:hover {
+    cursor: pointer;
+}

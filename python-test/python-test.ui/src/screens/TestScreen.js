@@ -10,6 +10,7 @@ import {createDefaultModalStyle} from "../web-react/utils/ModalFactory";
 import {buttonFace} from "../web-react/button/ButtonFactory";
 import {client} from "../client/APIClient";
 import Highlight from "react-highlight";
+import Header from "../components/header/Header";
 
 export default class TestScreen extends React.Component {
 	constructor(props) {
@@ -29,6 +30,12 @@ export default class TestScreen extends React.Component {
 		this.handleContinue = this.handleContinue.bind(this);
 		this.validateQuestionForm = this.validateQuestionForm.bind(this);
 		this.submitResults = this.submitResults.bind(this);
+
+		let location = window.location.href;
+		if (location.endsWith("#top")) {
+			location = location.substr(0, location.length -4);
+			window.location.href = location;
+		}
 	}
 
 	submitResults() {
@@ -97,12 +104,15 @@ export default class TestScreen extends React.Component {
 			selfEvalAnswered: true
 		});
 		this.closeConfirmationModal();
+		window.location.href += "#top"
 	}
 
 	render() {
 		if (!this.state.student) {
 			return (
+
 				<div className={"container"}>
+					<Header/>
 					<Message bsStyle={"danger"} heading={"An error occurred."}
 							 message={"You are not authorized to participate. Please enter your matriculation number " +
 							 "at the login page."}/>
@@ -117,11 +127,11 @@ export default class TestScreen extends React.Component {
 		const selfEvalQuestions = [
 			{
 				question: "How would you rate your programming skills?",
-				answers: ["Good to very good knowledge", "Basic knowledge", "Some or no knowledge"]
+				answers: ["🤓 Good to very good knowledge", "🙂 Basic knowledge", "🙁 Some or no knowledge"]
 			},
 			{
 				question: "How much experience do you have with collaborative software development (e.g. projects on Github)?",
-				answers: ["Good to very good experience", "Basic experience", "Some or no experience"]
+				answers: ["🤓 Good to very good experience", "🙂 Basic experience", "🙁 Some or no experience"]
 			}
 		];
 
@@ -182,15 +192,15 @@ export default class TestScreen extends React.Component {
 				question: "Which of the listed statements causes the output 'Loop stopped' not to be printed?",
 				image: "q5",
 				code: {
-				language: 'c',
-				code: 'void loop(int n) {\n' +
-					'    for (int i = 0; i < n; i++) { \n' +
-					'        if (n == 19) {\n' +
-					'            ???\n' +
-					'         }\n' +
-					'    }\n' +
-					'    printf("Loop stopped!");\n' +
-					'}'
+					language: 'c',
+					code: 'void loop(int n) {\n' +
+						'    for (int i = 0; i < n; i++) { \n' +
+						'        if (n == 19) {\n' +
+						'            ???\n' +
+						'         }\n' +
+						'    }\n' +
+						'    printf("Loop stopped!");\n' +
+						'}'
 				},
 				answers: [
 					"continue;",
@@ -252,21 +262,25 @@ export default class TestScreen extends React.Component {
 
 		return (
 
-			<div className={"container"}>
-				Hello {this.state.student}.
-				<Highlight className={"python"}>
-					{"printf('Hello')"}
-				</Highlight>
+			<div className={"container"} id={"top"}>
+				<Header/>
+
+				<div style={{margin: "20px 0"}}>
+					<Highlight className={"python"}>
+						{"printf('👋 Hello " + this.state.student + ".')"}
+					</Highlight>
+				</div>
 				<h2>Self Evaluation</h2>
 				<p>The following questions help to classify you in terms of your experience with software development
-					in general.</p>
-				<Message heading={"Important Hint:"}
-						 message={"This test is not part of the examination or your grade. It only serves as " +
-						 "an orientation for the organizers of Robolab to ensure balanced and fair groups."}
-						 dismissable={true}/>
-				<Message dismissable={true} heading={"Important Hint:"}
-						 message={"Please answer the following self evaluation questions " +
-						 "honestly. It's okay if you have only little experience in software development. That's why you are here! 👍"}/>
+					in general.<br/> Only <b>one</b> answer is correct for each question.</p>
+				{!this.state.selfEvalAnswered && <Message heading={"Important Hint:"}
+														  message={"This test is not part of the examination or your grade. It only serves as " +
+														  "an orientation for the organizers of Robolab to ensure balanced and fair groups."}
+														  dismissable={true}/>}
+
+				{!this.state.selfEvalAnswered && <Message dismissable={true} heading={"Important Hint:"}
+														  message={"Please answer the following self evaluation questions " +
+														  "honestly. It's okay if you have only little experience in software development. That's why you are here! 👍"}/>}
 				{!this.state.selfEvalAnswered && selfEvalQuestionList}
 				{this.state.selfEvalAnswered && regularQuestionList}
 				{!this.state.selfEvalAnswered &&
