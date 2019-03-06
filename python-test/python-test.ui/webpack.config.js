@@ -7,7 +7,7 @@ var target = path.resolve(
 	"../python-test.app/src/main/resources/static/dist"
 );
 
-const BASE_API_URL = 'http://iamtrent.de:8762';
+const BASE_API_URL = 'https://iamtrent.de';
 
 module.exports = {
 	entry: {
@@ -71,9 +71,9 @@ module.exports = {
 		}),
 		// defines the mode in which the external component is rendered
 		new webpack.DefinePlugin({
-			MODE: JSON.stringify("standalone"),
+			MODE: JSON.stringify("external-component"),
 			BASE_API_URL: JSON.stringify(BASE_API_URL),
-			PYTHON_TEST_SERVICE_BASE_API_URL: JSON.stringify('')
+			PYTHON_TEST_SERVICE_BASE_API_URL: JSON.stringify(BASE_API_URL + "python-test")
 		})
 	],
 	externals: {
