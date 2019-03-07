@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +24,23 @@ public class PythonTestController implements PytestApi {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PythonTestController.class);
 
 	private final PythonTestService pythonTestService;
+
+	@Override
+	public ResponseEntity<OperationResponse> getTestResultForStudent(@PathVariable String matriculationNumber) {
+		OperationResult<TestResult> result = pythonTestService.getTestResultForStudent(matriculationNumber);
+		OperationResponse response = new OperationResponse();
+		switch (result.getStatus()) {
+			case SUCCESS:
+				response.addDataItem(result.getPayload());
+				break;
+			case NOT_EXISTING:
+				String info = "Info: " + matriculationNumber + " has not submitted any result yet.";
+				LOGGER.info(info);
+				response.error(info);
+				return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
 	@Autowired
 	public PythonTestController(PythonTestService pythonTestService) {
@@ -62,7 +80,7 @@ public class PythonTestController implements PytestApi {
 	@Override
 	public ResponseEntity<OperationResponse> setCorrectAnswers(@Valid @RequestBody CorrectAnswers correctAnswers) {
 		OperationResult<CorrectAnswers> result = pythonTestService.setCorrectAnswers(correctAnswers);
-		switch (result.getStatus()){
+		switch (result.getStatus()) {
 			case SUCCESS:
 				break;
 			case NOT_EXISTING:

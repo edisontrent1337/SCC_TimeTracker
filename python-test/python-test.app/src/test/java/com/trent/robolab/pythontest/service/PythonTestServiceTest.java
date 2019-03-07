@@ -82,16 +82,16 @@ public class PythonTestServiceTest {
 
 	@Test
 	public void createCSVFromResultsWorksCorrectly() {
-		addTestResult(1234567, "A", "B", 0, 1, 0, 2, -1, 0, 1);
-		addTestResult(1234568, "B", "B", 1, 1, 0, 2, 1, 0, 1);
 		CorrectAnswers correctAnswers = new CorrectAnswers();
-		correctAnswers.setAnswers(Arrays.asList(0,1,0,2,1,0,1));
+		correctAnswers.setAnswers(Arrays.asList(0, 1, 0, 2, 1, 0, 1));
 		pythonTestService.setCorrectAnswers(correctAnswers);
+		addTestResult(1234567, "A", "B", 0, 1, 0, 2, -1, 0, -1);
+		addTestResult(1234568, "B", "B", 1, 1, 0, 2, 1, 0, 1);
 		assertEquals(2, testResultRepository.count());
 		OperationResult<String> result = pythonTestService.getTestResults();
 		assertEquals(OperationStatus.SUCCESS, result.getStatus());
-		assertEquals("1234567,A,B,1,1,1,1,0,1,1\n" +
-								"1234568,B,B,0,1,1,1,1,1,1", result.getPayload());
+		assertEquals("1234567,A,B,1,1,1,1,0,1,0,71.43\n" +
+				"1234568,B,B,0,1,1,1,1,1,1,85.71", result.getPayload());
 	}
 
 	private void addTestResult(int matriculationNumber, String selfEvalA, String selfEvalB, int... answers) {

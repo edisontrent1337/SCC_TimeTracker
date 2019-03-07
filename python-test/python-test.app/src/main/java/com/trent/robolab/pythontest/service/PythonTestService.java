@@ -11,13 +11,12 @@ import com.trent.robolab.pythontest.repository.TestResultRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class PythonTestService implements IPythonTestService {
@@ -45,9 +44,12 @@ public class PythonTestService implements IPythonTestService {
 		} else {
 			StringBuilder builder = new StringBuilder();
 			List<Integer> answers = testResult.getAnswers();
+			CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findAll().iterator().next();
+			String[] correctAnswers = correctAnswersEntity.getAnswers().split(",");
 			for (int i = 0; i < answers.size(); i++) {
 				Integer answer = answers.get(i);
-				builder.append(Integer.toString(answer));
+				String givenAnswer = Integer.toString(answer);
+				builder.append(givenAnswer.equals(correctAnswers[i]) ? 1 : 0);
 				if (i != answers.size() - 1) {
 					builder.append(",");
 				}
@@ -102,7 +104,6 @@ public class PythonTestService implements IPythonTestService {
 
 	@Override
 	public OperationResult<CorrectAnswers> setCorrectAnswers(CorrectAnswers correctAnswers) {
-		CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findById(1);
 		StringBuilder builder = new StringBuilder();
 		List<Integer> answers = correctAnswers.getAnswers();
 
@@ -113,11 +114,13 @@ public class PythonTestService implements IPythonTestService {
 				builder.append(",");
 			}
 		}
-		if (correctAnswersEntity != null) {
-			correctAnswersEntity.setAnswers(builder.toString());
-			correctAnswersRepository.save(correctAnswersEntity);
-		} else {
+		if (correctAnswersRepository.count() == 0) {
 			CorrectAnswersEntity entity = new CorrectAnswersEntity();
+			entity.setAnswers(builder.toString());
+			entity.setCreationDate(OffsetDateTime.now());
+			correctAnswersRepository.save(entity);
+		} else {
+			CorrectAnswersEntity entity = correctAnswersRepository.findAll().iterator().next();
 			entity.setAnswers(builder.toString());
 			entity.setCreationDate(OffsetDateTime.now());
 			correctAnswersRepository.save(entity);
@@ -139,7 +142,6 @@ public class PythonTestService implements IPythonTestService {
 			}
 			LOGGER.info("The answer given was " + resultEntity.getAnswers());
 			String[] givenAnswers = resultEntity.getAnswers().split(",");
-			String[] correctAnswers = correctAnswersRepository.findById(1).getAnswers().split(",");
 			builder
 					.append(resultEntity.getMatriculationNumber())
 					.append(",");
@@ -148,14 +150,16 @@ public class PythonTestService implements IPythonTestService {
 					.append(",")
 					.append(selfEval[1])
 					.append(",");
-			for (int i = 0; i < givenAnswers.length; i++) {
-				String answer = givenAnswers[i];
-				String correctAnswer = correctAnswers[i];
-				builder.append(answer.equals(correctAnswer) ? 1 : 0);
-				if (i != givenAnswers.length - 1) {
-					builder.append(",");
-				}
+			builder.append(resultEntity.getAnswers());
+			builder.append(",");
+			float numberOfCorrectAnswers = 0;
+			for (String answer : givenAnswers) {
+				numberOfCorrectAnswers += answer.equals("1") ? 1 : 0;
 			}
+
+			float score = numberOfCorrectAnswers / givenAnswers.length;
+			score = (float) (Math.round(score * 10000.0) / 10000.0) * 100;
+			builder.append(Float.toString(score));
 			if (iterator.hasNext()) {
 				builder.append("\n");
 			}
@@ -185,5 +189,35 @@ public class PythonTestService implements IPythonTestService {
 		}
 		result.setStatus(OperationStatus.SUCCESS);
 		return result;
+	}
+
+	@Override
+	public OperationResult<TestResult> getTestResultForStudent(String matriculationNumber) {
+		OperationResult<TestResult> operationResult = new OperationResult<>();
+		TestResultEntity resultEntity = testResultRepository.findByMatriculationNumber(Integer.parseInt(matriculationNumber));
+		if (resultEntity == null || "".equals(resultEntity.getAnswers()) || "".equals(resultEntity.getSelfEvaluation())) {
+			operationResult.setStatus(OperationStatus.NOT_EXISTING);
+			operationResult.setPayload(null);
+		} else {
+			TestResult testResult = new TestResult();
+			testResult.setMatriculationNumber(resultEntity.getMatriculationNumber());
+			String[] selfEval = resultEntity.getSelfEvaluation().split(",");
+			testResult.setSelfEvaluation1(selfEval[0]);
+			testResult.setSelfEvaluation2(selfEval[1]);
+			List<String> answerStrings = Arrays.asList(resultEntity.getAnswers().split(","));
+			List<Integer> answersAsNumber = new ArrayList<>();
+			answerStrings.forEach((answer) -> {
+				answersAsNumber.add(Integer.parseInt(answer));
+			});
+			testResult.setAnswers(answersAsNumber);
+			operationResult.setPayload(testResult);
+			operationResult.setStatus(OperationStatus.SUCCESS);
+		}
+		return operationResult;
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+		return null;
 	}
 }

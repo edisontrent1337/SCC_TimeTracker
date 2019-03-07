@@ -11,6 +11,7 @@ import {buttonFace} from "../web-react/button/ButtonFactory";
 import {client} from "../client/APIClient";
 import Highlight from "react-highlight";
 import Header from "../components/header/Header";
+import LoadingIndicator from "../web-react/indicators/LoadingIndicator";
 
 export default class TestScreen extends React.Component {
 	constructor(props) {
@@ -23,6 +24,8 @@ export default class TestScreen extends React.Component {
 			confirmationModalIsOpen: false,
 			submitModalIsOpen: false,
 			questionsAnswered: false,
+			answersSubmitted: false,
+			mounted: false,
 			regularQuestions: [
 				{
 					question: "What distinguishes objects from classes in object-oriented programming?",
@@ -138,6 +141,23 @@ export default class TestScreen extends React.Component {
 		this.closeSubmitModal = this.closeSubmitModal.bind(this);
 		this.handleContinue = this.handleContinue.bind(this);
 		this.submitResults = this.submitResults.bind(this);
+		this.getAlreadySubmittedResults = this.getAlreadySubmittedResults.bind(this);
+	}
+
+	getAlreadySubmittedResults() {
+		client.get("/pytest/results/" + this.state.student, this)
+			.then(res => res.json())
+			.then(res => {
+				this.setState({
+					mounted: true
+				});
+				console.log(res);
+				if (!res.error) {
+					this.setState({
+						answersSubmitted: true
+					})
+				}
+			});
 	}
 
 	componentDidMount() {
@@ -146,8 +166,9 @@ export default class TestScreen extends React.Component {
 			initializedAnswers.push(-1);
 		});
 		this.setState({
-			answers: initializedAnswers
+			answers: initializedAnswers,
 		}, () => console.log(this.state.answers));
+		this.getAlreadySubmittedResults();
 	}
 
 
@@ -164,7 +185,13 @@ export default class TestScreen extends React.Component {
 		console.log(resultJson);
 		client.post("/pytest/submit", resultJson, this)
 			.then(res => res.json())
-			.then(res => console.log(res));
+			.then(res => {
+				if (!res.error) {
+					this.setState({
+						answersSubmitted: true
+					});
+				}
+			});
 	}
 
 	answerQuestion(questionID, answerID) {
@@ -217,6 +244,9 @@ export default class TestScreen extends React.Component {
 	}
 
 	render() {
+		if (!this.state.mounted) {
+			return <LoadingIndicator width={64} height={64}/>
+		}
 		if (!this.state.student) {
 			return (
 
@@ -232,6 +262,21 @@ export default class TestScreen extends React.Component {
 				</div>
 			);
 		}
+		if (this.state.answersSubmitted) {
+			return (
+				<div className={"container"}>
+					<Header/>
+					<div>
+						<Message heading={"Thank you."}
+								 message={"We received your submitted your answers."}/>
+					</div>
+					<div className={"cf"}>
+						<Button value={"Go Back"} color={colors.green["500"]} onClick={() => window.location = "/"}/>
+					</div>
+					<Footer/>
+				</div>
+			)
+		}
 
 		const selfEvalQuestions = [
 			{
@@ -243,121 +288,13 @@ export default class TestScreen extends React.Component {
 				answers: ["🤓 Good to very good experience", "🙂 Basic experience", "🙁 Some or no experience"]
 			}
 		];
-
-		const regularQuestions = [
-
-			{
-				question: "What distinguishes objects from classes in object-oriented programming?",
-				answers: [
-					"Objects are declarations of a class",
-					"Objects are instances of a class",
-					"Objects are part of a class",
-					"Objects describe class attributes"]
-			},
-			{
-				question: "Which approach would you use to implement the following task with as little code as possible?",
-				additionalInformation: "Gather all leaves of a binary tree",
-				answers: [
-					"Imperative approach",
-					"Iterative approach",
-					"Recursive approach"]
-			},
-			{
-				question: "What is the output on the Python console?",
-				code: {
-					language: 'python',
-					code: 'Python 3.6.7 (default, Oct 22 2018, 11:32:17) \n' +
-						'[GCC 8.2.0] on linux\n' +
-						'Type "help", "copyright", "credits" or "license" for more information.\n' +
-						'>>> a = "1"\n' +
-						'>>> b = "9"\n' +
-						'>>> print(a + b)\n'
-				},
-				answers: [
-					"10",
-					"19",
-					"TypeError",
-					"1 9"]
-			},
-			{
-				question: "What is the result of the following recursion when the starting value is n=0?",
-				code: {
-					language: 'c',
-					code: 'int s(int n) { \n' +
-						'    if(n == 20) {\n' +
-						'        return 1;\n' +
-						'    }\n' +
-						'    return n + s(n + 5);\n' +
-						'}'
-				},
-				answers: [
-					"6",
-					"16",
-					"31",
-					"RecursionError"]
-			},
-
-			{
-				question: "Which of the listed statements causes the output 'Loop stopped' not to be printed?",
-				image: "q5",
-				code: {
-					language: 'c',
-					code: 'void loop(int n) {\n' +
-						'    for (int i = 0; i < n; i++) { \n' +
-						'        if (n == 19) {\n' +
-						'            ???\n' +
-						'         }\n' +
-						'    }\n' +
-						'    printf("Loop stopped!");\n' +
-						'}'
-				},
-				answers: [
-					"continue;",
-					"return;",
-					"break;"]
-			},
-
-			{
-				question: "You see the following error message in the python console. Which python statement is missing " +
-					"for  the code to work?",
-				image: "q6",
-				answers: [
-					"import sqrt",
-					"from math import sqrt",
-					"import math",
-					"import math.sqrt",
-				]
-			},
-			{
-				question: "What is printed on the python console?",
-				image: "q7",
-				answers: [
-					"TypeError",
-					"Hello <__main__Container object at 0x7fb7f3f7668>",
-					"Hello",
-					"Hello 1337",
-				]
-			},
-
-			{
-				question: "What is printed on the python console?",
-				image: "q8",
-				answers: [
-					"[1]",
-					"IndexError",
-					"[1,2]",
-					"[2]",
-				]
-			},
-		];
-
 		const selfEvalQuestionList = selfEvalQuestions.map((q, i) => {
 			return <Question question={q.question} answers={q.answers} additionalInformation={q.additionalInformation}
 							 key={i} id={i} code={q.code}
 							 onChange={this.answerSelfEvaluation}/>
 		});
 
-		const regularQuestionList = regularQuestions.map((q, i) => {
+		const regularQuestionList = this.state.regularQuestions.map((q, i) => {
 			return <Question question={(i + 1) + ".) " + q.question} answers={q.answers}
 							 additionalInformation={q.additionalInformation}
 							 key={i} id={i}
@@ -464,6 +401,11 @@ export default class TestScreen extends React.Component {
 					</div>
 				</Modal>
 
+				{this.state.connectionError &&
+				<div>
+					<Message message={this.state.connectionError + ": Python Test Service is unavailable."}
+							 heading={"Connection Error:"} bsStyle={"danger"}/>
+				</div>}
 				{this.state.selfEvalAnswered &&
 				<div style={{padding: "10px 0"}}>
 					<Button color={colors.green["500"]} value={"Submit"} validator={true}
@@ -472,6 +414,7 @@ export default class TestScreen extends React.Component {
 				}
 
 				<div className={"cf"}></div>
+
 
 				<Footer/>
 

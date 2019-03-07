@@ -118,7 +118,25 @@ paths:
           content:
             text/plain:
               schema:
-                type: string
+                type: string#
+  /pytest/results/{matriculationNumber}:
+    get:
+      operationId: getTestResultForStudent
+      description: Returns test result for a given student
+      parameters:
+      - name: matriculationNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
   /pytest/submit:
     post:
       security:

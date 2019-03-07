@@ -36,7 +36,7 @@ function put(url, body, component) {
 
 function get(url, component) {
 	let headers = generateHeaders(token);
-	header.method = "GET";
+	headers.method = "GET";
 	return fetch(PYTHON_TEST_SERVICE_BASE_API_URL + url, headers).catch((err) => handleError(err, component));
 }
 
