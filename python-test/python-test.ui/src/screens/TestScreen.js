@@ -21,24 +21,138 @@ export default class TestScreen extends React.Component {
 			answers: [],
 			selfEvalAnswered: false,
 			confirmationModalIsOpen: false,
-			questionsAnswered: false
+			submitModalIsOpen: false,
+			questionsAnswered: false,
+			regularQuestions: [
+				{
+					question: "What distinguishes objects from classes in object-oriented programming?",
+					answers: [
+						"Objects are declarations of a class",
+						"Objects are instances of a class",
+						"Objects are part of a class",
+						"Objects describe class attributes"]
+				},
+				{
+					question: "Which approach would you use to implement the following task with as little code as possible?",
+					additionalInformation: "Gather all leaves of a binary tree",
+					answers: [
+						"Imperative approach",
+						"Iterative approach",
+						"Recursive approach"]
+				},
+				{
+					question: "What is the output on the Python console?",
+					code: {
+						language: 'python',
+						code: 'Python 3.6.7 (default, Oct 22 2018, 11:32:17) \n' +
+							'[GCC 8.2.0] on linux\n' +
+							'Type "help", "copyright", "credits" or "license" for more information.\n' +
+							'>>> a = "1"\n' +
+							'>>> b = "9"\n' +
+							'>>> print(a + b)\n'
+					},
+					answers: [
+						"10",
+						"19",
+						"TypeError",
+						"1 9"]
+				},
+				{
+					question: "What is the result of the following recursion when the starting value is n=0?",
+					code: {
+						language: 'c',
+						code: 'int s(int n) { \n' +
+							'    if(n == 20) {\n' +
+							'        return 1;\n' +
+							'    }\n' +
+							'    return n + s(n + 5);\n' +
+							'}'
+					},
+					answers: [
+						"6",
+						"16",
+						"31",
+						"RecursionError"]
+				},
+
+				{
+					question: "Which of the listed statements causes the output 'Loop stopped' not to be printed?",
+					image: "q5",
+					code: {
+						language: 'c',
+						code: 'void loop(int n) {\n' +
+							'    for (int i = 0; i < n; i++) { \n' +
+							'        if (n == 19) {\n' +
+							'            ???\n' +
+							'         }\n' +
+							'    }\n' +
+							'    printf("Loop stopped!");\n' +
+							'}'
+					},
+					answers: [
+						"continue;",
+						"return;",
+						"break;"]
+				},
+
+				{
+					question: "You see the following error message in the python console. Which python statement is missing " +
+						"for  the code to work?",
+					image: "q6",
+					answers: [
+						"import sqrt",
+						"from math import sqrt",
+						"import math",
+						"import math.sqrt",
+					]
+				},
+				{
+					question: "What is printed on the python console?",
+					image: "q7",
+					answers: [
+						"TypeError",
+						"Hello <__main__Container object at 0x7fb7f3f7668>",
+						"Hello",
+						"Hello 1337",
+					]
+				},
+
+				{
+					question: "What is printed on the python console?",
+					image: "q8",
+					answers: [
+						"[1]",
+						"IndexError",
+						"[1,2]",
+						"[2]",
+					]
+				},
+			]
+
 		};
 		this.answerQuestion = this.answerQuestion.bind(this);
 		this.answerSelfEvaluation = this.answerSelfEvaluation.bind(this);
 		this.openConfirmationModal = this.openConfirmationModal.bind(this);
 		this.closeConfirmationModal = this.closeConfirmationModal.bind(this);
+		this.openSubmitModal = this.openSubmitModal.bind(this);
+		this.closeSubmitModal = this.closeSubmitModal.bind(this);
 		this.handleContinue = this.handleContinue.bind(this);
-		this.validateQuestionForm = this.validateQuestionForm.bind(this);
 		this.submitResults = this.submitResults.bind(this);
-
-		let location = window.location.href;
-		if (location.endsWith("#top")) {
-			location = location.substr(0, location.length -4);
-			window.location.href = location;
-		}
 	}
 
+	componentDidMount() {
+		let initializedAnswers = [];
+		this.state.regularQuestions.forEach(() => {
+			initializedAnswers.push(-1);
+		});
+		this.setState({
+			answers: initializedAnswers
+		}, () => console.log(this.state.answers));
+	}
+
+
 	submitResults() {
+		this.closeSubmitModal();
 		let resultJson = JSON.stringify(
 			{
 				matriculationNumber: this.state.student,
@@ -53,29 +167,12 @@ export default class TestScreen extends React.Component {
 			.then(res => console.log(res));
 	}
 
-	validateQuestionForm() {
-		let answers = this.state.answers;
-		for (let i = 0; i < answers.length; i++) {
-			if (typeof answers[i] === 'undefined') {
-				console.log("Not done yet");
-				this.setState({
-					questionsAnswered: false
-				});
-				return;
-			}
-		}
-		console.log("DONE");
-		this.setState({
-			questionsAnswered: true
-		});
-	}
-
 	answerQuestion(questionID, answerID) {
 		let currentAnswers = this.state.answers;
 		currentAnswers[questionID] = answerID;
 		this.setState({
 			answers: currentAnswers
-		}, () => this.validateQuestionForm());
+		});
 	}
 
 	answerSelfEvaluation(questionID, answerID) {
@@ -99,12 +196,24 @@ export default class TestScreen extends React.Component {
 		});
 	}
 
+	openSubmitModal() {
+		this.setState({
+			submitModalIsOpen: true
+		});
+	}
+
+	closeSubmitModal() {
+		this.setState({
+			submitModalIsOpen: false
+		});
+	}
+
 	handleContinue() {
 		this.setState({
 			selfEvalAnswered: true
 		});
 		this.closeConfirmationModal();
-		window.location.href += "#top"
+		window.scrollTo(0, 0);
 	}
 
 	render() {
@@ -323,15 +432,42 @@ export default class TestScreen extends React.Component {
 					</div>
 				</Modal>
 
-				{this.state.selfEvalAnswered && !this.state.questionsAnswered &&
-				<div className={"cf"}>
-					<Message message={"Please answer all questions above first!"} heading={"Attention:"}/>
-				</div>
-				}
+
+				<Modal ariaHideApp={false} defaultStyles={createDefaultModalStyle()}
+					   isOpen={this.state.submitModalIsOpen}
+					   onRequestClose={this.closeSubmitModal}
+				>
+					<div className="col-lg-4" style={{margin: "50px auto"}}>
+						<CredentialForm
+							title="Submit your answers"
+							hint={"Are you sure you want to submit your answers?"}
+							error={this.state.connectionError || this.state.error}
+							logo={logo}
+							inputs={[
+								{
+									type: "button",
+									value: buttonFace("arrow-forward-outline", "Continue"),
+									validator: () => true,
+									loading: this.state.requestSent,
+									handler: this.submitResults,
+									color: colors.green["800"],
+								},
+								{
+									type: "button",
+									value: "Cancel",
+									color: colors.red["800"],
+									handler: this.closeSubmitModal,
+									validator: () => true
+								},
+							]}
+						/>
+					</div>
+				</Modal>
+
 				{this.state.selfEvalAnswered &&
 				<div style={{padding: "10px 0"}}>
-					<Button color={colors.green["500"]} value={"Submit"} validator={this.state.questionsAnswered}
-							onClick={this.submitResults}/>
+					<Button color={colors.green["500"]} value={"Submit"} validator={true}
+							onClick={() => this.openSubmitModal()}/>
 				</div>
 				}
 
