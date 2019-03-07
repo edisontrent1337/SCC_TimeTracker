@@ -6,7 +6,7 @@ import com.trent.robolab.pythontest.api.model.TestResult;
 
 public interface IPythonTestService {
 
-	OperationResult<TestResult> createTestResult(TestResult result);
+	OperationResult<TestResult> addTestResult(TestResult result);
 	OperationResult<Participants> setParticipants(Participants participants);
 	OperationResult<Participants> enterTest(Participants participants);
 	OperationResult<CorrectAnswers> setCorrectAnswers(CorrectAnswers correctAnswers);

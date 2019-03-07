@@ -33,7 +33,7 @@ public class PythonTestController implements PytestApi {
 	@Override
 	public ResponseEntity<OperationResponse> createTestResult(@Valid @RequestBody TestResult testResult) {
 		OperationResponse response = new OperationResponse();
-		OperationResult<TestResult> result = pythonTestService.createTestResult(testResult);
+		OperationResult<TestResult> result = pythonTestService.addTestResult(testResult);
 		switch (result.getStatus()) {
 			case SUCCESS:
 				response.addDataItem(testResult);

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +34,7 @@ public class PythonTestService implements IPythonTestService {
 	}
 
 	@Override
-	public OperationResult<TestResult> createTestResult(TestResult testResult) {
+	public OperationResult<TestResult> addTestResult(TestResult testResult) {
 		OperationResult<TestResult> result = new OperationResult<>();
 		Integer matriculationNumber = testResult.getMatriculationNumber();
 		TestResultEntity entity = testResultRepository.findByMatriculationNumber(matriculationNumber);
@@ -43,11 +44,16 @@ public class PythonTestService implements IPythonTestService {
 			return result;
 		} else {
 			StringBuilder builder = new StringBuilder();
-			for (Integer answer : testResult.getAnswers()) {
+			List<Integer> answers = testResult.getAnswers();
+			for (int i = 0; i < answers.size(); i++) {
+				Integer answer = answers.get(i);
 				builder.append(Integer.toString(answer));
+				if (i != answers.size() - 1) {
+					builder.append(",");
+				}
 			}
 			entity.setAnswers(builder.toString());
-			entity.setSelfEvaluation(testResult.getSelfEvaluation1() + testResult.getSelfEvaluation2());
+			entity.setSelfEvaluation(testResult.getSelfEvaluation1() + "," + testResult.getSelfEvaluation2());
 			testResultRepository.save(entity);
 			LOGGER.info("Successfully saved result for matriculation number " + testResult.getMatriculationNumber());
 			result.setStatus(OperationStatus.SUCCESS);
@@ -98,8 +104,14 @@ public class PythonTestService implements IPythonTestService {
 	public OperationResult<CorrectAnswers> setCorrectAnswers(CorrectAnswers correctAnswers) {
 		CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findById(1);
 		StringBuilder builder = new StringBuilder();
-		for (Integer answer : correctAnswers.getAnswers()) {
+		List<Integer> answers = correctAnswers.getAnswers();
+
+		for (int i = 0, answersSize = answers.size(); i < answersSize; i++) {
+			Integer answer = answers.get(i);
 			builder.append(Integer.toString(answer));
+			if (i != answersSize - 1) {
+				builder.append(",");
+			}
 		}
 		if (correctAnswersEntity != null) {
 			correctAnswersEntity.setAnswers(builder.toString());
@@ -119,20 +131,23 @@ public class PythonTestService implements IPythonTestService {
 	public OperationResult<String> getTestResults() {
 		List<TestResultEntity> results = (List<TestResultEntity>) testResultRepository.findAll();
 		StringBuilder builder = new StringBuilder();
-		for (TestResultEntity resultEntity : results) {
+		for (Iterator<TestResultEntity> iterator = results.iterator(); iterator.hasNext(); ) {
+			TestResultEntity resultEntity = iterator.next();
 			if ("".equals(resultEntity.getAnswers()) || "".equals(resultEntity.getSelfEvaluation())) {
 				LOGGER.info("The student " + resultEntity.getMatriculationNumber() + " has not answered.");
 				continue;
 			}
-			String[] givenAnswers = resultEntity.getAnswers().split("(?!^)");
-			String[] correctAnswers = correctAnswersRepository.findById(1).getAnswers().split("(?!^)");
+			LOGGER.info("The answer given was " + resultEntity.getAnswers());
+			String[] givenAnswers = resultEntity.getAnswers().split(",");
+			String[] correctAnswers = correctAnswersRepository.findById(1).getAnswers().split(",");
 			builder
 					.append(resultEntity.getMatriculationNumber())
 					.append(",");
-			builder.append(resultEntity.getSelfEvaluation().split("")[0]);
-			builder.append(",");
-			builder.append(resultEntity.getSelfEvaluation().split("")[1]);
-			builder.append(",");
+			String[] selfEval = resultEntity.getSelfEvaluation().split(",");
+			builder.append(selfEval[0])
+					.append(",")
+					.append(selfEval[1])
+					.append(",");
 			for (int i = 0; i < givenAnswers.length; i++) {
 				String answer = givenAnswers[i];
 				String correctAnswer = correctAnswers[i];
@@ -141,8 +156,9 @@ public class PythonTestService implements IPythonTestService {
 					builder.append(",");
 				}
 			}
-
-			builder.append("\n");
+			if (iterator.hasNext()) {
+				builder.append("\n");
+			}
 		}
 		OperationResult<String> result = new OperationResult<>();
 		result.setStatus(OperationStatus.SUCCESS);
