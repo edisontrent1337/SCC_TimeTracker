@@ -42,9 +42,17 @@ public class PythonTestService implements IPythonTestService {
 			LOGGER.error("The student with matriculation number " + testResult.getMatriculationNumber() + " was not found");
 			return result;
 		} else {
+			if (!entity.getAnswers().isEmpty() && entity.getMatriculationNumber() != 1234567) {
+				result.setStatus(OperationStatus.FAILURE);
+				LOGGER.error("The student with matriculation number " + testResult.getMatriculationNumber() + " has already answered");
+				return result;
+			}
 			StringBuilder builder = new StringBuilder();
 			List<Integer> answers = testResult.getAnswers();
-			CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findAll().iterator().next();
+			CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findFirstBy();
+			if (correctAnswersEntity == null) {
+				LOGGER.error("No correct answer string was set.");
+			}
 			String[] correctAnswers = correctAnswersEntity.getAnswers().split(",");
 			for (int i = 0; i < answers.size(); i++) {
 				Integer answer = answers.get(i);
@@ -56,11 +64,43 @@ public class PythonTestService implements IPythonTestService {
 			}
 			entity.setAnswers(builder.toString());
 			entity.setSelfEvaluation(testResult.getSelfEvaluation1() + "," + testResult.getSelfEvaluation2());
+			float score = calculateScore(answers, testResult.getSelfEvaluation1(), testResult.getSelfEvaluation2());
+			entity.setScore(score);
 			testResultRepository.save(entity);
 			LOGGER.info("Successfully saved result for matriculation number " + testResult.getMatriculationNumber());
 			result.setStatus(OperationStatus.SUCCESS);
 		}
 		return result;
+	}
+
+	private float calculateScore(List<Integer> answers, String selfEvaluationA, String selfEvaluationB) {
+		int numberOfCorrectAnswers = calculateNumberOfCorrectAnswers(answers);
+		float credibility = numberOfCorrectAnswers / (float) answers.size();
+		String selfEval = "CBA";
+		int evalScoreA = selfEval.indexOf(selfEvaluationA);
+		int evalScoreB = selfEval.indexOf(selfEvaluationB);
+		float evalScore = evalScoreA + evalScoreB;
+		evalScore *= credibility;
+		float achievedScore = evalScore + numberOfCorrectAnswers;
+
+		float maxScore = 4 + answers.size();
+		float score = achievedScore / maxScore;
+		score = (float) (Math.round(score * 10000.0) / 10000.0);
+		return score * 100;
+	}
+
+	private int calculateNumberOfCorrectAnswers(List<Integer> answers) {
+		CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findFirstBy();
+		if (correctAnswersEntity == null) {
+			LOGGER.error("No correct answer string was set.");
+		}
+		String[] correctAnswers = correctAnswersEntity.getAnswers().split(",");
+		int numberOfCorrectAnswers = 0;
+		for (int i = 0; i < answers.size(); i++) {
+			String answer = Integer.toString(answers.get(i));
+			numberOfCorrectAnswers += answer.equals(correctAnswers[i]) ? 1 : 0;
+		}
+		return numberOfCorrectAnswers;
 	}
 
 	@Override
@@ -96,6 +136,7 @@ public class PythonTestService implements IPythonTestService {
 			testResultEntity.setUuid(UUID.randomUUID().toString());
 			testResultEntity.setAnswers("");
 			testResultEntity.setSelfEvaluation("");
+			testResultEntity.setScore(0);
 			testResultRepository.save(testResultEntity);
 		}
 		operationResult.setStatus(OperationStatus.SUCCESS);
@@ -120,7 +161,10 @@ public class PythonTestService implements IPythonTestService {
 			entity.setCreationDate(OffsetDateTime.now());
 			correctAnswersRepository.save(entity);
 		} else {
-			CorrectAnswersEntity entity = correctAnswersRepository.findAll().iterator().next();
+			CorrectAnswersEntity entity = correctAnswersRepository.findFirstBy();
+			if (entity == null) {
+				LOGGER.error("No correct answer string was set.");
+			}
 			entity.setAnswers(builder.toString());
 			entity.setCreationDate(OffsetDateTime.now());
 			correctAnswersRepository.save(entity);
@@ -136,30 +180,23 @@ public class PythonTestService implements IPythonTestService {
 		StringBuilder builder = new StringBuilder();
 		for (Iterator<TestResultEntity> iterator = results.iterator(); iterator.hasNext(); ) {
 			TestResultEntity resultEntity = iterator.next();
-			if ("".equals(resultEntity.getAnswers()) || "".equals(resultEntity.getSelfEvaluation())) {
+			String givenAnswerString = resultEntity.getAnswers();
+			String selfEvaluationString = resultEntity.getSelfEvaluation();
+			if (givenAnswerString == null || givenAnswerString.isEmpty() || selfEvaluationString == null || selfEvaluationString.isEmpty()) {
 				LOGGER.info("The student " + resultEntity.getMatriculationNumber() + " has not answered.");
 				continue;
 			}
-			LOGGER.info("The answer given was " + resultEntity.getAnswers());
-			String[] givenAnswers = resultEntity.getAnswers().split(",");
 			builder
 					.append(resultEntity.getMatriculationNumber())
 					.append(",");
-			String[] selfEval = resultEntity.getSelfEvaluation().split(",");
+			String[] selfEval = selfEvaluationString.split(",");
 			builder.append(selfEval[0])
 					.append(",")
 					.append(selfEval[1])
 					.append(",");
-			builder.append(resultEntity.getAnswers());
+			builder.append(givenAnswerString);
 			builder.append(",");
-			float numberOfCorrectAnswers = 0;
-			for (String answer : givenAnswers) {
-				numberOfCorrectAnswers += answer.equals("1") ? 1 : 0;
-			}
-
-			float score = numberOfCorrectAnswers / givenAnswers.length;
-			score = (float) (Math.round(score * 10000.0) / 10000.0) * 100;
-			builder.append(Float.toString(score));
+			builder.append(resultEntity.getScore());
 			if (iterator.hasNext()) {
 				builder.append("\n");
 			}

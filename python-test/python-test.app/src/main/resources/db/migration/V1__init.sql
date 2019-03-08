@@ -5,6 +5,7 @@ CREATE TABLE test_results (
     answers VARCHAR(255) NOT NULL,
     uuid VARCHAR(255) NOT NULL,
     self_evaluation VARCHAR(255) NOT NULL,
+    score FLOAT(20),
     PRIMARY KEY (id)
 );
 

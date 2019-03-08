@@ -57,10 +57,10 @@ public class PythonTestController implements PytestApi {
 				response.addDataItem(testResult);
 				break;
 			case FAILURE:
-				response.error("Error: An unspecified error occurred!");
+				response.error("Error: You have already answered the test.");
 				break;
 			case UNAUTHORIZED:
-				response.error("Error: You are not authorized to submit a test result");
+				response.error("Error: You are not authorized to submit a test result.");
 				break;
 		}
 		return new ResponseEntity<>(response, HttpStatus.OK);

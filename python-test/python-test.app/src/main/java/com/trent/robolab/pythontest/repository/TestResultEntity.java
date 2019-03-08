@@ -23,6 +23,18 @@ public class TestResultEntity {
 	@Column(name = "self_evaluation")
 	private String selfEvaluation;
 
+
+	@Column(name = "score")
+	private float score;
+
+	public float getScore() {
+		return score;
+	}
+
+	public void setScore(float score) {
+		this.score = score;
+	}
+
 	public String getSelfEvaluation() {
 		return selfEvaluation;
 	}
