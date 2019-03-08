@@ -75,18 +75,28 @@ public class PythonTestService implements IPythonTestService {
 
 	private float calculateScore(List<Integer> answers, String selfEvaluationA, String selfEvaluationB) {
 		int numberOfCorrectAnswers = calculateNumberOfCorrectAnswers(answers);
-		float credibility = numberOfCorrectAnswers / (float) answers.size();
+		int gaußScore = calculateGaußScore(answers);
+		float performance = gaußScore / (float) calcMaxScore(answers.size());
 		String selfEval = "CBA";
-		int evalScoreA = selfEval.indexOf(selfEvaluationA);
-		int evalScoreB = selfEval.indexOf(selfEvaluationB);
+		int evalScale = 1;
+		int evalScoreA = 1 + selfEval.indexOf(selfEvaluationA) * evalScale;
+		int evalScoreB = 1 + selfEval.indexOf(selfEvaluationB) * evalScale;
 		float evalScore = evalScoreA + evalScoreB;
-		evalScore *= credibility;
-		float achievedScore = evalScore + numberOfCorrectAnswers;
-
-		float maxScore = 4 + answers.size();
-		float score = achievedScore / maxScore;
+		int maxEvalScore = 2 * ((selfEval.length() - 1) * evalScale) + 2;
+		float selfConfidence = Math.min(1, (evalScore / maxEvalScore) + 0.3f);
+		float achievedScore = evalScore * performance + gaußScore * selfConfidence;
+		float maxScore = calcMaxScore(answers.size());
+		float score = Math.min(1, achievedScore / maxScore);
 		score = (float) (Math.round(score * 10000.0) / 10000.0);
 		return score * 100;
+	}
+
+	private int calcMaxScore(int numberOfAnswers) {
+		int maxScore = 0;
+		for (int i = 1; i <= numberOfAnswers; i++) {
+			maxScore += Math.floorDiv(i, 2) + 1;
+		}
+		return maxScore;
 	}
 
 	private int calculateNumberOfCorrectAnswers(List<Integer> answers) {
@@ -99,6 +109,20 @@ public class PythonTestService implements IPythonTestService {
 		for (int i = 0; i < answers.size(); i++) {
 			String answer = Integer.toString(answers.get(i));
 			numberOfCorrectAnswers += answer.equals(correctAnswers[i]) ? 1 : 0;
+		}
+		return numberOfCorrectAnswers;
+	}
+
+	private int calculateGaußScore(List<Integer> answers) {
+		CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findFirstBy();
+		if (correctAnswersEntity == null) {
+			LOGGER.error("No correct answer string was set.");
+		}
+		String[] correctAnswers = correctAnswersEntity.getAnswers().split(",");
+		int numberOfCorrectAnswers = 0;
+		for (int i = 0; i < answers.size(); i++) {
+			String answer = Integer.toString(answers.get(i));
+			numberOfCorrectAnswers += answer.equals(correctAnswers[i]) ? Math.floorDiv(i + 1, 2) + 1 : 0;
 		}
 		return numberOfCorrectAnswers;
 	}
@@ -202,19 +226,37 @@ public class PythonTestService implements IPythonTestService {
 	public OperationResult<String> getTestResults() {
 		List<TestResultEntity> results = (List<TestResultEntity>) testResultRepository.findAll();
 		results.sort((testResultEntity, otherEntity) -> Float.compare(testResultEntity.getScore(), otherEntity.getScore()));
-
 		int chunkSize = Math.floorDiv(results.size(), 6);
+
+		int numberOfGroupsOfFour = results.size() % 6;
+
 		List<TestResultEntity> worst = new ArrayList<>();
 		List<TestResultEntity> best = new ArrayList<>();
+		List<TestResultEntity> upperMidRange = new ArrayList<>();
+		List<TestResultEntity> lowerMidRange = new ArrayList<>();
 
-		for (int i = 0; i < chunkSize; i++) {
+		for (int i = numberOfGroupsOfFour; i < chunkSize + numberOfGroupsOfFour; i++) {
 			worst.add(results.get(i));
 			best.add(results.get(results.size() - 1 - i));
 		}
+
+		for (int i = chunkSize + numberOfGroupsOfFour; i < 3 * chunkSize + numberOfGroupsOfFour; i++) {
+			lowerMidRange.add(results.get(i));
+		}
+
+		for (int i = 3 * chunkSize + numberOfGroupsOfFour; i < 5 * chunkSize + numberOfGroupsOfFour; i++) {
+			upperMidRange.add(results.get(i));
+		}
+
 		StringBuilder builder = new StringBuilder();
-		addSubList(builder, results);
-		/*builder.append("\n----------------------------------\n");
-		addSubList(builder, best);*/
+		addSubList(builder, worst);
+		builder.append("\n");
+		addSubList(builder, lowerMidRange);
+		builder.append("\n");
+		addSubList(builder, upperMidRange);
+		builder.append("\n");
+		addSubList(builder, best);
+		builder.append("\n");
 
 		OperationResult<String> result = new OperationResult<>();
 		result.setStatus(OperationStatus.SUCCESS);
