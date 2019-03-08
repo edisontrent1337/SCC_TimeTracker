@@ -83,7 +83,7 @@ public class PythonTestService implements IPythonTestService {
 		int evalScoreB = 1 + selfEval.indexOf(selfEvaluationB) * evalScale;
 		float evalScore = evalScoreA + evalScoreB;
 		int maxEvalScore = 2 * ((selfEval.length() - 1) * evalScale) + 2;
-		float selfConfidence = Math.min(1, (evalScore / maxEvalScore) + 0.3f);
+		float selfConfidence = Math.min(1, (evalScore / maxEvalScore) + 0.4f);
 		float achievedScore = evalScore * performance + gaußScore * selfConfidence;
 		float maxScore = calcMaxScore(answers.size());
 		float score = Math.min(1, achievedScore / maxScore);
