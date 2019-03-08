@@ -138,9 +138,33 @@ public class PythonTestService implements IPythonTestService {
 			testResultEntity.setSelfEvaluation("");
 			testResultEntity.setScore(0);
 			testResultRepository.save(testResultEntity);
+
+			TestResult result = new TestResult();
+			result.setMatriculationNumber(matriculationNumber);
+			result.setAnswers(generateRandomAnswer());
+			result.setSelfEvaluation1(generateRandomSelfEvaluation());
+			result.setSelfEvaluation2(generateRandomSelfEvaluation());
+			addTestResult(result);
 		}
 		operationResult.setStatus(OperationStatus.SUCCESS);
 		return operationResult;
+	}
+
+	private String generateRandomSelfEvaluation() {
+		String selfEval = "ABC";
+		Random random = new Random();
+		return String.valueOf(selfEval.charAt(random.nextInt(3)));
+	}
+
+	private List<Integer> generateRandomAnswer() {
+		CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findFirstBy();
+		int answersRequired = correctAnswersEntity.getAnswers().length();
+		List<Integer> answer = new ArrayList<>();
+		Random random = new Random();
+		for (int i = 0; i < answersRequired; i += 2) {
+			answer.add(random.nextInt(3));
+		}
+		return answer;
 	}
 
 	@Override
@@ -177,7 +201,28 @@ public class PythonTestService implements IPythonTestService {
 	@Override
 	public OperationResult<String> getTestResults() {
 		List<TestResultEntity> results = (List<TestResultEntity>) testResultRepository.findAll();
+		results.sort((testResultEntity, otherEntity) -> Float.compare(testResultEntity.getScore(), otherEntity.getScore()));
+
+		int chunkSize = Math.floorDiv(results.size(), 6);
+		List<TestResultEntity> worst = new ArrayList<>();
+		List<TestResultEntity> best = new ArrayList<>();
+
+		for (int i = 0; i < chunkSize; i++) {
+			worst.add(results.get(i));
+			best.add(results.get(results.size() - 1 - i));
+		}
 		StringBuilder builder = new StringBuilder();
+		addSubList(builder, results);
+		/*builder.append("\n----------------------------------\n");
+		addSubList(builder, best);*/
+
+		OperationResult<String> result = new OperationResult<>();
+		result.setStatus(OperationStatus.SUCCESS);
+		result.setPayload(builder.toString());
+		return result;
+	}
+
+	private void addSubList(StringBuilder builder, List<TestResultEntity> results) {
 		for (Iterator<TestResultEntity> iterator = results.iterator(); iterator.hasNext(); ) {
 			TestResultEntity resultEntity = iterator.next();
 			String givenAnswerString = resultEntity.getAnswers();
@@ -201,10 +246,6 @@ public class PythonTestService implements IPythonTestService {
 				builder.append("\n");
 			}
 		}
-		OperationResult<String> result = new OperationResult<>();
-		result.setStatus(OperationStatus.SUCCESS);
-		result.setPayload(builder.toString());
-		return result;
 	}
 
 	@Override

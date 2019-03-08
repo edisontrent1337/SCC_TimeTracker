@@ -80,7 +80,6 @@ export default class TestScreen extends React.Component {
 
 				{
 					question: "Which of the listed statements causes the output 'Loop stopped' not to be printed?",
-					image: "q5",
 					code: {
 						language: 'c',
 						code: 'void loop(int n) {\n' +
