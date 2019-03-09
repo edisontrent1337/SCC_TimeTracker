@@ -335,7 +335,7 @@ export default class TestScreen extends React.Component {
 						<Container>
 							<center style={{fontSize: "20px", color: colors.blueGrey["800"]}}>
 								As far as I know... <br/>
-								Your group number is <span style={{fontWeight: "bold"}}>{this.state.groupNumber}</span>.
+								Your group number is <span style={{fontWeight: "bold"}}>1{this.state.groupNumber}</span>.
 								<br/>
 								Your room number is <span
 								style={{fontWeight: "bold"}}>{TestScreen.getRoomNumber(this.state.groupNumber)}</span>.
