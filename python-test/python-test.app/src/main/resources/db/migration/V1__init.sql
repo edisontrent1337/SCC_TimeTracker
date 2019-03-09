@@ -6,6 +6,8 @@ CREATE TABLE test_results (
     uuid VARCHAR(255) NOT NULL,
     self_evaluation VARCHAR(255) NOT NULL,
     score FLOAT(20),
+    studies VARCHAR(255) NOT NULL,
+    group_number INT,
     PRIMARY KEY (id)
 );
 

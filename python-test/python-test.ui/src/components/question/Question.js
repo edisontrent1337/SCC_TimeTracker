@@ -34,6 +34,7 @@ export default class Question extends React.Component {
 			<div style={{color: colors.blueGrey["800"], marginBottom:"30px"}}>
 				<h4><i style={{padding:"0 10px 0 0"}} className="far fa-lightbulb"></i>{question}</h4>
 				<i style={{fontSize:"20px"}}>{additionalInformation}</i>
+				{this.props.children}
 				<div style={{padding:"10px 0", maxWidth: "100%"}}>
 
 					{this.props.code && <Highlight className={this.props.code.language}> {this.props.code.code}</Highlight>}

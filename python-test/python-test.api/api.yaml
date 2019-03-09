@@ -30,6 +30,12 @@ components:
         matriculationNumber:
           type: integer
           description: The matriculation number
+        studies:
+          type: string
+          description: The course of studies
+        groupNumber:
+          type: integer
+          description: The students group number
         selfEvaluation1:
           type: string
           description: Result of self evaluation question 1
@@ -107,6 +113,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/operationResponse"
+  /pytest/conclude:
+    get:
+      operationId: concludeTest
+      description: Ends the test
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
 
   /pytest/results:
     get:
@@ -118,7 +135,7 @@ paths:
           content:
             text/plain:
               schema:
-                type: string#
+                type: string
   /pytest/results/{matriculationNumber}:
     get:
       operationId: getTestResultForStudent

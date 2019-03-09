@@ -21,6 +21,7 @@ import java.util.*;
 @Service
 public class PythonTestService implements IPythonTestService {
 
+	private static final int QUESTION_RATE_SCALE = 4;
 	private final TestResultRepository testResultRepository;
 	private final CorrectAnswersRepository correctAnswersRepository;
 
@@ -66,6 +67,7 @@ public class PythonTestService implements IPythonTestService {
 			entity.setSelfEvaluation(testResult.getSelfEvaluation1() + "," + testResult.getSelfEvaluation2());
 			float score = calculateScore(answers, testResult.getSelfEvaluation1(), testResult.getSelfEvaluation2());
 			entity.setScore(score);
+			entity.setStudies(testResult.getStudies());
 			testResultRepository.save(entity);
 			LOGGER.info("Successfully saved result for matriculation number " + testResult.getMatriculationNumber());
 			result.setStatus(OperationStatus.SUCCESS);
@@ -74,9 +76,8 @@ public class PythonTestService implements IPythonTestService {
 	}
 
 	private float calculateScore(List<Integer> answers, String selfEvaluationA, String selfEvaluationB) {
-		int numberOfCorrectAnswers = calculateNumberOfCorrectAnswers(answers);
-		int gaußScore = calculateGaußScore(answers);
-		float performance = gaußScore / (float) calcMaxScore(answers.size());
+		int baseScore = calculateBaseScore(answers);
+		float performance = baseScore / (float) calcMaxScore(answers.size());
 		String selfEval = "CBA";
 		int evalScale = 1;
 		int evalScoreA = 1 + selfEval.indexOf(selfEvaluationA) * evalScale;
@@ -84,7 +85,7 @@ public class PythonTestService implements IPythonTestService {
 		float evalScore = evalScoreA + evalScoreB;
 		int maxEvalScore = 2 * ((selfEval.length() - 1) * evalScale) + 2;
 		float selfConfidence = Math.min(1, (evalScore / maxEvalScore) + 0.4f);
-		float achievedScore = evalScore * performance + gaußScore * selfConfidence;
+		float achievedScore = evalScore * performance + baseScore * selfConfidence;
 		float maxScore = calcMaxScore(answers.size());
 		float score = Math.min(1, achievedScore / maxScore);
 		score = (float) (Math.round(score * 10000.0) / 10000.0);
@@ -94,26 +95,13 @@ public class PythonTestService implements IPythonTestService {
 	private int calcMaxScore(int numberOfAnswers) {
 		int maxScore = 0;
 		for (int i = 1; i <= numberOfAnswers; i++) {
-			maxScore += Math.floorDiv(i, 2) + 1;
+			maxScore += Math.floorDiv(i, QUESTION_RATE_SCALE) + 1;
 		}
 		return maxScore;
 	}
 
-	private int calculateNumberOfCorrectAnswers(List<Integer> answers) {
-		CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findFirstBy();
-		if (correctAnswersEntity == null) {
-			LOGGER.error("No correct answer string was set.");
-		}
-		String[] correctAnswers = correctAnswersEntity.getAnswers().split(",");
-		int numberOfCorrectAnswers = 0;
-		for (int i = 0; i < answers.size(); i++) {
-			String answer = Integer.toString(answers.get(i));
-			numberOfCorrectAnswers += answer.equals(correctAnswers[i]) ? 1 : 0;
-		}
-		return numberOfCorrectAnswers;
-	}
 
-	private int calculateGaußScore(List<Integer> answers) {
+	private int calculateBaseScore(List<Integer> answers) {
 		CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findFirstBy();
 		if (correctAnswersEntity == null) {
 			LOGGER.error("No correct answer string was set.");
@@ -122,7 +110,7 @@ public class PythonTestService implements IPythonTestService {
 		int numberOfCorrectAnswers = 0;
 		for (int i = 0; i < answers.size(); i++) {
 			String answer = Integer.toString(answers.get(i));
-			numberOfCorrectAnswers += answer.equals(correctAnswers[i]) ? Math.floorDiv(i + 1, 2) + 1 : 0;
+			numberOfCorrectAnswers += answer.equals(correctAnswers[i]) ? Math.floorDiv(i + 1, QUESTION_RATE_SCALE) + 1 : 0;
 		}
 		return numberOfCorrectAnswers;
 	}
@@ -161,6 +149,7 @@ public class PythonTestService implements IPythonTestService {
 			testResultEntity.setAnswers("");
 			testResultEntity.setSelfEvaluation("");
 			testResultEntity.setScore(0);
+			testResultEntity.setStudies("");
 			testResultRepository.save(testResultEntity);
 
 			TestResult result = new TestResult();
@@ -168,10 +157,20 @@ public class PythonTestService implements IPythonTestService {
 			result.setAnswers(generateRandomAnswer());
 			result.setSelfEvaluation1(generateRandomSelfEvaluation());
 			result.setSelfEvaluation2(generateRandomSelfEvaluation());
+			result.setStudies(generateRandomStudies());
 			addTestResult(result);
 		}
 		operationResult.setStatus(OperationStatus.SUCCESS);
 		return operationResult;
+	}
+
+	private String generateRandomStudies() {
+		Random random = new Random();
+		int probability = random.nextInt(100);
+		if (probability < 10) {
+			return "physik";
+		}
+		return "informatik";
 	}
 
 	private String generateRandomSelfEvaluation() {
@@ -225,38 +224,153 @@ public class PythonTestService implements IPythonTestService {
 	@Override
 	public OperationResult<String> getTestResults() {
 		List<TestResultEntity> results = (List<TestResultEntity>) testResultRepository.findAll();
+		StringBuilder builder = new StringBuilder();
+		addSubList(builder, results);
+		OperationResult<String> result = new OperationResult<>();
+		result.setStatus(OperationStatus.SUCCESS);
+		result.setPayload(builder.toString());
+		return result;
+	}
+
+	@Override
+	public OperationResult<String> concludeTest() {
+		List<TestResultEntity> results = (List<TestResultEntity>) testResultRepository.findAll();
+		List<TestResultEntity> physicists = new ArrayList<>();
+		int numberOfStudents = results.size();
+		StringBuilder builder = new StringBuilder();
+		String foundStudents = "Found " + numberOfStudents + " students";
+		LOGGER.info(foundStudents);
+		builder.append(foundStudents).append("\n");
+
+		for (Iterator<TestResultEntity> iterator = results.iterator(); iterator.hasNext(); ) {
+			TestResultEntity entity = iterator.next();
+			if ("physik".equals(entity.getStudies())) {
+				physicists.add(entity);
+				iterator.remove();
+			}
+		}
+		String foundPhysicStudents = "Found " + physicists.size() + " physics students.\n";
+		LOGGER.info(foundPhysicStudents);
+		builder.append(foundPhysicStudents);
+
+		String remainingStudents = "Remaining students:  " + results.size();
+		LOGGER.info(remainingStudents);
+		builder.append(remainingStudents).append("\n");
+
 		results.sort((testResultEntity, otherEntity) -> Float.compare(testResultEntity.getScore(), otherEntity.getScore()));
 		int chunkSize = Math.floorDiv(results.size(), 6);
+		String chunkSizeInfo = "Chunk size:  " + chunkSize;
+		LOGGER.info(chunkSizeInfo);
+		builder.append(chunkSizeInfo).append("\n");
 
 		int numberOfGroupsOfFour = results.size() % 6;
 
-		List<TestResultEntity> worst = new ArrayList<>();
-		List<TestResultEntity> best = new ArrayList<>();
+		String groupsOfFourInfo = "Groups of four:  " + numberOfGroupsOfFour;
+		LOGGER.info(groupsOfFourInfo);
+		builder.append(groupsOfFourInfo).append("\n");
+
+		List<TestResultEntity> worstStudents = new ArrayList<>();
+		List<TestResultEntity> bestStudents = new ArrayList<>();
 		List<TestResultEntity> upperMidRange = new ArrayList<>();
 		List<TestResultEntity> lowerMidRange = new ArrayList<>();
+		List<TestResultEntity> leftOvers = new ArrayList<>();
 
-		for (int i = numberOfGroupsOfFour; i < chunkSize + numberOfGroupsOfFour; i++) {
-			worst.add(results.get(i));
-			best.add(results.get(results.size() - 1 - i));
+		for (int i = 0; i < numberOfGroupsOfFour; i++) {
+			leftOvers.add(results.get(i));
 		}
-
+		for (int i = numberOfGroupsOfFour; i < chunkSize + numberOfGroupsOfFour; i++) {
+			worstStudents.add(results.get(i));
+		}
 		for (int i = chunkSize + numberOfGroupsOfFour; i < 3 * chunkSize + numberOfGroupsOfFour; i++) {
 			lowerMidRange.add(results.get(i));
 		}
-
 		for (int i = 3 * chunkSize + numberOfGroupsOfFour; i < 5 * chunkSize + numberOfGroupsOfFour; i++) {
 			upperMidRange.add(results.get(i));
 		}
+		for (int i = 5 * chunkSize + numberOfGroupsOfFour; i < 6 * chunkSize + numberOfGroupsOfFour; i++) {
+			bestStudents.add(results.get(i));
+		}
 
-		StringBuilder builder = new StringBuilder();
-		addSubList(builder, worst);
+		builder.append("WORST: \n");
+		addSubList(builder, worstStudents);
 		builder.append("\n");
+		builder.append("LOWER MID: \n");
 		addSubList(builder, lowerMidRange);
 		builder.append("\n");
+		builder.append("UPPER MID: \n");
 		addSubList(builder, upperMidRange);
 		builder.append("\n");
-		addSubList(builder, best);
+		builder.append("BEST: \n");
+		addSubList(builder, bestStudents);
 		builder.append("\n");
+		builder.append("LEFT OVERS: \n");
+		addSubList(builder, leftOvers);
+		builder.append("\n");
+		builder.append("PHYSIC STUDENTS: \n");
+		addSubList(builder, physicists);
+		builder.append("\n");
+		Collections.reverse(lowerMidRange);
+		Collections.reverse(worstStudents);
+		List<StudentGroup> studentGroups = new ArrayList<>();
+		int y = 0;
+		for (TestResultEntity bestResult : bestStudents) {
+			StudentGroup group = new StudentGroup();
+			group.addStudents(bestResult, lowerMidRange.get(y), lowerMidRange.get(y + 1));
+			if (leftOvers.size() > 0) {
+				TestResultEntity leftOver = leftOvers.get(leftOvers.size() - 1);
+				group.addStudents(leftOver);
+				leftOvers.remove(leftOvers.size() - 1);
+			}
+			studentGroups.add(group);
+			y += 2;
+		}
+		builder.append("\n");
+		y = 0;
+
+		for (TestResultEntity worstResult : worstStudents) {
+			StudentGroup group = new StudentGroup();
+			group.addStudents(worstResult, upperMidRange.get(y), upperMidRange.get(y + 1));
+			studentGroups.add(group);
+			y += 2;
+		}
+		if (physicists.size() > 3) {
+			int numberOfPhysicianGroupsOfFour = physicists.size() % 3;
+			int remainingLeftOvers = numberOfGroupsOfFour;
+			for (int i = numberOfPhysicianGroupsOfFour; i < physicists.size(); i += 3) {
+				StudentGroup group = new StudentGroup();
+				group.addStudents(physicists.get(i), physicists.get(i + 1), physicists.get(i + 2));
+				if (remainingLeftOvers > 0) {
+					group.addStudents(physicists.get(remainingLeftOvers));
+					remainingLeftOvers -= 1;
+				}
+				studentGroups.add(group);
+			}
+		} else {
+			StudentGroup group = new StudentGroup();
+			group.addStudents(physicists);
+			studentGroups.add(group);
+		}
+
+		List<Integer> groupNumbers = new ArrayList<>();
+		for (int i = 1; i <= studentGroups.size(); i++) {
+			groupNumbers.add(i);
+		}
+
+		LOGGER.info(groupNumbers.toString());
+
+		Random random = new Random();
+
+		for (StudentGroup group : studentGroups) {
+			int groupNumber = groupNumbers.get(random.nextInt(groupNumbers.size()));
+			groupNumbers.remove(new Integer(groupNumber));
+			group.assignNumber(groupNumber);
+			for (TestResultEntity student : group.getStudents()) {
+				student.setGroupNumber(groupNumber);
+				testResultRepository.save(student);
+			}
+			LOGGER.info(group.toString());
+			builder.append(group.toString());
+		}
 
 		OperationResult<String> result = new OperationResult<>();
 		result.setStatus(OperationStatus.SUCCESS);
@@ -324,6 +438,8 @@ public class PythonTestService implements IPythonTestService {
 			String[] selfEval = resultEntity.getSelfEvaluation().split(",");
 			testResult.setSelfEvaluation1(selfEval[0]);
 			testResult.setSelfEvaluation2(selfEval[1]);
+			testResult.setGroupNumber(resultEntity.getGroupNumber());
+			testResult.setStudies(resultEntity.getStudies());
 			List<String> answerStrings = Arrays.asList(resultEntity.getAnswers().split(","));
 			List<Integer> answersAsNumber = new ArrayList<>();
 			answerStrings.forEach((answer) -> {

@@ -12,6 +12,8 @@ import {client} from "../client/APIClient";
 import Highlight from "react-highlight";
 import Header from "../components/header/Header";
 import LoadingIndicator from "../web-react/indicators/LoadingIndicator";
+import Select from "../web-react/input/Select";
+import Container from "../web-react/container/Container";
 
 export default class TestScreen extends React.Component {
 	constructor(props) {
@@ -20,11 +22,13 @@ export default class TestScreen extends React.Component {
 			student: localStorage.getItem("student"),
 			selfEvaluation: [],
 			answers: [],
+			studies: "informatik",
 			selfEvalAnswered: false,
 			confirmationModalIsOpen: false,
 			submitModalIsOpen: false,
 			questionsAnswered: false,
 			answersSubmitted: false,
+			groupNumber: undefined,
 			mounted: false,
 			regularQuestions: [
 				{
@@ -63,13 +67,11 @@ export default class TestScreen extends React.Component {
 				{
 					question: "What is the result of the following recursion when the starting value is n=0?",
 					code: {
-						language: 'c',
-						code: 'int s(int n) { \n' +
-							'    if(n == 20) {\n' +
-							'        return 1;\n' +
-							'    }\n' +
-							'    return n + s(n + 5);\n' +
-							'}'
+						language: 'python',
+						code: "def s(n):\n" +
+							"    if n == 20:\n" +
+							"        return 1\n" +
+							"    return n + s(n+5)"
 					},
 					answers: [
 						"6",
@@ -79,28 +81,39 @@ export default class TestScreen extends React.Component {
 				},
 
 				{
-					question: "Which of the listed statements causes the output 'Loop stopped' not to be printed?",
+					question: "Which of the listed statements causes the output 'Loop completed!' not to be printed?",
 					code: {
 						language: 'c',
-						code: 'void loop(int n) {\n' +
-							'    for (int i = 0; i < n; i++) { \n' +
-							'        if (n == 19) {\n' +
-							'            ???\n' +
-							'         }\n' +
-							'    }\n' +
-							'    printf("Loop stopped!");\n' +
-							'}'
+						code: "def loop(n):\n" +
+							"    for i in range(0, n):\n" +
+							"        if i == 19:\n" +
+							"            ???\n" +
+							"    print(\"Loop completed!\")\n" +
+							"loop(20)\n"
 					},
 					answers: [
-						"continue;",
-						"return;",
-						"break;"]
+						"continue",
+						"pass",
+						"break",
+						"return"
+					]
 				},
+
 
 				{
 					question: "You see the following error message in the python console. Which python statement is missing " +
 						"for  the code to work?",
-					image: "q6",
+					code: {
+						language: "python",
+						code: 'Python 3.6.7 (default, Oct 22 2018, 11:32:17) \n' +
+							'[GCC 8.2.0] on linux\n' +
+							'Type "help", "copyright", "credits" or "license" for more information.\n' +
+							'>>> sqrt(2)\n' +
+							'Traceback (most recent call last):\n' +
+							'  File "<stdin>", line 1, in <module>\n' +
+							'NameError: name \'sqrt\' is not defined\n' +
+							'>>> \n'
+					},
 					answers: [
 						"import sqrt",
 						"from math import sqrt",
@@ -109,8 +122,36 @@ export default class TestScreen extends React.Component {
 					]
 				},
 				{
+					question: "Which number is not part of the list?",
+					code: {
+						language: "python",
+						code: "list = [i for i in range(0,10) if i % 2 == 0]"
+					},
+					answers: ["2", "6", "0", "3"]
+				},
+
+				{
+					question: "How many elements does the resulting list have ?",
+					code: {
+						language: "python",
+						code: "list = [i * i for i in range(1,10) if i % 11 == 0]"
+					},
+					answers: ["1", "0", "10", "3"]
+				},
+				{
 					question: "What is printed on the python console?",
-					image: "q7",
+					code: {
+						language: "python",
+						code: "class Container:\n" +
+							"    def __init__(self, value):\n" +
+							"        self.value = value\n" +
+							"    def __add__(self, other):\n" +
+							"        return f'{self.value} {other}'\n" +
+							"\n" +
+							"a = Container(\"Hello\")\n" +
+							"b = Container(1337)\n" +
+							"print(a + b)\n"
+					},
 					answers: [
 						"TypeError",
 						"Hello <__main__Container object at 0x7fb7f3f7668>",
@@ -121,7 +162,17 @@ export default class TestScreen extends React.Component {
 
 				{
 					question: "What is printed on the python console?",
-					image: "q8",
+					code: {
+						language: "python",
+						code: "class Container:\n" +
+							"    queue = []\n" +
+							"    def __init__(self, initial):\n" +
+							"        self.queue.append(initial)\n" +
+							"first = Container(1)\n" +
+							"second = Container(2)\n" +
+							"\n" +
+							"print(second.queue)\n"
+					},
 					answers: [
 						"[1]",
 						"IndexError",
@@ -141,6 +192,8 @@ export default class TestScreen extends React.Component {
 		this.handleContinue = this.handleContinue.bind(this);
 		this.submitResults = this.submitResults.bind(this);
 		this.getAlreadySubmittedResults = this.getAlreadySubmittedResults.bind(this);
+		this.handleSelect = this.handleSelect.bind(this);
+		TestScreen.getRoomNumber = TestScreen.getRoomNumber.bind(this);
 	}
 
 	getAlreadySubmittedResults() {
@@ -150,10 +203,10 @@ export default class TestScreen extends React.Component {
 				this.setState({
 					mounted: true
 				});
-				console.log(res);
 				if (!res.error) {
 					this.setState({
-						answersSubmitted: true
+						answersSubmitted: true,
+						groupNumber: res.data[0].groupNumber
 					})
 				}
 			});
@@ -179,6 +232,7 @@ export default class TestScreen extends React.Component {
 				answers: this.state.answers,
 				selfEvaluation1: this.state.selfEvaluation[0],
 				selfEvaluation2: this.state.selfEvaluation[1],
+				studies: this.state.studies
 			}
 		);
 		console.log(resultJson);
@@ -199,6 +253,13 @@ export default class TestScreen extends React.Component {
 		this.setState({
 			answers: currentAnswers
 		});
+	}
+
+	handleSelect(event) {
+		this.setState({
+			studies: event.target.value
+		}, () => console.log(this.state));
+		event.preventDefault();
 	}
 
 	answerSelfEvaluation(questionID, answerID) {
@@ -265,9 +326,24 @@ export default class TestScreen extends React.Component {
 			return (
 				<div className={"container"}>
 					<Header/>
-					<div>
+					<div style={{padding: "20px 0"}}>
 						<Message heading={"Thank you."}
-								 message={"We received your submitted your answers."}/>
+								 message={"We received your submitted answers."} dismissable={true}/>
+						{!this.state.groupNumber && <Message heading={"Important hint:"}
+															 message={"Please check back here in some minutes to get your group number."}/>}
+						{this.state.groupNumber !== 0 &&
+						<Container>
+							<center style={{fontSize: "20px", color: colors.blueGrey["800"]}}>
+								As far as I know... <br/>
+								Your group number is <span style={{fontWeight: "bold"}}>{this.state.groupNumber}</span>.
+								<br/>
+								Your room number is <span
+								style={{fontWeight: "bold"}}>{TestScreen.getRoomNumber(this.state.groupNumber)}</span>.
+								<br/>
+								<i>Enjoy your internship! </i> 😀
+							</center>
+						</Container>
+						}
 					</div>
 					<div className={"cf"}>
 						<Button value={"Go Back"} color={colors.green["500"]} onClick={() => window.location = "/"}/>
@@ -305,6 +381,7 @@ export default class TestScreen extends React.Component {
 		const logo = <i style={{color: colors.green["500"], fontSize: "60px"}}
 						className="fab fa-python"> </i>;
 
+		let selfEvalAnswered = this.state.selfEvalAnswered;
 		return (
 
 			<div className={"container"} id={"top"}>
@@ -315,26 +392,33 @@ export default class TestScreen extends React.Component {
 						{"printf('👋 Hello " + this.state.student + ".')"}
 					</Highlight>
 				</div>
+
 				<h2>Self Evaluation</h2>
 				<p>The following questions help to classify you in terms of your experience with software development
 					in general.<br/> Only <b>one</b> answer is correct for each question.</p>
-				{!this.state.selfEvalAnswered && <Message heading={"Important Hint:"}
-														  message={"This test is not part of the examination or your grade. It only serves as " +
-														  "an orientation for the organizers of Robolab to ensure balanced and fair groups."}
-														  dismissable={true}/>}
+				{!selfEvalAnswered && <div>
+					<Message heading={"Important Hint:"}
+							 message={"This test is not part of the examination or your grade. It only serves as " +
+							 "an orientation for the organizers of Robolab to ensure balanced and fair groups."}
+							 dismissable={true}/>
 
-				{!this.state.selfEvalAnswered && <Message dismissable={true} heading={"Important Hint:"}
-														  message={"Please answer the following self evaluation questions " +
-														  "honestly. It's okay if you have only little experience in software development. That's why you are here! 👍"}/>}
-				{!this.state.selfEvalAnswered && selfEvalQuestionList}
-				{this.state.selfEvalAnswered && regularQuestionList}
-				{!this.state.selfEvalAnswered &&
-				<Button validator={
-					typeof this.state.selfEvaluation[0] !== "undefined" &&
-					typeof this.state.selfEvaluation[1] !== "undefined"}
-						value={"Continue"} color={colors.green["500"]}
-						onClick={() => this.openConfirmationModal()}/>}
-
+					<Message dismissable={true} heading={"Important Hint:"}
+							 message={"Please answer the following self evaluation questions " +
+							 "honestly. It's okay if you have only little experience in software development. That's why you are here! 👍"}/>
+					<Question question={"What's your course studies?"} answers={[]}>
+						<Select options={["Informatik", "Medieninformatik", "Physik", "Informationssystemtechnik"]}
+								name={"studies"} id={"studies"} hint={["Please select your course studies."]}
+								onChange={this.handleSelect}/>
+					</Question>
+					{selfEvalQuestionList}
+					<Button validator={
+						typeof this.state.selfEvaluation[0] !== "undefined" &&
+						typeof this.state.selfEvaluation[1] !== "undefined" &&
+						typeof this.state.studies !== "undefined"}
+							value={"Continue"} color={colors.green["500"]}
+							onClick={() => this.openConfirmationModal()}/>
+				</div>}
+				{selfEvalAnswered && regularQuestionList}
 				<div className={"cf"}></div>
 
 				<Modal ariaHideApp={false} defaultStyles={createDefaultModalStyle()}
@@ -405,7 +489,7 @@ export default class TestScreen extends React.Component {
 					<Message message={this.state.connectionError + ": Python Test Service is unavailable."}
 							 heading={"Connection Error:"} bsStyle={"danger"}/>
 				</div>}
-				{this.state.selfEvalAnswered &&
+				{selfEvalAnswered &&
 				<div style={{padding: "10px 0"}}>
 					<Button color={colors.green["500"]} value={"Submit"} validator={true}
 							onClick={() => this.openSubmitModal()}/>
@@ -421,4 +505,20 @@ export default class TestScreen extends React.Component {
 		);
 	}
 
+	static getRoomNumber(groupNumber) {
+		if (groupNumber < 8)
+			return "E001";
+		else if (groupNumber < 15)
+			return "E005";
+		else if (groupNumber < 22)
+			return "E006";
+		else if (groupNumber < 29)
+			return "E007";
+		else if (groupNumber < 36)
+			return "E008";
+		else if (groupNumber < 43)
+			return "E009";
+		else if (groupNumber < 50)
+			return "E010";
+	}
 }

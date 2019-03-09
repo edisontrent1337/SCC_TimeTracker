@@ -13,4 +13,6 @@ public interface IPythonTestService extends UserDetailsService {
 	OperationResult<CorrectAnswers> setCorrectAnswers(CorrectAnswers correctAnswers);
 	OperationResult<String> getTestResults();
 	OperationResult<TestResult> getTestResultForStudent(String matriculationNumber);
+
+	OperationResult<String> concludeTest();
 }

@@ -134,4 +134,10 @@ public class PythonTestController implements PytestApi {
 		}
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+	@Override
+	public ResponseEntity<String> concludeTest() {
+		OperationResult<String> result = pythonTestService.concludeTest();
+		return new ResponseEntity<>(result.getPayload(), HttpStatus.OK);
+	}
 }

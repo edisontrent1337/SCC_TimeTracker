@@ -27,6 +27,26 @@ public class TestResultEntity {
 	@Column(name = "score")
 	private float score;
 
+	@Column(name = "studies")
+	private String studies;
+
+
+	@Column(name = "group_number")
+	private int groupNumber;
+
+	@Override
+	public String toString() {
+		return "(" + matriculationNumber + "): " + this.studies + " EVAL: " + selfEvaluation + " SCORE: " + score;
+	}
+
+	public String getStudies() {
+		return studies;
+	}
+
+	public void setStudies(String studies) {
+		this.studies = studies;
+	}
+
 	public float getScore() {
 		return score;
 	}
@@ -84,5 +104,14 @@ public class TestResultEntity {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	public void setGroupNumber(int groupNumber) {
+		this.groupNumber = groupNumber;
+	}
+
+
+	public int getGroupNumber() {
+		return groupNumber;
 	}
 }
