@@ -219,7 +219,7 @@ export default class TestScreen extends React.Component {
 		});
 		this.setState({
 			answers: initializedAnswers,
-		}, () => console.log(this.state.answers));
+		});
 		this.getAlreadySubmittedResults();
 	}
 
@@ -235,7 +235,6 @@ export default class TestScreen extends React.Component {
 				studies: this.state.studies
 			}
 		);
-		console.log(resultJson);
 		client.post("/pytest/submit", resultJson, this)
 			.then(res => res.json())
 			.then(res => {
@@ -260,7 +259,7 @@ export default class TestScreen extends React.Component {
 	handleSelect(event) {
 		this.setState({
 			studies: event.target.value
-		}, () => console.log(this.state));
+		});
 		event.preventDefault();
 	}
 
