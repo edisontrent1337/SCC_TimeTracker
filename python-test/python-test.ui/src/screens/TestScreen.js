@@ -243,8 +243,10 @@ export default class TestScreen extends React.Component {
 					this.setState({
 						answersSubmitted: true
 					});
+					this.getAlreadySubmittedResults();
 				}
 			});
+
 	}
 
 	answerQuestion(questionID, answerID) {
