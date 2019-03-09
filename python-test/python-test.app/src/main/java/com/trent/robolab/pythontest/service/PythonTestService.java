@@ -152,13 +152,13 @@ public class PythonTestService implements IPythonTestService {
 			testResultEntity.setStudies("");
 			testResultRepository.save(testResultEntity);
 
-			TestResult result = new TestResult();
+			/*TestResult result = new TestResult();
 			result.setMatriculationNumber(matriculationNumber);
 			result.setAnswers(generateRandomAnswer());
 			result.setSelfEvaluation1(generateRandomSelfEvaluation());
 			result.setSelfEvaluation2(generateRandomSelfEvaluation());
 			result.setStudies(generateRandomStudies());
-			addTestResult(result);
+			addTestResult(result);*/
 		}
 		operationResult.setStatus(OperationStatus.SUCCESS);
 		return operationResult;
