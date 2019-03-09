@@ -389,7 +389,7 @@ export default class TestScreen extends React.Component {
 
 				<div style={{margin: "20px 0"}}>
 					<Highlight className={"python"}>
-						{"printf('👋 Hello " + this.state.student + ".')"}
+						{"print('👋 Hello " + this.state.student + ".')"}
 					</Highlight>
 				</div>
 
