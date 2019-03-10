@@ -1,10 +1,7 @@
 package com.trent.robolab.pythontest.controller;
 
 import com.trent.robolab.pythontest.api.PytestApi;
-import com.trent.robolab.pythontest.api.model.CorrectAnswers;
-import com.trent.robolab.pythontest.api.model.OperationResponse;
-import com.trent.robolab.pythontest.api.model.Participants;
-import com.trent.robolab.pythontest.api.model.TestResult;
+import com.trent.robolab.pythontest.api.model.*;
 import com.trent.robolab.pythontest.service.OperationResult;
 import com.trent.robolab.pythontest.service.PythonTestService;
 import org.slf4j.Logger;
@@ -24,6 +21,12 @@ public class PythonTestController implements PytestApi {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PythonTestController.class);
 
 	private final PythonTestService pythonTestService;
+
+	@Override
+	public ResponseEntity<String> resetTest() {
+		OperationResult<String> result = pythonTestService.resetTest();
+		return new ResponseEntity<>(result.getPayload(), HttpStatus.OK);
+	}
 
 	@Override
 	public ResponseEntity<OperationResponse> getTestResultForStudent(@PathVariable String matriculationNumber) {
@@ -56,8 +59,14 @@ public class PythonTestController implements PytestApi {
 			case SUCCESS:
 				response.addDataItem(testResult);
 				break;
-			case FAILURE:
+			case DUPLICATE_FAILURE:
 				response.error("Error: You have already answered the test.");
+				break;
+			case NOT_EXISTING:
+				response.error("No correct answer string was set in the config.");
+				break;
+			case FAILURE:
+				response.error("The set answer string in the configuration is malformed.");
 				break;
 			case UNAUTHORIZED:
 				response.error("Error: You are not authorized to submit a test result.");
@@ -67,9 +76,11 @@ public class PythonTestController implements PytestApi {
 	}
 
 	@Override
-	public ResponseEntity<String> getAllTestResults() {
-		OperationResult<String> result = pythonTestService.getTestResults();
-		return new ResponseEntity<>(result.getPayload(), HttpStatus.OK);
+	public ResponseEntity<OperationResponse> getAllTestResults() {
+		OperationResult<TestResultSummary> result = pythonTestService.getTestResults();
+		OperationResponse response = new OperationResponse();
+		response.addDataItem(result.getPayload());
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@Override
@@ -80,15 +91,20 @@ public class PythonTestController implements PytestApi {
 	@Override
 	public ResponseEntity<OperationResponse> setCorrectAnswers(@Valid @RequestBody CorrectAnswers correctAnswers) {
 		OperationResult<CorrectAnswers> result = pythonTestService.setCorrectAnswers(correctAnswers);
+		OperationResponse response = new OperationResponse();
 		switch (result.getStatus()) {
 			case SUCCESS:
+				response.addDataItem(result.getPayload());
 				break;
 			case NOT_EXISTING:
 				break;
 			case FAILURE:
+				String error = "Error while setting correct answers.";
+				response.setError(error);
+				LOGGER.error(error);
 				break;
 		}
-		return null;
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@Override
@@ -140,4 +156,6 @@ public class PythonTestController implements PytestApi {
 		OperationResult<String> result = pythonTestService.concludeTest();
 		return new ResponseEntity<>(result.getPayload(), HttpStatus.OK);
 	}
+
+
 }

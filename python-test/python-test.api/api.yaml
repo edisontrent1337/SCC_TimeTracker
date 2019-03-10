@@ -17,6 +17,13 @@ components:
           type: array
           items:
             type: integer
+    testResultSummary:
+      description: The summary of all existing test result, consisting of the csv and the number of answers
+      properties:
+        csv:
+          type: string
+        count:
+          type: integer
     correctAnswers:
       description: The correct answer array that can be set by the admin
       properties:
@@ -125,6 +132,18 @@ paths:
               schema:
                 type: string
 
+  /pytest/reset:
+    get:
+      operationId: resetTest
+      description: Resets the given answers in the database
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+
   /pytest/results:
     get:
       operationId: getAllTestResults
@@ -133,9 +152,10 @@ paths:
         '200':
           description: OK
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
+                $ref: "#/components/schemas/operationResponse"
+
   /pytest/results/{matriculationNumber}:
     get:
       operationId: getTestResultForStudent

@@ -4,6 +4,7 @@ package com.trent.robolab.pythontest.service;
 import com.trent.robolab.pythontest.api.model.CorrectAnswers;
 import com.trent.robolab.pythontest.api.model.Participants;
 import com.trent.robolab.pythontest.api.model.TestResult;
+import com.trent.robolab.pythontest.api.model.TestResultSummary;
 import com.trent.robolab.pythontest.repository.CorrectAnswersEntity;
 import com.trent.robolab.pythontest.repository.CorrectAnswersRepository;
 import com.trent.robolab.pythontest.repository.TestResultEntity;
@@ -44,7 +45,7 @@ public class PythonTestService implements IPythonTestService {
 			return result;
 		} else {
 			if (!entity.getAnswers().isEmpty() && entity.getMatriculationNumber() != 1234567) {
-				result.setStatus(OperationStatus.FAILURE);
+				result.setStatus(OperationStatus.DUPLICATE_FAILURE);
 				LOGGER.error("The student with matriculation number " + testResult.getMatriculationNumber() + " has already answered");
 				return result;
 			}
@@ -53,8 +54,15 @@ public class PythonTestService implements IPythonTestService {
 			CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findFirstBy();
 			if (correctAnswersEntity == null) {
 				LOGGER.error("No correct answer string was set.");
+				result.setStatus(OperationStatus.FAILURE);
+				return result;
 			}
 			String[] correctAnswers = correctAnswersEntity.getAnswers().split(",");
+			if (answers.size() != correctAnswers.length) {
+				LOGGER.error("Mismatch between number of given answers and correct answers config");
+				result.setStatus(OperationStatus.FAILURE);
+				return result;
+			}
 			for (int i = 0; i < answers.size(); i++) {
 				Integer answer = answers.get(i);
 				String givenAnswer = Integer.toString(answer);
@@ -164,6 +172,7 @@ public class PythonTestService implements IPythonTestService {
 		return operationResult;
 	}
 
+
 	private String generateRandomStudies() {
 		Random random = new Random();
 		int probability = random.nextInt(100);
@@ -188,6 +197,23 @@ public class PythonTestService implements IPythonTestService {
 			answer.add(random.nextInt(3));
 		}
 		return answer;
+	}
+
+	@Override
+	public OperationResult<String> resetTest() {
+		List<TestResultEntity> entities = (List<TestResultEntity>) testResultRepository.findAll();
+		for (TestResultEntity entity : entities) {
+			entity.setAnswers("");
+			entity.setSelfEvaluation("");
+			entity.setScore(0);
+			entity.setGroupNumber(0);
+			entity.setStudies("");
+			testResultRepository.save(entity);
+		}
+		OperationResult<String> result = new OperationResult<>();
+		result.setStatus(OperationStatus.SUCCESS);
+		result.setPayload("Successfully reset " + testResultRepository.count() + " students.");
+		return result;
 	}
 
 	@Override
@@ -218,24 +244,34 @@ public class PythonTestService implements IPythonTestService {
 		}
 		OperationResult<CorrectAnswers> result = new OperationResult<>();
 		result.setStatus(OperationStatus.SUCCESS);
+		result.setPayload(correctAnswers);
 		return result;
 	}
 
 	@Override
-	public OperationResult<String> getTestResults() {
-		List<TestResultEntity> results = (List<TestResultEntity>) testResultRepository.findAll();
+	public OperationResult<TestResultSummary> getTestResults() {
+		List<TestResultEntity> testResults = (List<TestResultEntity>) testResultRepository.findAll();
+		testResults.removeIf(this::hasNotAnswered);
 		StringBuilder builder = new StringBuilder();
-		addSubList(builder, results);
-		OperationResult<String> result = new OperationResult<>();
+		convertToCsv(builder, testResults);
+		OperationResult<TestResultSummary> result = new OperationResult<>();
 		result.setStatus(OperationStatus.SUCCESS);
-		result.setPayload(builder.toString());
+		TestResultSummary summary = new TestResultSummary();
+		summary.setCsv(builder.toString());
+		summary.setCount(testResults.size());
+		result.setPayload(summary);
 		return result;
+	}
+
+	private boolean hasNotAnswered(TestResultEntity entity) {
+		return entity.getAnswers() == null || entity.getAnswers().isEmpty() || entity.getSelfEvaluation() == null || entity.getSelfEvaluation().isEmpty();
 	}
 
 	@Override
 	public OperationResult<String> concludeTest() {
 		List<TestResultEntity> results = (List<TestResultEntity>) testResultRepository.findAll();
 		List<TestResultEntity> physicists = new ArrayList<>();
+		List<TestResultEntity> skippedStudents = new ArrayList<>();
 		int numberOfStudents = results.size();
 		StringBuilder builder = new StringBuilder();
 		String foundStudents = "Found " + numberOfStudents + " students";
@@ -244,6 +280,11 @@ public class PythonTestService implements IPythonTestService {
 
 		for (Iterator<TestResultEntity> iterator = results.iterator(); iterator.hasNext(); ) {
 			TestResultEntity entity = iterator.next();
+			if (hasNotAnswered(entity)) {
+				LOGGER.info("The student " + entity.getMatriculationNumber() + " has not answered and is skipped.");
+				skippedStudents.add(entity);
+				iterator.remove();
+			}
 			if ("physik".equals(entity.getStudies())) {
 				physicists.add(entity);
 				iterator.remove();
@@ -292,23 +333,26 @@ public class PythonTestService implements IPythonTestService {
 		}
 
 		builder.append("WORST: \n");
-		addSubList(builder, worstStudents);
+		convertToCsv(builder, worstStudents);
 		builder.append("\n");
 		builder.append("LOWER MID: \n");
-		addSubList(builder, lowerMidRange);
+		convertToCsv(builder, lowerMidRange);
 		builder.append("\n");
 		builder.append("UPPER MID: \n");
-		addSubList(builder, upperMidRange);
+		convertToCsv(builder, upperMidRange);
 		builder.append("\n");
 		builder.append("BEST: \n");
-		addSubList(builder, bestStudents);
+		convertToCsv(builder, bestStudents);
 		builder.append("\n");
 		builder.append("LEFT OVERS: \n");
-		addSubList(builder, leftOvers);
+		convertToCsv(builder, leftOvers);
 		builder.append("\n");
 		builder.append("PHYSIC STUDENTS: \n");
-		addSubList(builder, physicists);
+		convertToCsv(builder, physicists);
 		builder.append("\n");
+		builder.append("SKIPPED STUDENTS WITH NO ANSWERS: \n");
+		convertToCsv(builder, skippedStudents);
+		builder.append("\n").append("GROUP ASSIGNMENTS: \n");
 		Collections.reverse(lowerMidRange);
 		Collections.reverse(worstStudents);
 		List<StudentGroup> studentGroups = new ArrayList<>();
@@ -378,23 +422,23 @@ public class PythonTestService implements IPythonTestService {
 		return result;
 	}
 
-	private void addSubList(StringBuilder builder, List<TestResultEntity> results) {
+	private void convertToCsv(StringBuilder builder, List<TestResultEntity> results) {
 		for (Iterator<TestResultEntity> iterator = results.iterator(); iterator.hasNext(); ) {
 			TestResultEntity resultEntity = iterator.next();
 			String givenAnswerString = resultEntity.getAnswers();
 			String selfEvaluationString = resultEntity.getSelfEvaluation();
-			if (givenAnswerString == null || givenAnswerString.isEmpty() || selfEvaluationString == null || selfEvaluationString.isEmpty()) {
-				LOGGER.info("The student " + resultEntity.getMatriculationNumber() + " has not answered.");
-				continue;
-			}
 			builder
 					.append(resultEntity.getMatriculationNumber())
 					.append(",");
 			String[] selfEval = selfEvaluationString.split(",");
-			builder.append(selfEval[0])
-					.append(",")
-					.append(selfEval[1])
-					.append(",");
+			if (selfEval.length != 2) {
+				builder.append(",,");
+			} else {
+				builder.append(selfEval[0])
+						.append(",")
+						.append(selfEval[1])
+						.append(",");
+			}
 			builder.append(givenAnswerString);
 			builder.append(",");
 			builder.append(resultEntity.getScore());

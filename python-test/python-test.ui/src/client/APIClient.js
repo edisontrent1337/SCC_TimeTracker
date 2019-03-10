@@ -11,8 +11,19 @@ export const client = {
 	post,
 	put,
 	del,
+	authenticate
 };
 
+function authenticate(url, body, component) {
+	return fetch(USER_SERVICE_BASE_API_URL + url, {
+		method: "POST",
+		body: body,
+		mode: "cors",
+		headers: {
+			"Content-Type": "application/json"
+		}
+	}).catch((err) => handleError(err, component));
+}
 
 function post(url, body, component) {
 	let headers = generateHeaders(token, body);

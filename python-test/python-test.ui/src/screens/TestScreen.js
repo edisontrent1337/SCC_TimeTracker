@@ -22,6 +22,7 @@ export default class TestScreen extends React.Component {
 			student: localStorage.getItem("student"),
 			selfEvaluation: [],
 			answers: [],
+			error: undefined,
 			studies: "informatik",
 			selfEvalAnswered: false,
 			confirmationModalIsOpen: false,
@@ -244,6 +245,11 @@ export default class TestScreen extends React.Component {
 					});
 					this.getAlreadySubmittedResults();
 				}
+				else {
+					this.setState({
+						error: res.error
+					});
+				}
 			});
 
 	}
@@ -328,6 +334,9 @@ export default class TestScreen extends React.Component {
 				<div className={"container"}>
 					<Header/>
 					<div style={{padding: "20px 0"}}>
+						<Highlight className={"python"}>
+							{"print('👋 Hello " + this.state.student + ".')"}
+						</Highlight>
 						<Message heading={"Thank you."}
 								 message={"We received your submitted answers."} dismissable={true}/>
 						{!this.state.groupNumber && <Message heading={"Important hint:"}
@@ -336,7 +345,8 @@ export default class TestScreen extends React.Component {
 						<Container>
 							<center style={{fontSize: "20px", color: colors.blueGrey["800"]}}>
 								As far as I know... <br/>
-								Your group number is <span style={{fontWeight: "bold"}}>1{this.state.groupNumber < 10 ? "0" + this.state.groupNumber : this.state.groupNumber}</span>.
+								Your group number is <span
+								style={{fontWeight: "bold"}}>1{this.state.groupNumber < 10 ? "0" + this.state.groupNumber : this.state.groupNumber}</span>.
 								<br/>
 								Your room number is <span
 								style={{fontWeight: "bold"}}>{TestScreen.getRoomNumber(this.state.groupNumber)}</span>.
@@ -395,7 +405,8 @@ export default class TestScreen extends React.Component {
 				</div>
 
 				<h2>Self Evaluation</h2>
-				<p>The following questions help to classify you in terms of your experience with software development
+				<p>Hey there! Welcome to the Python Skill Test for Robolab 2019. The following questions help to
+					classify you in terms of your experience with software development
 					in general.<br/> Only <b>one</b> answer is correct for each question.</p>
 				{!selfEvalAnswered && <div>
 					<Message heading={"Important Hint:"}
@@ -419,8 +430,9 @@ export default class TestScreen extends React.Component {
 							value={"Continue"} color={colors.green["500"]}
 							onClick={() => this.openConfirmationModal()}/>
 				</div>}
-				{selfEvalAnswered && regularQuestionList}
-				<div className={"cf"}></div>
+				<div className={"cf"}>
+					{selfEvalAnswered && regularQuestionList}
+				</div>
 
 				<Modal ariaHideApp={false} defaultStyles={createDefaultModalStyle()}
 					   isOpen={this.state.confirmationModalIsOpen}
@@ -489,6 +501,11 @@ export default class TestScreen extends React.Component {
 				<div>
 					<Message message={this.state.connectionError + ": Python Test Service is unavailable."}
 							 heading={"Connection Error:"} bsStyle={"danger"}/>
+				</div>}
+				{this.state.error &&
+				<div>
+					<Message message={this.state.error}
+							 heading={"An error occurred:"} bsStyle={"danger"}/>
 				</div>}
 				{selfEvalAnswered &&
 				<div style={{padding: "10px 0"}}>

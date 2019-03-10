@@ -62,7 +62,7 @@ public class StudentGroup {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		for (TestResultEntity entity : students) {
-			builder.append(entity.toString()).append("GROUP: ").append(number).append("\n");
+			builder.append(entity.toString()).append(" GROUP: ").append(number).append("\n");
 		}
 		builder.append("\n");
 		return builder.toString();

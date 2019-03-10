@@ -4,6 +4,7 @@ import com.trent.robolab.pythontest.PythonTestApp;
 import com.trent.robolab.pythontest.api.model.CorrectAnswers;
 import com.trent.robolab.pythontest.api.model.Participants;
 import com.trent.robolab.pythontest.api.model.TestResult;
+import com.trent.robolab.pythontest.api.model.TestResultSummary;
 import com.trent.robolab.pythontest.repository.TestResultEntity;
 import com.trent.robolab.pythontest.repository.TestResultRepository;
 import org.junit.Before;
@@ -88,10 +89,10 @@ public class PythonTestServiceTest {
 		addTestResult(1234567, "A", "B", 0, 1, 0, 2, -1, 0, -1);
 		addTestResult(1234568, "B", "B", 1, 1, 0, 2, 1, 0, 1);
 		assertEquals(2, testResultRepository.count());
-		OperationResult<String> result = pythonTestService.getTestResults();
+		OperationResult<TestResultSummary> result = pythonTestService.getTestResults();
 		assertEquals(OperationStatus.SUCCESS, result.getStatus());
 		assertEquals("1234567,A,B,1,1,1,1,0,1,0,84.62\n" +
-				"1234568,B,B,0,1,1,1,1,1,1,84.62", result.getPayload());
+				"1234568,B,B,0,1,1,1,1,1,1,84.62", result.getPayload().getCsv());
 	}
 
 	private void addTestResult(int matriculationNumber, String selfEvalA, String selfEvalB, int... answers) {
