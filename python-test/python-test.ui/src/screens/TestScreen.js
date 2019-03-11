@@ -14,6 +14,7 @@ import Header from "../components/header/Header";
 import LoadingIndicator from "../web-react/indicators/LoadingIndicator";
 import Select from "../web-react/input/Select";
 import Container from "../web-react/container/Container";
+import Ticket from "../components/ticket/Ticket";
 
 export default class TestScreen extends React.Component {
 	constructor(props) {
@@ -343,16 +344,7 @@ export default class TestScreen extends React.Component {
 															 message={"Please check back here in some minutes to get your group number."}/>}
 						{this.state.groupNumber !== 0 &&
 						<Container>
-							<center style={{fontSize: "20px", color: colors.blueGrey["800"]}}>
-								As far as I know... <br/>
-								Your group number is <span
-								style={{fontWeight: "bold"}}>1{this.state.groupNumber < 10 ? "0" + this.state.groupNumber : this.state.groupNumber}</span>.
-								<br/>
-								Your room number is <span
-								style={{fontWeight: "bold"}}>{TestScreen.getRoomNumber(this.state.groupNumber)}</span>.
-								<br/>
-								<i>Enjoy your internship! </i> 😀
-							</center>
+							<Ticket matriculationNumber={this.state.student} room={TestScreen.getRoomNumber(this.state.groupNumber)} group={"1" + (this.state.groupNumber < 10 ? "0" + this.state.groupNumber : this.state.groupNumber)}/>
 						</Container>
 						}
 					</div>
