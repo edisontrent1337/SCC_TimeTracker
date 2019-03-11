@@ -130,8 +130,15 @@ export default class ConfigScreen extends React.Component {
 			role: "user"
 		})).then(res => res.json()).then(res => {
 			console.log(res);
-			localStorage.setItem("user", JSON.stringify(res));
-			location.reload();
+			if (res.error) {
+				this.setState({
+					error: res.error
+				});
+			}
+			else {
+				localStorage.setItem("user", JSON.stringify(res));
+				location.reload();
+			}
 		});
 	}
 
@@ -141,7 +148,7 @@ export default class ConfigScreen extends React.Component {
 			return <div className={"container"}>
 				<Header/>
 
-				<div className="col-lg-4" style={{marginTop:"20px"}}>
+				<div className="col-lg-4" style={{marginTop: "20px"}}>
 
 					<CredentialForm
 						color={colors.green["500"]}
