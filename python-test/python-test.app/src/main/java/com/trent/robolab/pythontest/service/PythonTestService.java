@@ -428,18 +428,18 @@ public class PythonTestService implements IPythonTestService {
 			String givenAnswerString = resultEntity.getAnswers();
 			String selfEvaluationString = resultEntity.getSelfEvaluation();
 			builder
-					.append(resultEntity.getMatriculationNumber())
-					.append(",");
+					.append(resultEntity.getMatriculationNumber());
 			String[] selfEval = selfEvaluationString.split(",");
-			if (selfEval.length != 2) {
-				builder.append(",,");
-			} else {
-				builder.append(selfEval[0])
+			if (selfEval.length == 2) {
+				builder.append(",")
+						.append(selfEval[0])
 						.append(",")
 						.append(selfEval[1])
 						.append(",");
 			}
-			builder.append(givenAnswerString);
+			if (!givenAnswerString.isEmpty()) {
+				builder.append(givenAnswerString);
+			}
 			builder.append(",");
 			builder.append(resultEntity.getScore());
 			if (iterator.hasNext()) {
