@@ -13,11 +13,18 @@ public class RedirectController {
 		return "forward:/ui/";
 	}
 
-	@RequestMapping(value = "/activities")
-	public String inPlace() {
-		System.out.println("Redirect to activities");
+	@RequestMapping(value = "/test")
+	public String inPlaceTest() {
+		System.out.println("Redirect to test");
 		return "forward:/";
 	}
+
+	@RequestMapping(value = "/config")
+	public String inPlaceConfig() {
+		System.out.println("Redirect to config");
+		return "forward:/";
+	}
+
 
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public String signUp() {
