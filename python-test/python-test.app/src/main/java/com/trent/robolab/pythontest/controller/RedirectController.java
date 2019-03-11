@@ -42,4 +42,9 @@ public class RedirectController {
 		return "forward:/";
 	}
 
+	@RequestMapping(value = "/config")
+	public String configInPlace() {
+		return "forward:/";
+	}
+
 }
