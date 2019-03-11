@@ -338,9 +338,7 @@ export default class TestScreen extends React.Component {
 						<Highlight className={"python"}>
 							{"print('👋 Hello " + this.state.student + ".')"}
 						</Highlight>
-						<Message heading={"Thank you."}
-								 message={"We received your submitted answers."} dismissable={true}/>
-						{!this.state.groupNumber && <Message heading={"Important hint:"}
+						{!this.state.groupNumber && <Message heading={"Thank you. We have received your answers."} bsStyle={"success"}
 															 message={"Please check back here in some minutes to get your group number."}/>}
 						{this.state.groupNumber !== 0 &&
 						<Container>
