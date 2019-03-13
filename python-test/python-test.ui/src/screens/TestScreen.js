@@ -87,8 +87,7 @@ export default class TestScreen extends React.Component {
 						"[10]"]
 				},
 				{
-					question: "You see the following error message in the python console. Which python statement is missing " +
-						"for  the code to work?",
+					question: "What will happen on execution of these instructions?",
 					code: {
 						language: "python",
 						code: 'Python 3.6.7 (default, Oct 22 2018, 11:32:17) \n' +
@@ -365,12 +364,13 @@ export default class TestScreen extends React.Component {
 									🤓</p>
 								<p>Below, you find your not so golden ticket for your RoboLab 2019:</p>
 
-								<Ticket matriculationNumber={this.state.student}
-										room={TestScreen.getRoomNumber(this.state.groupNumber)}
-										group={"1" + (this.state.groupNumber < 10 ? "0" + this.state.groupNumber : this.state.groupNumber)}
-								/>
+
 
 							</Hint>
+							<Ticket matriculationNumber={this.state.student}
+									room={TestScreen.getRoomNumber(this.state.groupNumber)}
+									group={"1" + (this.state.groupNumber < 10 ? "0" + this.state.groupNumber : this.state.groupNumber)}
+							/>
 
 							<div className={"cf"} style={{margin: "20px 0", texAlign: "left"}}>
 								<Message bsStyle={"success"} heading={"Great!"} dismissable={true}
