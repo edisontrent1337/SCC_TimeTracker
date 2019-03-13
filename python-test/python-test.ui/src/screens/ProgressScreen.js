@@ -18,32 +18,31 @@ export default class ProgressScreen extends React.Component {
 			.then(res => res.json())
 			.then(res => {
 				this.setState({
-						progress: res.data[0]
-					});
+					progress: res.data[0]
+				});
 			});
 	}
 
 	render() {
 		return (
-			<div>
+			<div className={"container"}>
 				<Header/>
-				<div className={"container"}>
-					<Hint>
-						{this.state.progress &&
-						<div>
-							<h1>
-								{Math.round((this.state.progress.studentsThatAnswered / this.state.progress.totalStudents) * 100)}
-								% of you have already answered!
-							</h1>
-							<h1>
-								{this.state.progress.studentsThatAnswered} of you have done it!
-							</h1>
-							<h1>
-								{this.state.progress.totalStudents - this.state.progress.studentsThatAnswered} are still missing!
-							</h1>
-						</div>}
-					</Hint>
-				</div>
+				<Hint>
+					{this.state.progress &&
+					<div>
+						<h1>
+							{Math.round((this.state.progress.studentsThatAnswered / this.state.progress.totalStudents) * 100)}
+							% of you have already answered!
+						</h1>
+						<h1>
+							{this.state.progress.studentsThatAnswered} of you have done it!
+						</h1>
+						<h1>
+							{this.state.progress.totalStudents - this.state.progress.studentsThatAnswered} are still
+							missing!
+						</h1>
+					</div>}
+				</Hint>
 				<Footer/>
 			</div>
 		);
