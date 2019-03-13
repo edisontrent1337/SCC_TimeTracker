@@ -10,6 +10,10 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    questionWeight:
+      properties:
+        weight:
+          type: integer
     testProgress:
       properties:
         studentsThatAnswered:
@@ -83,6 +87,26 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/correctAnswers"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
+  /pytest/config/weight:
+    post:
+      security:
+      - bearerAuth: []
+      operationId: setQuestionWeight
+      requestBody:
+        description: Sets the weight for difficult questions
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/questionWeight"
       responses:
         '200':
           description: OK

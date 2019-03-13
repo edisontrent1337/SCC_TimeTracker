@@ -20,6 +20,7 @@ export default class ConfigScreen extends React.Component {
 		this.handleSubmitCorrectAnswers = this.handleSubmitCorrectAnswers.bind(this);
 		this.concludeTest = this.concludeTest.bind(this);
 		this.getResults = this.getResults.bind(this);
+		this.handleSubmitWeight = this.handleSubmitWeight.bind(this);
 		this.state = {
 			resetMessage: undefined,
 			results: undefined,
@@ -28,6 +29,7 @@ export default class ConfigScreen extends React.Component {
 			conclusionResult: undefined,
 			addParticipantsMessage: undefined,
 			setCorrectAnswersMessage: undefined,
+			setWeightMessage: undefined,
 			correctAnswers: undefined,
 			numberOfResults: 0,
 			forgottenMatriculationNumber: undefined
@@ -52,6 +54,24 @@ export default class ConfigScreen extends React.Component {
 			});
 
 		event.preventDefault();
+	}
+
+
+	handleSubmitWeight() {
+		client.post("/pytest/config/weight", JSON.stringify({weight: this.state.weight}), this)
+			.then(res => res.json())
+			.then((res) => {
+				if (res.error) {
+					this.setState({
+						error: res.error
+					})
+				}
+				else {
+					this.setState({
+						setWeightMessage: "Set question weight to: " + res.data[0].weight
+					});
+				}
+			});
 	}
 
 	handleSubmit(event) {
@@ -83,7 +103,8 @@ export default class ConfigScreen extends React.Component {
 		this.setState({
 			[event.target.name]: event.target.value,
 			addParticipantsMessage: undefined,
-			setCorrectAnswersMessage: undefined
+			setCorrectAnswersMessage: undefined,
+			setWeightMessage: undefined
 		}, () => {
 			this.setState({
 				validForm: this.validateForm()
@@ -150,7 +171,7 @@ export default class ConfigScreen extends React.Component {
 			return <div className={"container"}>
 				<Header/>
 
-				<div className="col-lg-4" style={{marginTop: "20px"}}>
+				<div className="col-lg-4" style={{margin: "20px auto"}}>
 
 					<CredentialForm
 						color={colors.green["500"]}
@@ -241,6 +262,36 @@ export default class ConfigScreen extends React.Component {
 						/>
 					</div>
 				</div>
+
+				<div className={"cf"}>
+					<div className="col-lg-4" style={{margin: "20px auto"}}>
+						{this.state.setWeightMessage &&
+						<Message bsStyle={"success"} heading={"Success!"}
+								 message={this.state.setWeightMessage}/>
+						}
+						<CredentialForm
+							color={colors.green["500"]}
+							title={<span>Set weight of difficult questions</span>}
+							onChange={this.handleChange}
+							error={this.state.error}
+							inputs={[
+								{
+									id: "weight",
+									type: "text",
+									label: "WEIGHT",
+									hint: ["Enter the weight for difficult questions. 4 = less, 3 = more etc."]
+								},
+								{
+									type: "button",
+									value: "Set weight",
+									mode: "big",
+									handler: this.handleSubmitWeight
+								}
+							]}
+						/>
+					</div>
+				</div>
+
 				<div className={"cf"}
 					 style={{padding: "20px 0", borderBottom: "1px solid " + colors.blueGrey["100"]}}>
 					<h3>Get Test Results</h3>

@@ -19,7 +19,7 @@ import java.util.*;
 @Service
 public class PythonTestService implements IPythonTestService {
 
-	private static final int QUESTION_RATE_SCALE = 4;
+	private int questionWeight = 4;
 	private final TestResultRepository testResultRepository;
 	private final CorrectAnswersRepository correctAnswersRepository;
 
@@ -70,7 +70,7 @@ public class PythonTestService implements IPythonTestService {
 			}
 			entity.setAnswers(builder.toString());
 			entity.setSelfEvaluation(testResult.getSelfEvaluation1() + "," + testResult.getSelfEvaluation2());
-			float score = calculateScore(answers, testResult.getSelfEvaluation1(), testResult.getSelfEvaluation2());
+			float score = calculateScore(answers, testResult.getSelfEvaluation1(), testResult.getSelfEvaluation2(), false);
 			entity.setScore(score);
 			entity.setStudies(testResult.getStudies());
 			testResultRepository.save(entity);
@@ -80,8 +80,8 @@ public class PythonTestService implements IPythonTestService {
 		return result;
 	}
 
-	private float calculateScore(List<Integer> answers, String selfEvaluationA, String selfEvaluationB) {
-		int baseScore = calculateBaseScore(answers);
+	private float calculateScore(List<Integer> answers, String selfEvaluationA, String selfEvaluationB, boolean recalculate) {
+		int baseScore = calculateBaseScore(answers, recalculate);
 		float performance = baseScore / (float) calcMaxScore(answers.size());
 		String selfEval = "CBA";
 		int evalScale = 1;
@@ -91,33 +91,39 @@ public class PythonTestService implements IPythonTestService {
 		int maxEvalScore = 2 * ((selfEval.length() - 1) * evalScale) + 2;
 		float selfConfidence = Math.min(1, (evalScore / maxEvalScore) + 0.4f);
 		float achievedScore = evalScore * performance + baseScore * selfConfidence;
-		float maxScore = calcMaxScore(answers.size());
+		float maxScore = calcMaxScore(answers.size()) + maxEvalScore;
 		float score = Math.min(1, achievedScore / maxScore);
 		score = (float) (Math.round(score * 10000.0) / 10000.0);
+		LOGGER.info("CALCULATED " + score * 100);
+		LOGGER.info("MAX SCORE " + maxScore);
 		return score * 100;
 	}
 
 	private int calcMaxScore(int numberOfAnswers) {
 		int maxScore = 0;
 		for (int i = 1; i <= numberOfAnswers; i++) {
-			maxScore += Math.floorDiv(i, QUESTION_RATE_SCALE) + 1;
+			maxScore += Math.floorDiv(i, questionWeight) + 1;
 		}
 		return maxScore;
 	}
 
 
-	private int calculateBaseScore(List<Integer> answers) {
+	private int calculateBaseScore(List<Integer> answers, boolean recalculate) {
 		CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findFirstBy();
 		if (correctAnswersEntity == null) {
 			LOGGER.error("No correct answer string was set.");
 		}
 		String[] correctAnswers = correctAnswersEntity.getAnswers().split(",");
-		int numberOfCorrectAnswers = 0;
+		int baseScore = 0;
 		for (int i = 0; i < answers.size(); i++) {
 			String answer = Integer.toString(answers.get(i));
-			numberOfCorrectAnswers += answer.equals(correctAnswers[i]) ? Math.floorDiv(i + 1, QUESTION_RATE_SCALE) + 1 : 0;
+			if (recalculate) {
+				baseScore += answer.equals("1") ? Math.floorDiv(i + 1, questionWeight) + 1 : 0;
+			} else {
+				baseScore += answer.equals(correctAnswers[i]) ? Math.floorDiv(i + 1, questionWeight) + 1 : 0;
+			}
 		}
-		return numberOfCorrectAnswers;
+		return baseScore;
 	}
 
 	@Override
@@ -505,6 +511,27 @@ public class PythonTestService implements IPythonTestService {
 		OperationResult<TestProgress> result = new OperationResult<>();
 		result.setStatus(OperationStatus.SUCCESS);
 		result.setPayload(progress);
+		return result;
+	}
+
+	@Override
+	public OperationResult<QuestionWeight> setQuestionWeight(QuestionWeight questionWeight) {
+		this.questionWeight = questionWeight.getWeight();
+		for (TestResultEntity entity : testResultRepository.findAllByAnswersIsNot("")) {
+			List<String> answersAsString = Arrays.asList(entity.getAnswers().split(","));
+			List<Integer> answers = new ArrayList<>();
+			for (String answerString : answersAsString) {
+				answers.add(Integer.parseInt(answerString));
+			}
+			String[] selfEvaluation = entity.getSelfEvaluation().split(",");
+			float score = calculateScore(answers, selfEvaluation[0], selfEvaluation[1], true);
+			entity.setScore(score);
+			testResultRepository.save(entity);
+		}
+
+		OperationResult<QuestionWeight> result = new OperationResult<>();
+		result.setStatus(OperationStatus.SUCCESS);
+		result.setPayload(questionWeight);
 		return result;
 	}
 }

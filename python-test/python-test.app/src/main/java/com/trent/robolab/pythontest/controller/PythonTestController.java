@@ -165,4 +165,12 @@ public class PythonTestController implements PytestApi {
 		response.addDataItem(result.getPayload());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+	@Override
+	public ResponseEntity<OperationResponse> setQuestionWeight(@Valid @RequestBody QuestionWeight questionWeight) {
+		OperationResult<QuestionWeight> result = pythonTestService.setQuestionWeight(questionWeight);
+		OperationResponse response = new OperationResponse();
+		response.addDataItem(result.getPayload());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }
