@@ -42,7 +42,7 @@ export default class Question extends React.Component {
 				<div style={{padding: "10px 0", maxWidth: "100%"}}>
 
 					{this.props.code &&
-					<Highlight className={this.props.code.language}> {this.props.code.code}</Highlight>}
+					<Highlight className={this.props.code.language}>{this.props.code.code}</Highlight>}
 				</div>
 				<div className={"cf"}>
 					{answerList}

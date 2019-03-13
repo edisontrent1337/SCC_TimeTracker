@@ -94,17 +94,14 @@ export default class TestScreen extends React.Component {
 						code: 'Python 3.6.7 (default, Oct 22 2018, 11:32:17) \n' +
 							'[GCC 8.2.0] on linux\n' +
 							'Type "help", "copyright", "credits" or "license" for more information.\n' +
-							'>>> sqrt(2)\n' +
-							'Traceback (most recent call last):\n' +
-							'  File "<stdin>", line 1, in <module>\n' +
-							'NameError: name \'sqrt\' is not defined\n' +
-							'>>> \n'
+							'>>> inf = {"RoboLab": 1, "Math": 3, "RA": 2}\n' +
+							'>>> print(inf[1])'
 					},
 					answers: [
-						"import sqrt",
-						"from math import sqrt",
-						"import math",
-						"import math.sqrt",
+						"RoboLab",
+						"RoboLab: 1",
+						"Math: 3",
+						"KeyError ",
 					]
 				},
 				{
@@ -164,24 +161,25 @@ export default class TestScreen extends React.Component {
 					answers: ["{9, 13}", "{8, 12, 14}", "{9, 12, 14}", "{8, 12, 12, 14}"]
 				},
 				{
-					question: "What is printed on the python console?",
+					question: "What is the output printed to the Python console?",
 					code: {
 						language: "python",
-						code: "class Container:\n" +
-							"    def __init__(self, value):\n" +
-							"        self.value = value\n" +
-							"    def __add__(self, other):\n" +
-							"        return f'{self.value} {other}'\n" +
-							"\n" +
-							"a = Container(\"Hello\")\n" +
-							"b = Container(1337)\n" +
-							"print(a + b)\n"
+						code: 'class C:\n' +
+							'    def __init__(self, v):\n' +
+							'        self.value = v\n' +
+							'    def __getitem__(self, item):\n' +
+							'        return C(item * 2)\n' +
+							'    def __mod__(self, other):\n' +
+							'        return str(self.value) + str(other.value)\n' +
+							'a = C(10)\n' +
+							'b = a[3]\n' +
+							'print(a % b)'
 					},
 					answers: [
-						"TypeError",
-						"Hello <__main__Container object at 0x7fb7f3f7668>",
-						"Hello",
-						"Hello 1337",
+						"10<__main__.C object at 0x7fac3b08fb00>",
+						"4",
+						"106",
+						"TypeError: unsupported operand type(s) for %: 'C' and 'C'",
 					]
 				},
 
@@ -363,8 +361,9 @@ export default class TestScreen extends React.Component {
 						{this.state.groupNumber !== 0 &&
 						<div className={"container"}>
 							<Hint heading={"🤯The oracle has spoken!🤯"}>
-								<p>Our super powerful server crunched the numbers and came up with something smart. 🤓</p>
-								<p>Below, you find your not so golden ticket for your Robolab 2019:</p>
+								<p>Our super powerful server crunched the numbers and came up with something smart.
+									🤓</p>
+								<p>Below, you find your not so golden ticket for your RoboLab 2019:</p>
 
 								<Ticket matriculationNumber={this.state.student}
 										room={TestScreen.getRoomNumber(this.state.groupNumber)}
@@ -373,7 +372,7 @@ export default class TestScreen extends React.Component {
 
 							</Hint>
 
-							<div className={"cf"} style={{margin:"20px 0", texAlign:"left"}}>
+							<div className={"cf"} style={{margin: "20px 0", texAlign: "left"}}>
 								<Message bsStyle={"success"} heading={"Great!"} dismissable={true}
 										 message={"Now, You only need to find Your group members and get Your Robot case."}/>
 							</div>
@@ -430,13 +429,13 @@ export default class TestScreen extends React.Component {
 				</div>
 
 				<h2>Self Evaluation</h2>
-				<p>Hey there! Welcome to the Python Skill Test for Robolab 2019. The following questions help to
+				<p>Hey there! Welcome to the Python Skill Test for RoboLab 2019. The following questions help to
 					classify you in terms of your experience with software development
 					in general.<br/> Only <b>one</b> answer is correct for each question.</p>
 				{!selfEvalAnswered && <div>
 					<Message heading={"Don't panic!"}
 							 message={"This test is not part of the examination or your grade. It only serves as " +
-							 "an orientation for the organizers of Robolab to ensure balanced and fair groups."}
+							 "an orientation for the organizers of RoboLab to ensure balanced and fair groups."}
 							 dismissable={true}/>
 
 					<Message dismissable={true} heading={"Also, before I forget: "}
