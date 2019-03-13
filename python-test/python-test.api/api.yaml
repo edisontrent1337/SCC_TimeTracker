@@ -103,6 +103,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/operationResponse"
+    delete:
+      security:
+      - bearerAuth: []
+      operationId: removeAllParticipants
+      description: Removes all participants from the database.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
   /pytest/enter:
     post:
       operationId: enterTest

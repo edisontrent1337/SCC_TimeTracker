@@ -235,9 +235,6 @@ public class PythonTestService implements IPythonTestService {
 			correctAnswersRepository.save(entity);
 		} else {
 			CorrectAnswersEntity entity = correctAnswersRepository.findFirstBy();
-			if (entity == null) {
-				LOGGER.error("No correct answer string was set.");
-			}
 			entity.setAnswers(builder.toString());
 			entity.setCreationDate(OffsetDateTime.now());
 			correctAnswersRepository.save(entity);

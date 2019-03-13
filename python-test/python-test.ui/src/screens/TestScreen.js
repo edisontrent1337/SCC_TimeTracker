@@ -15,6 +15,7 @@ import LoadingIndicator from "../web-react/indicators/LoadingIndicator";
 import Select from "../web-react/input/Select";
 import Container from "../web-react/container/Container";
 import Ticket from "../components/ticket/Ticket";
+import Hint from "../web-react/hints/Hint";
 
 export default class TestScreen extends React.Component {
 	constructor(props) {
@@ -338,12 +339,28 @@ export default class TestScreen extends React.Component {
 						<Highlight className={"python"}>
 							{"print('👋 Hello " + this.state.student + ".')"}
 						</Highlight>
-						{!this.state.groupNumber && <Message heading={"Thank you. We have received your answers."} bsStyle={"success"}
-															 message={"Please check back here in some minutes to get your group number."}/>}
+						{!this.state.groupNumber &&
+						<Message heading={"Thank you. We have received your answers."} bsStyle={"success"}
+								 message={"Please check back here in some minutes while we crunch the numbers for ya 🤓."}/>}
 						{this.state.groupNumber !== 0 &&
-						<Container>
-							<Ticket matriculationNumber={this.state.student} room={TestScreen.getRoomNumber(this.state.groupNumber)} group={"1" + (this.state.groupNumber < 10 ? "0" + this.state.groupNumber : this.state.groupNumber)}/>
-						</Container>
+						<div className={"container"}>
+							<Hint heading={"🤯The oracle has spoken!🤯"}>
+								<p>Our super powerful server crunched the numbers and came up with something smart. 🤓</p>
+								<p>Below, you find your not so golden ticket for your Robolab 2019:</p>
+
+								<Ticket matriculationNumber={this.state.student}
+										room={TestScreen.getRoomNumber(this.state.groupNumber)}
+										group={"1" + (this.state.groupNumber < 10 ? "0" + this.state.groupNumber : this.state.groupNumber)}
+								/>
+
+							</Hint>
+
+							<div className={"cf"} style={{margin:"20px 0", texAlign:"left"}}>
+								<Message bsStyle={"success"} heading={"Great!"} dismissable={true}
+										 message={"Now, You only need to find Your group members and get Your Robot case."}/>
+							</div>
+
+						</div>
 						}
 					</div>
 					<div className={"cf"}>
@@ -399,15 +416,17 @@ export default class TestScreen extends React.Component {
 					classify you in terms of your experience with software development
 					in general.<br/> Only <b>one</b> answer is correct for each question.</p>
 				{!selfEvalAnswered && <div>
-					<Message heading={"Important Hint:"}
+					<Message heading={"Don't panic!"}
 							 message={"This test is not part of the examination or your grade. It only serves as " +
 							 "an orientation for the organizers of Robolab to ensure balanced and fair groups."}
 							 dismissable={true}/>
 
-					<Message dismissable={true} heading={"Important Hint:"}
+					<Message dismissable={true} heading={"Also, before I forget: "}
 							 message={"Please answer the following self evaluation questions " +
 							 "honestly. It's okay if you have only little experience in software development. That's why you are here! 👍"}/>
 					<Question question={"What's your course studies?"} answers={[]}>
+						<Message bsStyle={"danger"} heading={"Attention:"}
+								 message={"Please make sure to select the correct course studies below."}/>
 						<Select options={["Informatik", "Medieninformatik", "Physik", "Informationssystemtechnik"]}
 								name={"studies"} id={"studies"} hint={["Please select your course studies."]}
 								onChange={this.handleSelect}/>

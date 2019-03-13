@@ -3,7 +3,6 @@ import CredentialForm from "../web-react/forms/CredentialForm";
 import colors from "../web-react/colors/colors";
 import {client} from "../client/APIClient";
 import Footer from "../components/footer/Footer";
-import robolab from "../../img/robolab.png";
 import Header from "../components/header/Header";
 
 export default class EnterTestScreen extends React.Component {
