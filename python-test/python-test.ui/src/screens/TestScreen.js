@@ -13,7 +13,6 @@ import Highlight from "react-highlight";
 import Header from "../components/header/Header";
 import LoadingIndicator from "../web-react/indicators/LoadingIndicator";
 import Select from "../web-react/input/Select";
-import Container from "../web-react/container/Container";
 import Ticket from "../components/ticket/Ticket";
 import Hint from "../web-react/hints/Hint";
 
@@ -35,74 +34,58 @@ export default class TestScreen extends React.Component {
 			mounted: false,
 			regularQuestions: [
 				{
-					question: "What distinguishes objects from classes in object-oriented programming?",
+					question: "Which of the following statements is true in the context of object-oriented programming?",
 					answers: [
-						"Objects are declarations of a class",
-						"Objects are instances of a class",
-						"Objects are part of a class",
-						"Objects describe class attributes"]
+						"Objects are declarations of a class.",
+						"Objects are instances of a class.",
+						"Objects can be part of a class.",
+						"Objects describe class attributes."]
+				},
+
+				{
+					question: "When writing classes in Python, the following method plays an important role. Which of the following statements is not true?",
+					additionalInformation: "This is an example class that models a car.",
+					code: {
+						language: "python",
+						code: "class Car:\n" +
+							"  def __init__(self):\n" +
+							"    self.wheels = 4\n" +
+							"    self.doors = 5\n" +
+							"    self.color = \"green\""
+					},
+					answers: [
+						"It serves as a constructor to build objects.",
+						"It can be used to call parent constructors.",
+						"It serves as the destructor of objects.",
+						"It sets the object's attributes to meaningful values."]
 				},
 				{
-					question: "Which approach would you use to implement the following task with as little code as possible?",
-					additionalInformation: "Gather all leaves of a binary tree",
-					answers: [
-						"Imperative approach",
-						"Iterative approach",
-						"Recursive approach"]
+					question: "Which number is not part of the list?",
+					code: {
+						language: "python",
+						code: "list = [i for i in range(0,10) if i % 2 == 0]"
+					},
+					answers: ["2", "6", "0", "3"]
 				},
+
 				{
-					question: "What is the output on the Python console?",
+					question: "What is the output printed to the Python console?",
 					code: {
 						language: 'python',
 						code: 'Python 3.6.7 (default, Oct 22 2018, 11:32:17) \n' +
 							'[GCC 8.2.0] on linux\n' +
 							'Type "help", "copyright", "credits" or "license" for more information.\n' +
-							'>>> a = "1"\n' +
-							'>>> b = "9"\n' +
-							'>>> print(a + b)\n'
+							'>>> first = [10]\n' +
+							'>>> second = first\n' +
+							'>>> second.append(1337)\n' +
+							'>>> print(first)\n'
 					},
 					answers: [
-						"10",
-						"19",
-						"TypeError",
-						"1 9"]
+						"[10, 1337]",
+						"None",
+						"[]",
+						"[10]"]
 				},
-				{
-					question: "What is the result of the following recursion when the starting value is n=0?",
-					code: {
-						language: 'python',
-						code: "def s(n):\n" +
-							"    if n == 20:\n" +
-							"        return 1\n" +
-							"    return n + s(n+5)"
-					},
-					answers: [
-						"6",
-						"16",
-						"31",
-						"RecursionError"]
-				},
-
-				{
-					question: "Which of the listed statements causes the output 'Loop completed!' not to be printed?",
-					code: {
-						language: 'c',
-						code: "def loop(n):\n" +
-							"    for i in range(0, n):\n" +
-							"        if i == 19:\n" +
-							"            ???\n" +
-							"    print(\"Loop completed!\")\n" +
-							"loop(20)\n"
-					},
-					answers: [
-						"continue",
-						"pass",
-						"break",
-						"return"
-					]
-				},
-
-
 				{
 					question: "You see the following error message in the python console. Which python statement is missing " +
 						"for  the code to work?",
@@ -125,21 +108,60 @@ export default class TestScreen extends React.Component {
 					]
 				},
 				{
-					question: "Which number is not part of the list?",
+					question: "What is the output printed to the Python console?",
 					code: {
-						language: "python",
-						code: "list = [i for i in range(0,10) if i % 2 == 0]"
+						language: 'python',
+						code: 'Python 3.6.7 (default, Oct 22 2018, 11:32:17) \n' +
+							'[GCC 8.2.0] on linux\n' +
+							'Type "help", "copyright", "credits" or "license" for more information.\n' +
+							'>>> kelvin_scale = "-273.15 °C"\n' +
+							'>>> temp_indoor = "15 °C"\n' +
+							'>>> print(temp_indoor in kelvin_scale)\n'
 					},
-					answers: ["2", "6", "0", "3"]
+					answers: [
+						"288.15 K",
+						"-258.15 °C",
+						"15 °C in -273.15 °C",
+						"True"]
+				},
+				{
+					question: "What is the output printed to the Python console?",
+					code: {
+						language: 'python',
+						code: 'def a():\n' +
+							'    r = 0\n' +
+							'    a = 1\n' +
+							'    while True:\n' +
+							'        a * 2\n' +
+							'        r = 4 * a\n' +
+							'        a += 1\n' +
+							'        if a == 3:\n' +
+							'          break\n' +
+							'    return r\n' +
+							'\n' +
+							'print(a())\n'
+					},
+					answers: [
+						"0",
+						"8",
+						"12",
+						"64"
+					]
 				},
 
 				{
-					question: "How many elements does the resulting list have ?",
+					question: "Which elements are part of the resulting set?",
 					code: {
 						language: "python",
-						code: "list = [i * i for i in range(1,10) if i % 11 == 0]"
+						code: 'super6 = [8,9,12,12,13,14]\n' +
+							'super = set()\n' +
+							'for x in super6:\n' +
+							'    if not (x % 2):\n' +
+							'        super.add(x)\n' +
+							'\n' +
+							'print(super)'
 					},
-					answers: ["1", "0", "10", "3"]
+					answers: ["{9, 13}", "{8, 12, 14}", "{9, 12, 14}", "{8, 12, 12, 14}"]
 				},
 				{
 					question: "What is printed on the python console?",
@@ -164,23 +186,19 @@ export default class TestScreen extends React.Component {
 				},
 
 				{
-					question: "What is printed on the python console?",
+					question: "What is the output printed to the Python console?",
 					code: {
 						language: "python",
-						code: "class Container:\n" +
-							"    queue = []\n" +
-							"    def __init__(self, initial):\n" +
-							"        self.queue.append(initial)\n" +
-							"first = Container(1)\n" +
-							"second = Container(2)\n" +
-							"\n" +
-							"print(second.queue)\n"
+						code: 'Python 3.6.7 (default, Oct 22 2018, 11:32:17) \n' +
+							'[GCC 8.2.0] on linux\n' +
+							'Type "help", "copyright", "credits" or "license" for more information.\n' +
+							'>>> [x % 2 for x in map(lambda x: x[1] + x[-1], [(1,2),(2,1)])]\n'
 					},
 					answers: [
-						"[1]",
+						"KeyError",
 						"IndexError",
-						"[1,2]",
-						"[2]",
+						"[0, 0]",
+						"[0, 1]",
 					]
 				},
 			]
@@ -388,7 +406,7 @@ export default class TestScreen extends React.Component {
 		});
 
 		const regularQuestionList = this.state.regularQuestions.map((q, i) => {
-			return <Question question={(i + 1) + ".) " + q.question} answers={q.answers}
+			return <Question question={(i + 1) + ". " + q.question} answers={q.answers}
 							 additionalInformation={q.additionalInformation}
 							 key={i} id={i}
 							 image={q.image}

@@ -158,4 +158,11 @@ public class PythonTestController implements PytestApi {
 	}
 
 
+	@Override
+	public ResponseEntity<OperationResponse> getTestProgress() {
+		OperationResult<TestProgress> result = pythonTestService.getTestProgress();
+		OperationResponse response = new OperationResponse();
+		response.addDataItem(result.getPayload());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }

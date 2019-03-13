@@ -56,6 +56,7 @@ export default class ConfigScreen extends React.Component {
 
 	handleSubmit(event) {
 		this.setState({
+			addParticipantsMessage: undefined,
 			enterRequestSent: true
 		});
 
@@ -81,7 +82,8 @@ export default class ConfigScreen extends React.Component {
 	handleChange(event) {
 		this.setState({
 			[event.target.name]: event.target.value,
-
+			addParticipantsMessage: undefined,
+			setCorrectAnswersMessage: undefined
 		}, () => {
 			this.setState({
 				validForm: this.validateForm()

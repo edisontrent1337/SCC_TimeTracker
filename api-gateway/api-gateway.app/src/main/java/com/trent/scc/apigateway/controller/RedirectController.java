@@ -25,6 +25,12 @@ public class RedirectController {
 		return "forward:/";
 	}
 
+	@RequestMapping(value = "/progress")
+	public String progressInPlace() {
+		System.out.println("Redirect to progress");
+		return "forward:/";
+	}
+
 
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public String signUp() {

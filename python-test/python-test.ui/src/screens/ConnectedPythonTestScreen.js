@@ -4,6 +4,7 @@ import {BrowserRouter} from "react-router-dom";
 import EnterTestScreen from "./EnterTestScreen";
 import TestScreen from "./TestScreen";
 import ConfigScreen from "./ConfigScreen";
+import ProgressScreen from "./ProgressScreen";
 
 export default class ConnectedPythonTestScreen extends React.Component {
 	constructor(props) {
@@ -18,6 +19,7 @@ export default class ConnectedPythonTestScreen extends React.Component {
 					<Route exact path="/" component={EnterTestScreen}/>
 					<Route exact path="/test" component={TestScreen}/>
 					<Route exact path="/config" component={ConfigScreen}/>
+					<Route exact path="/progress" component={ProgressScreen}/>
 				</Switch>
 			</BrowserRouter>
 		);

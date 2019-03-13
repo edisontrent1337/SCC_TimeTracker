@@ -1,9 +1,6 @@
 package com.trent.robolab.pythontest.service;
 
-import com.trent.robolab.pythontest.api.model.CorrectAnswers;
-import com.trent.robolab.pythontest.api.model.Participants;
-import com.trent.robolab.pythontest.api.model.TestResult;
-import com.trent.robolab.pythontest.api.model.TestResultSummary;
+import com.trent.robolab.pythontest.api.model.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface IPythonTestService extends UserDetailsService {
@@ -18,4 +15,6 @@ public interface IPythonTestService extends UserDetailsService {
 	OperationResult<String> concludeTest();
 
 	OperationResult<String> resetTest();
+
+	OperationResult<TestProgress> getTestProgress();
 }

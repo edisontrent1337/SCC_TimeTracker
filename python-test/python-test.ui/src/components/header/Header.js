@@ -23,7 +23,7 @@ export default class Header extends React.Component {
 					</a>
 				</div>
 				<div className={"cf"} style={{margin: "10px 0 0 60px"}}>
-					<h3>Robolab 2019</h3>
+					<h3>RoboLab 2019</h3>
 				</div>
 			</div>
 		);

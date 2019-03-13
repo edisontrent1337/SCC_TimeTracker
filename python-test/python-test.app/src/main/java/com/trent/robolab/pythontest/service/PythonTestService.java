@@ -1,10 +1,7 @@
 package com.trent.robolab.pythontest.service;
 
 
-import com.trent.robolab.pythontest.api.model.CorrectAnswers;
-import com.trent.robolab.pythontest.api.model.Participants;
-import com.trent.robolab.pythontest.api.model.TestResult;
-import com.trent.robolab.pythontest.api.model.TestResultSummary;
+import com.trent.robolab.pythontest.api.model.*;
 import com.trent.robolab.pythontest.repository.CorrectAnswersEntity;
 import com.trent.robolab.pythontest.repository.CorrectAnswersRepository;
 import com.trent.robolab.pythontest.repository.TestResultEntity;
@@ -496,5 +493,18 @@ public class PythonTestService implements IPythonTestService {
 	@Override
 	public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 		return null;
+	}
+
+	@Override
+	public OperationResult<TestProgress> getTestProgress() {
+		int totalStudents = (int) testResultRepository.count();
+		int studentsThatAnswered = testResultRepository.findAllByAnswersIsNot("").size();
+		TestProgress progress = new TestProgress();
+		progress.studentsThatAnswered(studentsThatAnswered);
+		progress.totalStudents(totalStudents);
+		OperationResult<TestProgress> result = new OperationResult<>();
+		result.setStatus(OperationStatus.SUCCESS);
+		result.setPayload(progress);
+		return result;
 	}
 }

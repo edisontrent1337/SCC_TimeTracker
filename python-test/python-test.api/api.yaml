@@ -10,6 +10,12 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    testProgress:
+      properties:
+        studentsThatAnswered:
+          type: integer
+        totalStudents:
+          type: integer
     participants:
       description: The list of matriculation numbers allowed to participate
       properties:
@@ -31,6 +37,7 @@ components:
           type: array
           items:
             type: integer
+
     testResult:
       description: A test result of the robolab python test
       properties:
@@ -186,6 +193,17 @@ paths:
               schema:
                 $ref: "#/components/schemas/operationResponse"
 
+  /pytest/progress:
+    get:
+      operationId: getTestProgress
+      description: Returns the test progress
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
   /pytest/submit:
     post:
       security:
