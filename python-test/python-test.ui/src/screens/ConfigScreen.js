@@ -172,7 +172,9 @@ export default class ConfigScreen extends React.Component {
 				<Header/>
 
 				<div className="col-lg-4" style={{margin: "20px auto"}}>
-
+					<div>
+						<Message heading={"As if I would leave this unprotected..."} message={"Nice try."}/>
+					</div>
 					<CredentialForm
 						color={colors.green["500"]}
 						title={<span>Sign in to <br/> edit the configuration</span>}

@@ -360,12 +360,10 @@ export default class TestScreen extends React.Component {
 						{this.state.groupNumber !== 0 &&
 						<div className={"container"}>
 							<Hint heading={"🤯The oracle has spoken!🤯"}>
-								<p>Our super powerful server crunched the numbers and came up with something smart.
+								<p>Our <i>super powerful</i> server crunched the numbers and came up with something
+									smart.
 									🤓</p>
 								<p>Below, you find your not so golden ticket for your RoboLab 2019:</p>
-
-
-
 							</Hint>
 							<Ticket matriculationNumber={this.state.student}
 									room={TestScreen.getRoomNumber(this.state.groupNumber)}
@@ -373,8 +371,8 @@ export default class TestScreen extends React.Component {
 							/>
 
 							<div className={"cf"} style={{margin: "20px 0", texAlign: "left"}}>
-								<Message bsStyle={"success"} heading={"Great!"} dismissable={true}
-										 message={"Now, You only need to find Your group members and get Your Robot case."}/>
+								<Message bsStyle={"success"} heading={"Great! You've just won the group lottery. 🤩"} dismissable={true}
+										 message={"Now, You only need to find your group members and get your Robot case."}/>
 							</div>
 
 						</div>

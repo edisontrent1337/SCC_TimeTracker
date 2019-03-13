@@ -11,9 +11,11 @@ export default class Footer extends React.Component{
 		return (
 			<div style={{marginTop:"20px"}}>
 				<center style={{color:colors.blueGrey["600"]}}>
-					crafted with ❤️ by <a href={"https://github.com/edisontrent1337"}> Sinthujan Thanabalasingam</a>
-					<br/>
-					&copy; 2019 Robolab TU Dresden
+					crafted with 🧠 and  ️❤️ by <a href={"https://github.com/edisontrent1337"}> Sinthujan Thanabalasingam</a>
+					<div>
+						<a href="/config">Configuration</a> | <a href="/progress">Progress</a>
+					</div>
+					&copy; 2019 RoboLab TU Dresden
 				</center>
 			</div>
 		);

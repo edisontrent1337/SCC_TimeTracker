@@ -1,3 +1,7 @@
 .progress {
     height: 50px;
 }
+
+.progressHolder h2 {
+    padding:10px;
+}
