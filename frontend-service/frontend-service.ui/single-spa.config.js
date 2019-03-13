@@ -19,7 +19,7 @@ registerApplication(
 		module => module.pythonTest
 	),
 	() => {
-		return pathNameEquals(["", "/", "/test", "/config"])
+		return pathNameEquals(["", "/", "/test", "/config, /progress"])
 	}
 );
 
