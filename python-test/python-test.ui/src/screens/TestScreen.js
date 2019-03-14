@@ -548,19 +548,19 @@ export default class TestScreen extends React.Component {
 	}
 
 	static getRoomNumber(groupNumber) {
-		if (groupNumber < 8)
+		if (groupNumber < 9)
 			return "E001";
-		else if (groupNumber < 15)
+		else if (groupNumber < 16)
 			return "E005";
-		else if (groupNumber < 22)
+		else if (groupNumber < 23)
 			return "E006";
-		else if (groupNumber < 29)
+		else if (groupNumber < 31)
 			return "E007";
-		else if (groupNumber < 36)
+		else if (groupNumber < 38)
 			return "E008";
-		else if (groupNumber < 43)
+		else if (groupNumber < 45)
 			return "E009";
-		else if (groupNumber < 50)
+		else if (groupNumber < 53)
 			return "E010";
 	}
 }
