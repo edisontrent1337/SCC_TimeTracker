@@ -313,13 +313,7 @@ export default class ConfigScreen extends React.Component {
 					</div>
 					}
 				</div>
-				<div className={"cf"}
-					 style={{padding: "20px 0", borderBottom: "1px solid " + colors.blueGrey["100"]}}>
-					<h3>Reset Test</h3>
-					<p>Reset all results of existing participants.</p>
-					{this.state.resetMessage && <Message heading={"Success!"} message={this.state.resetMessage}/>}
-					<Button value={"Reset"} color={colors.red["500"]} onClick={this.resetTest}/>
-				</div>
+
 				<div className={"cf"}
 					 style={{padding: "20px 0", borderBottom: "1px solid " + colors.blueGrey["100"]}}>
 					<h3>Conclude Test</h3>
