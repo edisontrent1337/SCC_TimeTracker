@@ -37,7 +37,7 @@ public class TestResultEntity {
 	@Override
 	public String toString() {
 		//return "(" + matriculationNumber + "): " + this.studies + " EVAL: " + selfEvaluation + " SCORE: " + score;
-		return matriculationNumber + "," + this.studies + "," + selfEvaluation + "," + score;
+		return matriculationNumber + "," + this.studies + "," + selfEvaluation + "," + score + ",";
 	}
 
 	public String getStudies() {
