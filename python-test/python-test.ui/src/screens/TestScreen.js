@@ -552,15 +552,15 @@ export default class TestScreen extends React.Component {
 			return "E001";
 		else if (groupNumber < 16)
 			return "E005";
-		else if (groupNumber < 23)
+		else if (groupNumber < 24)
 			return "E006";
-		else if (groupNumber < 31)
+		else if (groupNumber < 32)
 			return "E007";
-		else if (groupNumber < 38)
+		else if (groupNumber < 39)
 			return "E008";
-		else if (groupNumber < 45)
+		else if (groupNumber < 46)
 			return "E009";
-		else if (groupNumber < 53)
+		else if (groupNumber < 54)
 			return "E010";
 	}
 }
