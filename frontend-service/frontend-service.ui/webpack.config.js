@@ -70,7 +70,9 @@ module.exports = {
 			BASE_API_URL: JSON.stringify(BASE_API_URL),
 			TIMING_SERVICE_BASE_API_URL: JSON.stringify(BASE_API_URL + '/timing-service'),
 			USER_SERVICE_BASE_API_URL: JSON.stringify(BASE_API_URL + '/user-service'),
-			PYTHON_TEST_SERVICE_BASE_API_URL: JSON.stringify(BASE_API_URL + '/python-test')
+			PYTHON_TEST_SERVICE_BASE_API_URL: JSON.stringify(BASE_API_URL + '/python-test'),
+			'process.env.NODE_ENV': '"production"'
+
 		}),
 		new webpack.optimize.LimitChunkCountPlugin({
 			maxChunks: 1

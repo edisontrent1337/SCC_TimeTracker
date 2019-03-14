@@ -6,11 +6,9 @@
   "scripts": {
     "start": "webpack-dev-server --open --color --port 3000 --config webpack.config.dev.js",
     "prepublish": "rm -rf ../frontend-service.app/src/main/resources/static/dist && npm run build",
-    "build": "rimraf ../frontend-service.app/src/main/resources/static/dist &&  webpack --progress --profile"
+    "build": "rimraf ../frontend-service.app/src/main/resources/static/dist &&  webpack --progress --profile -p"
   },
   "dependencies": {
-    "angular": "^1.7.1",
-    "angular-ui-router": "^1.0.18",
     "bootstrap": "^4.2.1",
     "html-webpack-plugin": "3.2.0",
     "react": "^16.4.0",

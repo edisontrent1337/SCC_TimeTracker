@@ -17,7 +17,7 @@
     "watch": "webpack --watch",
     "start": "webpack-dev-server --open --color --port 3001 --config webpack.config.dev.js",
     "prepublish": "rm -rf ../pythpn-test.app/src/main/resources/static/dist && npm run build",
-    "build": "rimraf ../pythpn-test.app/src/main/resources/static/dist &&  webpack --progress --profile",
+    "build": "rimraf ../pythpn-test.app/src/main/resources/static/dist &&  webpack --progress -p --profile",
     "buildDev": "rimraf ../pythpn-test.app/src/main/resources/static/dist &&  webpack --progress --profile --config webpack.buildDev.config.js"
   },
   "babel": {
