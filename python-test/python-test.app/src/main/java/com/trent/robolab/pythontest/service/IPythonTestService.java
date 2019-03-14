@@ -19,4 +19,6 @@ public interface IPythonTestService extends UserDetailsService {
 	OperationResult<TestProgress> getTestProgress();
 
 	OperationResult<QuestionWeight> setQuestionWeight(QuestionWeight questionWeight);
+
+	OperationResult<String> setRooms();
 }

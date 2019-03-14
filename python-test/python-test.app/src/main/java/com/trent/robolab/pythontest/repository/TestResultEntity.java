@@ -34,6 +34,9 @@ public class TestResultEntity {
 	@Column(name = "group_number")
 	private int groupNumber;
 
+	@Column(name="room")
+	private String room;
+
 	@Override
 	public String toString() {
 		//return "(" + matriculationNumber + "): " + this.studies + " EVAL: " + selfEvaluation + " SCORE: " + score;
@@ -66,6 +69,15 @@ public class TestResultEntity {
 
 	@Column(name = "uuid")
 	private String uuid;
+
+
+	public String getRoom() {
+		return room;
+	}
+
+	public void setRoom(String room) {
+		this.room = room;
+	}
 
 	public long getId() {
 		return id;
@@ -110,7 +122,6 @@ public class TestResultEntity {
 	public void setGroupNumber(int groupNumber) {
 		this.groupNumber = groupNumber;
 	}
-
 
 	public int getGroupNumber() {
 		return groupNumber;

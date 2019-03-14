@@ -534,4 +534,32 @@ public class PythonTestService implements IPythonTestService {
 		result.setPayload(questionWeight);
 		return result;
 	}
+
+	@Override
+	public OperationResult<String> setRooms() {
+		for (TestResultEntity entity : testResultRepository.findAll()) {
+			int groupNumber = entity.getGroupNumber();
+			if (groupNumber != 0) {
+				if (groupNumber < 9)
+					entity.setRoom("E001");
+				else if (groupNumber < 16)
+					entity.setRoom("E005");
+				else if (groupNumber < 24)
+					entity.setRoom("E006");
+				else if (groupNumber < 32)
+					entity.setRoom("E007");
+				else if (groupNumber < 39)
+					entity.setRoom("E008");
+				else if (groupNumber < 46)
+					entity.setRoom("E009");
+				else if (groupNumber < 54)
+					entity.setRoom("E010");
+			}
+			testResultRepository.save(entity);
+		}
+		OperationResult<String> result = new OperationResult<>();
+		result.setStatus(OperationStatus.SUCCESS);
+		result.setPayload("Success.");
+		return result;
+	}
 }

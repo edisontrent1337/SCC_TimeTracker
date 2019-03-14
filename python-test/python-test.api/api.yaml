@@ -75,6 +75,20 @@ components:
           items:
             type: object
 paths:
+
+  /pytest/config/roomAssignment:
+    post:
+      security:
+      - bearerAuth: []
+      operationId: setRooms
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operationResponse"
+
   /pytest/config/answers:
     post:
       security:

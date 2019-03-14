@@ -173,4 +173,12 @@ public class PythonTestController implements PytestApi {
 		response.addDataItem(result.getPayload());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+	@Override
+	public ResponseEntity<OperationResponse> setRooms() {
+		OperationResult<String> result = pythonTestService.setRooms();
+		OperationResponse response = new OperationResponse();
+		response.addDataItem(result.getPayload());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }
