@@ -89,6 +89,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/operationResponse"
 
+  /pytest/results/csv:
+    get:
+      security:
+      - bearerAuth: []
+      operationId: getCSV
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+
   /pytest/config/answers:
     post:
       security:

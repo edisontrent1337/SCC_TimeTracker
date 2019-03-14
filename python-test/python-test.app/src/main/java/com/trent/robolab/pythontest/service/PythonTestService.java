@@ -436,12 +436,29 @@ public class PythonTestService implements IPythonTestService {
 						.append(",")
 						.append(selfEval[1])
 						.append(",");
+			} else {
+				builder.append(",")
+						.append("-")
+						.append(",")
+						.append("-")
+						.append(",");
 			}
 			if (!givenAnswerString.isEmpty()) {
 				builder.append(givenAnswerString);
+			} else {
+				CorrectAnswersEntity correctAnswersEntity = correctAnswersRepository.findFirstBy();
+				int numberOfAnswers = correctAnswersEntity.getAnswers().split(",").length;
+
+				for (int i = 0; i < numberOfAnswers - 1; i++) {
+					builder.append("-");
+					if (i <  numberOfAnswers - 2) {
+						builder.append(",");
+					}
+				}
 			}
 			builder.append(",");
-			builder.append(resultEntity.getScore());
+			builder.append(resultEntity.getScore()).append(",");
+			builder.append(resultEntity.getRoom());
 			if (iterator.hasNext()) {
 				builder.append("\n");
 			}
@@ -560,6 +577,16 @@ public class PythonTestService implements IPythonTestService {
 		OperationResult<String> result = new OperationResult<>();
 		result.setStatus(OperationStatus.SUCCESS);
 		result.setPayload("Success.");
+		return result;
+	}
+
+	@Override
+	public OperationResult<String> getCSV() {
+		StringBuilder builder = new StringBuilder();
+		convertToCsv(builder, (List<TestResultEntity>) testResultRepository.findAll());
+		OperationResult<String> result = new OperationResult<>();
+		result.setStatus(OperationStatus.SUCCESS);
+		result.setPayload(builder.toString());
 		return result;
 	}
 }

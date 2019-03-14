@@ -181,4 +181,10 @@ public class PythonTestController implements PytestApi {
 		response.addDataItem(result.getPayload());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+	@Override
+	public ResponseEntity<String> getCSV() {
+		OperationResult<String> result = pythonTestService.getCSV();
+		return new ResponseEntity<>(result.getPayload(), HttpStatus.OK);
+	}
 }

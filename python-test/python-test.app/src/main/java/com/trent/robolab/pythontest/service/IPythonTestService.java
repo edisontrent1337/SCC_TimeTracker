@@ -21,4 +21,6 @@ public interface IPythonTestService extends UserDetailsService {
 	OperationResult<QuestionWeight> setQuestionWeight(QuestionWeight questionWeight);
 
 	OperationResult<String> setRooms();
+
+	OperationResult<String> getCSV();
 }
