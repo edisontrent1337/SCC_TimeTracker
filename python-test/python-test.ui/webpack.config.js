@@ -74,7 +74,8 @@ module.exports = {
 			MODE: JSON.stringify("external-component"),
 			BASE_API_URL: JSON.stringify(BASE_API_URL),
 			PYTHON_TEST_SERVICE_BASE_API_URL: JSON.stringify(BASE_API_URL + "/python-test"),
-			USER_SERVICE_BASE_API_URL: JSON.stringify(BASE_API_URL + "/user-service")
+			USER_SERVICE_BASE_API_URL: JSON.stringify(BASE_API_URL + "/user-service"),
+			'process.env.NODE_ENV': '"production"'
 		})
 	],
 	externals: {
