@@ -357,7 +357,7 @@ export default class TestScreen extends React.Component {
 						{!this.state.groupNumber &&
 						<Message heading={"Thank you. We have received your answers."} bsStyle={"success"}
 								 message={"Please check back here in some minutes while we crunch the numbers for ya 🤓."}/>}
-						{this.state.groupNumber !== 0 &&
+						{this.state.groupNumber !== -99 &&
 						<div className={"container"}>
 							<Hint heading={"🤯The oracle has spoken!🤯"}>
 								<p>Our <i>super powerful</i> server crunched the numbers and came up with something
