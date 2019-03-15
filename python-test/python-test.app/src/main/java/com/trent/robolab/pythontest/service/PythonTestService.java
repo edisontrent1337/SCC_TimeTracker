@@ -428,7 +428,11 @@ public class PythonTestService implements IPythonTestService {
 			String givenAnswerString = resultEntity.getAnswers();
 			String selfEvaluationString = resultEntity.getSelfEvaluation();
 			builder
-					.append(resultEntity.getMatriculationNumber());
+					.append(resultEntity.getMatriculationNumber())
+					.append(",")
+					.append(resultEntity.getRoom())
+					.append(",")
+					.append(resultEntity.getGroupNumber());
 			String[] selfEval = selfEvaluationString.split(",");
 			if (selfEval.length == 2) {
 				builder.append(",")
@@ -457,8 +461,7 @@ public class PythonTestService implements IPythonTestService {
 				}
 			}
 			builder.append(",");
-			builder.append(resultEntity.getScore()).append(",");
-			builder.append(resultEntity.getRoom());
+			builder.append(resultEntity.getScore());
 			if (iterator.hasNext()) {
 				builder.append("\n");
 			}
@@ -583,7 +586,9 @@ public class PythonTestService implements IPythonTestService {
 	@Override
 	public OperationResult<String> getCSV() {
 		StringBuilder builder = new StringBuilder();
-		convertToCsv(builder, (List<TestResultEntity>) testResultRepository.findAll());
+		List<TestResultEntity> all = (List<TestResultEntity>) testResultRepository.findAll();
+		all.sort(Comparator.comparingInt(TestResultEntity::getGroupNumber));
+		convertToCsv(builder, all);
 		OperationResult<String> result = new OperationResult<>();
 		result.setStatus(OperationStatus.SUCCESS);
 		result.setPayload(builder.toString());
